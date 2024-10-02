@@ -1,9 +1,33 @@
 import React, { useState, useRef } from "react";
-import { Tag, Plus, Image, Palette, X } from "lucide-react";
+import { Tag, Plus, Image, Palette, X, SmilePlusIcon } from "lucide-react";
+import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Button } from "../ui/button";
+import { AddTagSection } from "./AddTagSection";
+
+const PALLETTE = {
+  gradient_blue: {
+    bg: "linear-gradient(127deg, #8ECDF2 3.2%, #A0C8FC 21.06%, #A4C7FE 30.47%, #96BDFE 38.93%, #84B0FE 47.86%, #2B6FFF 97.22%)",
+    "filled-round": {
+      bg: "linear-gradient(120deg, #2EA1FF 14.35%, #5D9CFF 45.44%, #1F65FD 93.51%)",
+      color: "#fff",
+    },
+    "filled-square": {
+      bg: "#fff",
+      color: "#3176FF",
+    },
+  },
+};
 
 const ThumbnailMaker = () => {
   const [tags, setTags] = useState<{ text: string; style: string }[]>([]);
-  const [bgColor, setBgColor] = useState("#f0f4f8");
+  const [bgColor, setBgColor] = useState(PALLETTE.gradient_blue.bg);
   const previewRef = useRef(null);
   console.log("previewRef: ", previewRef);
 
@@ -31,18 +55,15 @@ const ThumbnailMaker = () => {
         margin: "0 auto",
         padding: "30px",
         fontFamily: "Arial, sans-serif",
-        backgroundColor: "#ffffff",
         borderRadius: "10px",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
       }}
     >
-      <h1 style={{ textAlign: "center", color: "#333", marginBottom: "30px" }}>
+      <h1 className="mb-7 text-center text-[80px] text-white">
         Thumbnail Maker
       </h1>
 
       <AddTagSection onAction={addTag} />
-
-      <BgColorPicker onChangeBgColor={setBgColor} />
 
       <ThumbnailPreview
         tags={tags}
@@ -75,71 +96,6 @@ const ThumbnailMaker = () => {
 };
 
 export default ThumbnailMaker;
-
-function AddTagSection({
-  onAction,
-}: {
-  onAction: (inputValue: string, tagStyle: string) => void;
-}) {
-  const [inputValue, setInputValue] = useState("");
-  const [tagStyle, setTagStyle] = useState("filled");
-
-  const onActionClick = async () => {
-    onAction(inputValue, tagStyle);
-    setInputValue("");
-  };
-
-  return (
-    <div style={{ display: "flex", marginBottom: "20px", gap: "10px" }}>
-      <input
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Enter a tag"
-        style={{
-          flex: 1,
-          padding: "12px",
-          borderRadius: "6px",
-          border: "1px solid #e0e0e0",
-          fontSize: "16px",
-          transition: "border-color 0.3s ease",
-        }}
-      />
-      <select
-        value={tagStyle}
-        onChange={(e) => setTagStyle(e.target.value)}
-        style={{
-          padding: "12px",
-          borderRadius: "6px",
-          border: "1px solid #e0e0e0",
-          backgroundColor: "#fff",
-          fontSize: "16px",
-          cursor: "pointer",
-        }}
-      >
-        <option value="filled">Filled</option>
-        <option value="outlined">Outlined</option>
-      </select>
-      <button
-        onClick={onActionClick}
-        style={{
-          padding: "12px 20px",
-          backgroundColor: "#4a90e2",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          display: "flex",
-          alignItems: "center",
-          cursor: "pointer",
-          fontSize: "16px",
-          transition: "background-color 0.3s ease",
-        }}
-      >
-        <Plus size={20} style={{ marginRight: "8px" }} /> Add Tag
-      </button>
-    </div>
-  );
-}
 
 function BgColorPicker({
   onChangeBgColor,
@@ -193,16 +149,13 @@ function ThumbnailPreview({
   removeTag: (index: number) => void;
 }) {
   return (
-    <div style={{ marginBottom: "20px" }}>
-      <h3 style={{ marginBottom: "10px", color: "#333" }}>Preview</h3>
+    <div className="mt-8">
       <div
         ref={previewRef}
         style={{
-          width: "300px",
-          height: "200px",
-          backgroundColor: bgColor,
-          border: "1px solid #e0e0e0",
-          borderRadius: "4px",
+          aspectRatio: "1080/565", // NOTE: 이후에 수정될 수 있음, 현재는 velog 기준
+          background: bgColor,
+          borderRadius: "8px",
           padding: "10px",
           display: "flex",
           flexWrap: "wrap",
