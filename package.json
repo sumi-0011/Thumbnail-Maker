@@ -16,6 +16,7 @@
   "dependencies": {
     "@loadable/component": "^5.15.3",
     "@radix-ui/react-popover": "^1.0.6",
+    "@radix-ui/react-select": "^2.1.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@tanstack/react-query": "^4.29.3",
     "@transmart/cli": "^0.2.4",
