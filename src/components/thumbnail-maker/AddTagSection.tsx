@@ -10,16 +10,35 @@ import { Button } from "../ui/button";
 import { Plus, SmilePlusIcon } from "lucide-react";
 import { useState } from "react";
 
+export type TagVariant = "filled" | "outlined" | "ghost";
+export type TagShape = "round" | "squared";
+
 export function AddTagSection({
   onAction,
 }: {
-  onAction: (inputValue: string, tagStyle: string) => void;
+  onAction: (
+    tag: {
+      text: string;
+      tagVariant: TagVariant;
+      tagShape: TagShape;
+    }
+    // inputValue: string,
+    // tagVariant: TagVariant,
+    // tagShape: TagShape
+  ) => void;
 }) {
   const [inputValue, setInputValue] = useState("");
-  const [tagVariant, setTagVariant] = useState("filled");
-  const [tagShape, setTagShape] = useState("round");
+  const [tagVariant, setTagVariant] = useState<TagVariant>("filled");
+  const [tagShape, setTagShape] = useState<TagShape>("round");
+
   const onActionClick = async () => {
-    onAction(inputValue, tagVariant);
+    if (inputValue.trim() === "") return;
+
+    onAction({
+      text: inputValue,
+      tagVariant: tagVariant,
+      tagShape: tagShape,
+    });
     setInputValue("");
   };
 
@@ -30,11 +49,17 @@ export function AddTagSection({
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         placeholder="Enter a tag"
+        // enter 누르면
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            onActionClick();
+          }
+        }}
       />
 
       <Select
         value={tagVariant}
-        onValueChange={setTagVariant}
+        onValueChange={(value) => setTagVariant(value as TagVariant)}
         defaultValue="filled"
       >
         <SelectTrigger className="w-[130px] ">
@@ -43,9 +68,14 @@ export function AddTagSection({
         <SelectContent>
           <SelectItem value="filled">Filled</SelectItem>
           <SelectItem value="outlined">Outlined</SelectItem>
+          <SelectItem value="ghost">Ghost</SelectItem>
         </SelectContent>
       </Select>
-      <Select value={tagShape} onValueChange={setTagShape} defaultValue="round">
+      <Select
+        value={tagShape}
+        onValueChange={(value) => setTagShape(value as TagShape)}
+        defaultValue="round"
+      >
         <SelectTrigger className="w-[130px] ">
           <SelectValue />
         </SelectTrigger>
