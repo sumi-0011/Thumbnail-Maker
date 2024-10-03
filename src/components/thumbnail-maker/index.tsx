@@ -39,7 +39,6 @@ const ThumbnailMaker = () => {
       <h1 className="mb-7 text-center text-[80px] text-white">
         Thumbnail Maker
       </h1>
-      {/* <AddTagSection onAction={addTag} /> */}
       <ThumbnailPreview
         tags={tags}
         bgColor={bgColor}
