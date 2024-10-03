@@ -51,9 +51,8 @@ const ThumbnailMaker = () => {
   return (
     <div
       style={{
-        maxWidth: "700px",
+        maxWidth: "768px",
         margin: "0 auto",
-        padding: "30px",
         fontFamily: "Arial, sans-serif",
         borderRadius: "10px",
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
@@ -72,25 +71,9 @@ const ThumbnailMaker = () => {
         removeTag={removeTag}
       />
 
-      <button
-        onClick={handlePreview}
-        style={{
-          padding: "12px 20px",
-          backgroundColor: "#2ecc71",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-          fontSize: "16px",
-          transition: "background-color 0.3s ease",
-        }}
-      >
-        <Image size={20} style={{ marginRight: "10px" }} /> Preview Thumbnail
-      </button>
+      <Button variant="secondary" onClick={handlePreview} className="mt-6">
+        <Image size={20} style={{ marginRight: "10px" }} /> 이미지 다운로드
+      </Button>
     </div>
   );
 };

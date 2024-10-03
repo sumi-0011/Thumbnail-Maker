@@ -30,14 +30,6 @@ export function AddTagSection({
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         placeholder="Enter a tag"
-        style={{
-          flex: 1,
-          padding: "12px",
-          borderRadius: "6px",
-          border: "1px solid #e0e0e0",
-          fontSize: "16px",
-          transition: "border-color 0.3s ease",
-        }}
       />
 
       <Select
@@ -45,7 +37,7 @@ export function AddTagSection({
         onValueChange={setTagVariant}
         defaultValue="filled"
       >
-        <SelectTrigger className="w-[120px]">
+        <SelectTrigger className="w-[130px] ">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -54,7 +46,7 @@ export function AddTagSection({
         </SelectContent>
       </Select>
       <Select value={tagShape} onValueChange={setTagShape} defaultValue="round">
-        <SelectTrigger className="w-[120px]">
+        <SelectTrigger className="w-[130px] ">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -62,7 +54,7 @@ export function AddTagSection({
           <SelectItem value="squared">Squared</SelectItem>
         </SelectContent>
       </Select>
-      <Button onClick={onActionClick} variant="secondary">
+      <Button onClick={onActionClick} variant="secondary" size="lg">
         <Plus size={20} style={{ marginRight: "8px" }} /> Add Tag
       </Button>
       <Button onClick={onActionClick} variant="secondary">
