@@ -22,10 +22,12 @@ function ThumbnailPreview({
   tags: { text: string; tagVariant: TagVariant; tagShape: TagShape }[];
   bgColor: string;
   previewRef: React.RefObject<HTMLDivElement>;
-  onTagsUpdate: (newTags: typeof tags, isOverflowing: boolean) => void;
+  onTagsUpdate: (newTags: typeof tags, isOverflowing: false | string) => void;
 }) {
   const tagsContainerRef = useRef<HTMLDivElement>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
+
+  const [overflowMessage, setOverflowMessage] = useState("");
 
   const checkOverflow = () => {
     if (tagsContainerRef.current) {
@@ -34,6 +36,15 @@ function ThumbnailPreview({
       const hasHorizontalOverflow = scrollWidth > offsetWidth;
       const hasVerticalOverflow = scrollHeight > offsetHeight;
       const newIsOverflowing = hasHorizontalOverflow || hasVerticalOverflow;
+
+      if (newIsOverflowing && hasHorizontalOverflow) {
+        setOverflowMessage("태그가 너무 깁니다. ");
+      }
+      if (newIsOverflowing && hasVerticalOverflow) {
+        setOverflowMessage(
+          "태그를 더 이상 추가할 수 없습니다. 공간이 부족합니다."
+        );
+      }
 
       setIsOverflowing(newIsOverflowing);
       return newIsOverflowing;
@@ -59,7 +70,7 @@ function ThumbnailPreview({
       const overflow = checkOverflow();
       if (overflow) {
         console.warn("태그를 더 이상 추가할 수 없습니다. 공간이 부족합니다.");
-        onTagsUpdate(tags, true); // Revert to original tags and signal overflow
+        onTagsUpdate(tags, overflowMessage); // Revert to original tags and signal overflow
       }
     });
   };
@@ -97,17 +108,13 @@ function ThumbnailPreview({
         </div>
       </div>
       {isOverflowing && (
-        <div className="mt-2 text-red-500">
-          태그를 더 이상 추가할 수 없습니다. 공간이 부족합니다.
-        </div>
+        <div className="mt-2 text-red-500">{overflowMessage}</div>
       )}
     </>
   );
 }
 
 export default ThumbnailPreview;
-
-// TagItem component remains unchanged
 
 function TagItem({
   tag,
@@ -123,12 +130,10 @@ function TagItem({
         ...tagStyle[`${tag.tagVariant}-${tag.tagShape}`],
       }}
       className={cn(
-        "relative flex max-w-full cursor-pointer items-center overflow-hidden truncate whitespace-nowrap rounded-full transition-all duration-300 ease-in-out"
+        "relative flex min-w-fit max-w-full cursor-pointer items-center overflow-hidden truncate whitespace-nowrap rounded-full transition-all duration-300 ease-in-out"
       )}
     >
-      <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-        {tag.text}
-      </span>
+      <span>{tag.text}</span>
       <div
         className="absolute -right-1 -top-1 hidden cursor-pointer rounded-full bg-white/80 p-0.5"
         onClick={(e) => {
