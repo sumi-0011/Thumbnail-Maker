@@ -1,17 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { cn } from "src/lib/utils";
-import { tagSize, tagStyle } from "./constants";
-import { AddTagSection } from "./AddTagSection";
-
-export type TagVariant = "filled" | "outlined" | "ghost";
-export type TagShape = "round" | "squared";
-
-const canvasSize = {
-  aspectRatio: "1080/565",
-  padding: "40px 50px",
-  gap: "16px 8px",
-};
+import { canvasSize, tagSize, tagStyle } from "./constants";
+import { AddTagSection, TagShape, TagVariant } from "./AddTagSection";
 
 function ThumbnailPreview({
   tags,
@@ -25,7 +16,6 @@ function ThumbnailPreview({
   onTagsUpdate: (newTags: typeof tags, isOverflowing: false | string) => void;
 }) {
   const tagsContainerRef = useRef<HTMLDivElement>(null);
-  const [isOverflowing, setIsOverflowing] = useState(false);
 
   const [overflowMessage, setOverflowMessage] = useState("");
 
@@ -46,7 +36,6 @@ function ThumbnailPreview({
         );
       }
 
-      setIsOverflowing(newIsOverflowing);
       return newIsOverflowing;
     }
     return false;
@@ -65,12 +54,12 @@ function ThumbnailPreview({
     const newTags = [...tags, newTag];
     onTagsUpdate(newTags, false);
 
-    // 다음 렌더링 사이클에서 오버플로우 체크
+    //  requestAnimationFrame을 사용하여 다음 렌더링 사이클에서 오버플로우를 체크함으로써, DOM 업데이트가 완료된 후에 체크
     requestAnimationFrame(() => {
       const overflow = checkOverflow();
       if (overflow) {
         console.warn("태그를 더 이상 추가할 수 없습니다. 공간이 부족합니다.");
-        onTagsUpdate(tags, overflowMessage); // Revert to original tags and signal overflow
+        onTagsUpdate(tags, overflowMessage);
       }
     });
   };
@@ -107,9 +96,6 @@ function ThumbnailPreview({
           </div>
         </div>
       </div>
-      {isOverflowing && (
-        <div className="mt-2 text-red-500">{overflowMessage}</div>
-      )}
     </>
   );
 }
