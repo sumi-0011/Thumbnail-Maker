@@ -4,9 +4,9 @@ import { Button } from "../ui/button";
 import { PALLETTE } from "./constants";
 import { Tag } from "./types";
 import { AddTagSection } from "./AddTagSection";
-import { toast } from "src/hooks/use-toast";
 import { CanvasContainer } from "./CanvasContainer";
 import { TagItem } from "./TagItem";
+import { toast } from "sonner";
 
 function ThumbnailMaker() {
   const [tags, setTags] = useState<Tag[]>([]);
@@ -76,16 +76,12 @@ const useCheckTagContainerOverflow = () => {
 
   const showOverflowToast = (overflow: OverflowMessage) => {
     if (overflow === "vertical-overflow") {
-      toast({
-        title: "태그 추가 실패",
-        variant: "destructive",
-        description: "공간이 부족해 태그를 더 이상 추가할 수 없습니다.",
+      toast.error("공간이 부족해 태그를 더 이상 추가할 수 없습니다.", {
+        position: "top-right",
       });
     } else if (overflow === "horizontal-overflow") {
-      toast({
-        title: "태그 추가 실패",
-        variant: "destructive",
-        description: "너무 긴 태그는 추가할 수 없습니다.",
+      toast.error("너무 긴 태그는 추가할 수 없습니다.", {
+        position: "top-right",
       });
     }
   };
