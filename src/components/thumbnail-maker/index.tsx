@@ -3,7 +3,7 @@ import { Image } from "lucide-react";
 import { Button } from "../ui/button";
 import { PALLETTE } from "./constants";
 import { Tag } from "./tag.types";
-import { AddTagSection } from "./AddTagSection";
+import { AddTagSection, TagListInput } from "./AddTagSection";
 import { CanvasContainer } from "./CanvasContainer";
 import { TagItem } from "./TagItem";
 import { useCheckTagOverflow } from "./hooks/useCheckTagOverflow";
@@ -64,12 +64,19 @@ function ThumbnailMaker() {
     });
   };
 
+  const handleAddTags = (newTags: Tag[]) => {
+    onTagsUpdate(newTags);
+  };
+
   return (
     <div className="mx-auto max-w-[768px]">
       <h1 className="mb-7 text-center text-[80px] text-white">
         Thumbnail Maker
       </h1>
       <AddTagSection onAction={handleAddTag} />
+      <div className="mt-4">
+        <TagListInput onAction={handleAddTags} />
+      </div>
       <div className="mt-8">
         <CanvasContainer
           previewRef={previewRef}

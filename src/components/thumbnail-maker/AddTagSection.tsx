@@ -78,3 +78,36 @@ export function AddTagSection({ onAction }: { onAction: (tag: Tag) => void }) {
     </div>
   );
 }
+
+export function TagListInput({
+  onAction,
+}: {
+  onAction: (tags: Tag[]) => void;
+}) {
+  const dummy = "SVGO로, SVG 최적화, 🚀, Sprite 생성, ->, 성능 향상, 💾";
+  const [inputValue, setInputValue] = useState(dummy);
+
+  return (
+    <div className="flex gap-4">
+      <Input
+        placeholder="태그 리스트 등록"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+      />
+      <Button
+        variant="secondary"
+        onClick={() =>
+          onAction(
+            inputValue.split(",").map((tag) => ({
+              text: tag,
+              tagVariant: "filled",
+              tagShape: "round",
+            }))
+          )
+        }
+      >
+        등록
+      </Button>
+    </div>
+  );
+}
