@@ -1,59 +1,115 @@
-import React, { useState, useRef } from "react";
-import { Tag, Plus, Image, Palette, X, SmilePlusIcon } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Image } from "lucide-react";
 import { Button } from "../ui/button";
-import { AddTagSection, TagShape, TagVariant } from "./AddTagSection";
-import ThumbnailPreview from "./ThumbnailPreview";
 import { PALLETTE } from "./constants";
+import { Tag } from "./types";
+import { AddTagSection } from "./AddTagSection";
 import { toast } from "src/hooks/use-toast";
+import { CanvasContainer } from "./CanvasContainer";
+import { TagItem } from "./TagItem";
 
-type Tag = { text: string; tagVariant: TagVariant; tagShape: TagShape };
-
-const ThumbnailMaker = () => {
+function ThumbnailMaker() {
   const [tags, setTags] = useState<Tag[]>([]);
   const [bgColor, setBgColor] = useState(PALLETTE.gradient_blue.bg);
-  const previewRef = useRef(null);
-  const [isOverflowing, setIsOverflowing] = useState<false | string>(false);
 
-  const handleTagsUpdate = (newTags: Tag[], overflow: false | string) => {
+  const { previewRef, onDownload } = usePreview();
+  const { tagsContainerRef, checkOverflow, showOverflowToast } =
+    useCheckTagContainerOverflow();
+
+  const onTagsUpdate = (newTags: Tag[]) => {
     setTags(newTags);
-    setIsOverflowing(overflow);
-    if (overflow) {
-      // 추가적인 UI 피드백이나 로직을 여기에 구현할 수 있습니다.
-      console.warn("태그 영역이 가득 찼습니다.");
-    }
   };
 
-  const handlePreview = () => {
-    // console.log("Preview functionality not implemented yet");
+  const handleRemoveTag = (index: number) => {
+    const newTags = tags.filter((_, i) => i !== index);
+    onTagsUpdate(newTags);
+  };
+
+  const handleAddTag = (newTag: (typeof tags)[0]) => {
+    const newTags = [...tags, newTag];
+    onTagsUpdate(newTags);
+
+    //  requestAnimationFrame을 사용하여 다음 렌더링 사이클에서 오버플로우를 체크함으로써, DOM 업데이트가 완료된 후에 체크
+    requestAnimationFrame(() => {
+      const overflow = checkOverflow();
+      if (overflow) {
+        showOverflowToast(overflow);
+        onTagsUpdate(tags);
+      }
+    });
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "768px",
-        margin: "0 auto",
-        fontFamily: "Arial, sans-serif",
-        borderRadius: "10px",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      }}
-    >
+    <div className="mx-auto max-w-[768px]">
       <h1 className="mb-7 text-center text-[80px] text-white">
         Thumbnail Maker
       </h1>
-      <ThumbnailPreview
-        tags={tags}
-        bgColor={bgColor}
-        previewRef={previewRef}
-        onTagsUpdate={handleTagsUpdate}
-      />
-      <Button variant="secondary" onClick={handlePreview} className="mt-6">
+      <AddTagSection onAction={handleAddTag} />
+      <div className="mt-8">
+        <CanvasContainer
+          previewRef={previewRef}
+          bgColor={bgColor}
+          tagsContainerRef={tagsContainerRef}
+        >
+          {tags.map((tag, index) => (
+            <TagItem
+              key={index}
+              tag={tag}
+              onRemove={() => handleRemoveTag(index)}
+            />
+          ))}
+        </CanvasContainer>
+      </div>
+      <Button variant="secondary" onClick={onDownload} className="mt-6">
         <Image size={20} style={{ marginRight: "10px" }} /> 이미지 다운로드
-      </Button>{" "}
-      <Button onClick={() => toast({ title: "Scheduled: Catch up" })}>
-        Show Toast
       </Button>
     </div>
   );
-};
+}
 
 export default ThumbnailMaker;
+
+type OverflowMessage = "vertical-overflow" | "horizontal-overflow";
+
+const useCheckTagContainerOverflow = () => {
+  const tagsContainerRef = useRef<HTMLDivElement>(null);
+
+  const showOverflowToast = (overflow: OverflowMessage) => {
+    if (overflow === "vertical-overflow") {
+      toast({
+        title: "태그 추가 실패",
+        variant: "destructive",
+        description: "공간이 부족해 태그를 더 이상 추가할 수 없습니다.",
+      });
+    } else if (overflow === "horizontal-overflow") {
+      toast({
+        title: "태그 추가 실패",
+        variant: "destructive",
+        description: "너무 긴 태그는 추가할 수 없습니다.",
+      });
+    }
+  };
+
+  const checkOverflow = (): false | OverflowMessage => {
+    if (tagsContainerRef.current) {
+      const { offsetWidth, scrollWidth, offsetHeight, scrollHeight } =
+        tagsContainerRef.current;
+      const hasHorizontalOverflow = scrollWidth > offsetWidth;
+      const hasVerticalOverflow = scrollHeight > offsetHeight;
+
+      if (hasVerticalOverflow) return "vertical-overflow";
+      if (hasHorizontalOverflow) return "horizontal-overflow";
+    }
+    return false;
+  };
+
+  return { tagsContainerRef, checkOverflow, showOverflowToast };
+};
+
+const usePreview = () => {
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  const onDownload = () => {};
+
+  return { previewRef, onDownload };
+};
