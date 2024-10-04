@@ -6,15 +6,17 @@ import { Tag } from "./types";
 import { AddTagSection } from "./AddTagSection";
 import { CanvasContainer } from "./CanvasContainer";
 import { TagItem } from "./TagItem";
-import { toast } from "sonner";
+import { useCheckTagOverflow } from "./hooks/useCheckTagOverflow";
+import { usePreview } from "./hooks/usePreview";
+import { usePallette } from "./hooks/usePallette";
 
 function ThumbnailMaker() {
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [bgColor, setBgColor] = useState(PALLETTE.gradient_blue.bg);
-
+  const { canvasBg, tagStyle } = usePallette();
   const { previewRef, onDownload } = usePreview();
   const { tagsContainerRef, checkOverflow, showOverflowToast } =
-    useCheckTagContainerOverflow();
+    useCheckTagOverflow();
+
+  const [tags, setTags] = useState<Tag[]>([]);
 
   const onTagsUpdate = (newTags: Tag[]) => {
     setTags(newTags);
@@ -48,7 +50,7 @@ function ThumbnailMaker() {
       <div className="mt-8">
         <CanvasContainer
           previewRef={previewRef}
-          bgColor={bgColor}
+          bgColor={canvasBg}
           tagsContainerRef={tagsContainerRef}
         >
           {tags.map((tag, index) => (
@@ -68,44 +70,3 @@ function ThumbnailMaker() {
 }
 
 export default ThumbnailMaker;
-
-type OverflowMessage = "vertical-overflow" | "horizontal-overflow";
-
-const useCheckTagContainerOverflow = () => {
-  const tagsContainerRef = useRef<HTMLDivElement>(null);
-
-  const showOverflowToast = (overflow: OverflowMessage) => {
-    if (overflow === "vertical-overflow") {
-      toast.error("공간이 부족해 태그를 더 이상 추가할 수 없습니다.", {
-        position: "top-right",
-      });
-    } else if (overflow === "horizontal-overflow") {
-      toast.error("너무 긴 태그는 추가할 수 없습니다.", {
-        position: "top-right",
-      });
-    }
-  };
-
-  const checkOverflow = (): false | OverflowMessage => {
-    if (tagsContainerRef.current) {
-      const { offsetWidth, scrollWidth, offsetHeight, scrollHeight } =
-        tagsContainerRef.current;
-      const hasHorizontalOverflow = scrollWidth > offsetWidth;
-      const hasVerticalOverflow = scrollHeight > offsetHeight;
-
-      if (hasVerticalOverflow) return "vertical-overflow";
-      if (hasHorizontalOverflow) return "horizontal-overflow";
-    }
-    return false;
-  };
-
-  return { tagsContainerRef, checkOverflow, showOverflowToast };
-};
-
-const usePreview = () => {
-  const previewRef = useRef<HTMLDivElement>(null);
-
-  const onDownload = () => {};
-
-  return { previewRef, onDownload };
-};
