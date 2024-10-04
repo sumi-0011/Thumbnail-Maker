@@ -1,3 +1,5 @@
+import { TagVariant, TagShape } from "./tag.types";
+
 export const PALLETTE = {
   gradient_blue: {
     bg: "linear-gradient(127deg, #8ECDF2 3.2%, #A0C8FC 21.06%, #A4C7FE 30.47%, #96BDFE 38.93%, #84B0FE 47.86%, #2B6FFF 97.22%)",
@@ -26,6 +28,13 @@ export const tagSize = {
     lineHeight: "normal",
   },
 };
+
+export const tagVariant: TagVariant[] = ["filled", "outlined", "ghost"];
+export const tagShape: TagShape[] = ["round", "squared"];
+
+export const tagStyleMap = tagVariant.flatMap((variant) =>
+  tagShape.map((shape) => ({ variant, shape }))
+);
 
 export const tagStyle = {
   "filled-round": {
