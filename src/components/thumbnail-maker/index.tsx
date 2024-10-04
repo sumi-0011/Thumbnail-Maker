@@ -74,7 +74,7 @@ function ThumbnailMaker() {
         Thumbnail Maker
       </h1>
       <AddTagSection onAction={handleAddTag} />
-      <div>
+      <div className="mt-4">
         <TagListInput onAction={handleAddTags} />
       </div>
       <div className="mt-8">

@@ -88,7 +88,7 @@ export function TagListInput({
   const [inputValue, setInputValue] = useState(dummy);
 
   return (
-    <div>
+    <div className="flex gap-4">
       <Input
         placeholder="태그 리스트 등록"
         value={inputValue}
