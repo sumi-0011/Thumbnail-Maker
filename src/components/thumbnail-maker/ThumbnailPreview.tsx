@@ -3,6 +3,9 @@ import { X } from "lucide-react";
 import { cn } from "src/lib/utils";
 import { canvasSize, tagSize, tagStyle } from "./constants";
 import { AddTagSection, TagShape, TagVariant } from "./AddTagSection";
+import { toast } from "src/hooks/use-toast";
+
+type OverflowMessage = "vertical-overflow" | "horizontal-overflow";
 
 function ThumbnailPreview({
   tags,
@@ -17,32 +20,24 @@ function ThumbnailPreview({
 }) {
   const tagsContainerRef = useRef<HTMLDivElement>(null);
 
-  const [overflowMessage, setOverflowMessage] = useState("");
-
-  const checkOverflow = () => {
+  const checkOverflow = (): false | OverflowMessage => {
     if (tagsContainerRef.current) {
       const { offsetWidth, scrollWidth, offsetHeight, scrollHeight } =
         tagsContainerRef.current;
       const hasHorizontalOverflow = scrollWidth > offsetWidth;
       const hasVerticalOverflow = scrollHeight > offsetHeight;
-      const newIsOverflowing = hasHorizontalOverflow || hasVerticalOverflow;
 
-      if (newIsOverflowing && hasHorizontalOverflow) {
-        setOverflowMessage("태그가 너무 깁니다. ");
-      }
-      if (newIsOverflowing && hasVerticalOverflow) {
-        setOverflowMessage(
-          "태그를 더 이상 추가할 수 없습니다. 공간이 부족합니다."
-        );
-      }
-
-      return newIsOverflowing;
+      if (hasVerticalOverflow) return "vertical-overflow";
+      if (hasHorizontalOverflow) return "horizontal-overflow";
     }
     return false;
   };
 
   useEffect(() => {
-    checkOverflow();
+    const overflow = checkOverflow();
+    if (overflow) {
+      showOverflowToast(overflow);
+    }
   }, [tags]);
 
   const handleRemoveTag = (index: number) => {
@@ -58,8 +53,8 @@ function ThumbnailPreview({
     requestAnimationFrame(() => {
       const overflow = checkOverflow();
       if (overflow) {
-        console.warn("태그를 더 이상 추가할 수 없습니다. 공간이 부족합니다.");
-        onTagsUpdate(tags, overflowMessage);
+        showOverflowToast(overflow);
+        onTagsUpdate(tags, overflow);
       }
     });
   };
@@ -132,3 +127,19 @@ function TagItem({
     </div>
   );
 }
+
+const showOverflowToast = (overflow: OverflowMessage) => {
+  if (overflow === "vertical-overflow") {
+    toast({
+      title: "태그 추가 실패",
+      variant: "destructive",
+      description: "공간이 부족해 태그를 더 이상 추가할 수 없습니다.",
+    });
+  } else if (overflow === "horizontal-overflow") {
+    toast({
+      title: "태그 추가 실패",
+      variant: "destructive",
+      description: "너무 긴 태그는 추가할 수 없습니다.",
+    });
+  }
+};
