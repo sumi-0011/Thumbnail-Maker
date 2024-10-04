@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { AddTagSection, TagShape, TagVariant } from "./AddTagSection";
 import ThumbnailPreview from "./ThumbnailPreview";
 import { PALLETTE } from "./constants";
+import { toast } from "src/hooks/use-toast";
 
 type Tag = { text: string; tagVariant: TagVariant; tagShape: TagShape };
 
@@ -48,9 +49,9 @@ const ThumbnailMaker = () => {
       <Button variant="secondary" onClick={handlePreview} className="mt-6">
         <Image size={20} style={{ marginRight: "10px" }} /> 이미지 다운로드
       </Button>{" "}
-      {isOverflowing && (
-        <div className="mt-2 text-red-500">{isOverflowing}</div>
-      )}
+      <Button onClick={() => toast({ title: "Scheduled: Catch up" })}>
+        Show Toast
+      </Button>
     </div>
   );
 };
