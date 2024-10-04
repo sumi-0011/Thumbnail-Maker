@@ -9,24 +9,9 @@ import {
 import { Button } from "../ui/button";
 import { Plus, SmilePlusIcon } from "lucide-react";
 import { useState } from "react";
+import { Tag, TagShape, TagVariant } from "./tag.types";
 
-export type TagVariant = "filled" | "outlined" | "ghost";
-export type TagShape = "round" | "squared";
-
-export function AddTagSection({
-  onAction,
-}: {
-  onAction: (
-    tag: {
-      text: string;
-      tagVariant: TagVariant;
-      tagShape: TagShape;
-    }
-    // inputValue: string,
-    // tagVariant: TagVariant,
-    // tagShape: TagShape
-  ) => void;
-}) {
+export function AddTagSection({ onAction }: { onAction: (tag: Tag) => void }) {
   const [inputValue, setInputValue] = useState("");
   const [tagVariant, setTagVariant] = useState<TagVariant>("filled");
   const [tagShape, setTagShape] = useState<TagShape>("round");
