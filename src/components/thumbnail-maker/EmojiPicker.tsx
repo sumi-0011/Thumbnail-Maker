@@ -3,6 +3,12 @@ import { Button } from "../ui/button";
 import { useRef, useState } from "react";
 import { SmilePlusIcon } from "lucide-react";
 import { useOutsideClick } from "src/hooks/use-outside-click";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 function EmojiPicker({ onAction }: { onAction: (emoji: EmojiType) => void }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,14 +18,24 @@ function EmojiPicker({ onAction }: { onAction: (emoji: EmojiType) => void }) {
 
   return (
     <div className="relative">
-      <Button
-        onClick={() => setIsOpen((prev) => !prev)}
-        variant="secondary"
-        size="icon"
-        className="h-[42px] min-w-[42px]"
-      >
-        <SmilePlusIcon size={18} color="#6A83FF" />
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button
+              onClick={() => setIsOpen((prev) => !prev)}
+              variant="secondary"
+              size="icon"
+              className="h-[42px] min-w-[42px]"
+            >
+              <SmilePlusIcon size={18} color="#6A83FF" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent sideOffset={8}>
+            <p>원하는 3D 이모지를 추가할 수 있어요!</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
       <div className="absolute right-0 z-10 mt-2" ref={pickerRef}>
         <Picker
           isOpen={isOpen}
