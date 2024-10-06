@@ -43,25 +43,31 @@ export const tagStyle = {
       "linear-gradient(120deg, #2EA1FF 14.35%, #5D9CFF 45.44%, #1F65FD 93.51%)",
     color: "#fff",
   },
-  "outlined-round": {
-    borderRadius: "52px",
-    border: "4px solid #FFF",
-    background: "rgba(255, 255, 255, 0.20)",
-  },
   "filled-squared": {
     borderRadius: "20px",
     color: "#3176FF",
     background: "#FFFFFF",
+  },
+  "filled-emoji": {},
+  "outlined-round": {
+    borderRadius: "52px",
+    border: "4px solid #FFF",
+    background: "rgba(255, 255, 255, 0.20)",
   },
   "outlined-squared": {
     background: "rgba(255, 255, 255, 0.20)",
     border: "4px solid #FFF",
     borderRadius: "20px",
   },
+  "outlined-emoji": {},
   "ghost-round": {
     background: "transparent",
   },
   "ghost-squared": {
     background: "transparent",
+  },
+  "ghost-emoji": {
+    padding: "0",
+    borderRadius: "0",
   },
 };

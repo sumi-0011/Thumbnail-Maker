@@ -28,6 +28,7 @@
     "i18next-browser-languagedetector": "^7.1.0",
     "i18next-resources-to-backend": "^1.1.4",
     "lucide-react": "^0.277.0",
+    "ms-3d-emoji-picker": "^1.4.1",
     "next-themes": "^0.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

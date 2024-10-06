@@ -16,12 +16,14 @@ export default function App() {
         <Toaster
           toastOptions={{
             classNames: {
-              title: "text-xl",
+              toast: "min-w-[400px]",
+              title: "text-base",
               icon: "w-6 h-6 icon-wrapper",
             },
           }}
+          className="min-w-[400px]"
           position="top-right"
-          duration={100000}
+          duration={1000}
         />
       </ThemeProvider>
       <ReactQueryDevtools />

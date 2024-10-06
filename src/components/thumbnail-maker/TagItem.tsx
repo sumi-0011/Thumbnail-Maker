@@ -39,7 +39,13 @@ export function TagItemView({ tag }: { tag: Tag }) {
         "relative flex min-w-fit max-w-full cursor-pointer items-center overflow-hidden truncate whitespace-nowrap rounded-full transition-all duration-300 ease-in-out"
       )}
     >
-      <span>{tag.text}</span>
+      <span>
+        {tag.tagContentType === "3d-emoji" ? (
+          <img src={tag.text.url} width={90} height={90} />
+        ) : (
+          tag.text
+        )}
+      </span>
     </div>
   );
 }
