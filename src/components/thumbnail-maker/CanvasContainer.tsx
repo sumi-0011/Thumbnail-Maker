@@ -1,4 +1,6 @@
+import { cn } from "src/lib/utils";
 import { canvasSize } from "./constants";
+import { useCurrentPaletteStyle } from "./Palette.context";
 
 export function CanvasContainer({
   previewRef,
@@ -11,16 +13,20 @@ export function CanvasContainer({
   tagsContainerRef: React.RefObject<HTMLDivElement>;
   children: React.ReactNode;
 }) {
+  const paletteStyle = useCurrentPaletteStyle();
   return (
     <div
       ref={previewRef}
+      key={paletteStyle.background}
       style={{
-        background: bgColor,
+        background: paletteStyle.background,
         aspectRatio: canvasSize.aspectRatio,
         padding: canvasSize.padding,
-        backgroundSize: "100%",
       }}
-      className="max-h-full w-[768px] overflow-hidden rounded-lg"
+      className={cn(
+        "max-h-full w-[768px] overflow-hidden rounded-lg ",
+        "bg-cover bg-center bg-no-repeat"
+      )}
     >
       <div
         ref={tagsContainerRef}

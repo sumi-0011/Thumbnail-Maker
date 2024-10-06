@@ -11,6 +11,7 @@ import { usePallette } from "./hooks/usePallette";
 import TagSheet from "./TagSheet";
 import PallettePicker from "./PallettePicker";
 import { cn } from "src/lib/utils";
+import { PaletteProvider } from "./Palette.context";
 
 function ThumbnailMaker() {
   const { canvasBg, tagStyle } = usePallette();
@@ -70,45 +71,46 @@ function ThumbnailMaker() {
       <h1 className="mb-7 text-center text-[80px] text-white">
         Thumbnail Maker
       </h1>
-      <AddTagSection onAction={handleAddTag} />
-      <CanvasContainer
-        previewRef={previewRef}
-        bgColor={canvasBg}
-        tagsContainerRef={tagsContainerRef}
-      >
-        {tags.map((tag, index) => (
-          <TagItem
-            key={index}
-            tag={tag}
-            paletteTagStyle={tagStyle}
-            onRemove={() => handleRemoveTag(index)}
-            onClick={() =>
-              tag.tagContentType !== "3d-emoji" && setOpenTagSheetIndex(index)
-            }
-            className={cn(
-              tag.tagContentType ? "cursor-default" : "cursor-pointer"
-            )}
-          />
-        ))}
-      </CanvasContainer>
-      <TagSheet
-        key={openTagSheetIndex}
-        isOpen={openTagSheetIndex !== null}
-        onClose={() => setOpenTagSheetIndex(null)}
-        paletteTagStyle={tagStyle}
-        tag={
-          openTagSheetIndex !== null
-            ? tags[openTagSheetIndex]
-            : { text: "", tagVariant: "filled", tagShape: "round" }
-        }
-        onAction={handleChangeTag}
-      />
-      <div className="flex items-center justify-between">
-        <PallettePicker />
-        <Button onClick={onDownload}>
-          <Image size={20} className="mr-2" /> Download Image
-        </Button>
-      </div>
+      <PaletteProvider>
+        <AddTagSection onAction={handleAddTag} />
+        <CanvasContainer
+          previewRef={previewRef}
+          bgColor={canvasBg}
+          tagsContainerRef={tagsContainerRef}
+        >
+          {tags.map((tag, index) => (
+            <TagItem
+              key={index}
+              tag={tag}
+              onRemove={() => handleRemoveTag(index)}
+              onClick={() =>
+                tag.tagContentType !== "3d-emoji" && setOpenTagSheetIndex(index)
+              }
+              className={cn(
+                tag.tagContentType ? "cursor-default" : "cursor-pointer"
+              )}
+            />
+          ))}
+        </CanvasContainer>
+        <TagSheet
+          key={openTagSheetIndex}
+          isOpen={openTagSheetIndex !== null}
+          onClose={() => setOpenTagSheetIndex(null)}
+          paletteTagStyle={tagStyle}
+          tag={
+            openTagSheetIndex !== null
+              ? tags[openTagSheetIndex]
+              : { text: "", tagVariant: "filled", tagShape: "round" }
+          }
+          onAction={handleChangeTag}
+        />
+        <div className="flex items-center justify-between">
+          <PallettePicker />
+          <Button onClick={onDownload}>
+            <Image size={20} className="mr-2" /> Download Image
+          </Button>
+        </div>
+      </PaletteProvider>
     </div>
   );
 }
