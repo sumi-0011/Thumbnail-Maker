@@ -43,7 +43,12 @@ export function TagItemView({ tag }: { tag: Tag }) {
     >
       <span>
         {tag.tagContentType === "3d-emoji" ? (
-          <img src={tag.text.url} width={90} height={90} />
+          <img
+            src={tag.text.url}
+            width={90}
+            height={90}
+            style={{ pointerEvents: "none" }}
+          />
         ) : (
           tag.text
         )}
