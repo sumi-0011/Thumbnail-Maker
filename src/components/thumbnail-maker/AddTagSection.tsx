@@ -10,6 +10,7 @@ import { Button } from "../ui/button";
 import { Plus, SmilePlusIcon } from "lucide-react";
 import { useState } from "react";
 import { Tag, TagShape, TagVariant } from "./tag.types";
+import EmojiPicker from "./EmojiPicker";
 
 export function AddTagSection({ onAction }: { onAction: (tag: Tag) => void }) {
   const [inputValue, setInputValue] = useState("");
@@ -47,7 +48,7 @@ export function AddTagSection({ onAction }: { onAction: (tag: Tag) => void }) {
         onValueChange={(value) => setTagVariant(value as TagVariant)}
         defaultValue="filled"
       >
-        <SelectTrigger className="w-[130px] ">
+        <SelectTrigger className="w-fit min-w-[120px]">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -61,7 +62,7 @@ export function AddTagSection({ onAction }: { onAction: (tag: Tag) => void }) {
         onValueChange={(value) => setTagShape(value as TagShape)}
         defaultValue="round"
       >
-        <SelectTrigger className="w-[130px] ">
+        <SelectTrigger className="w-fit min-w-[120px]">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -69,12 +70,19 @@ export function AddTagSection({ onAction }: { onAction: (tag: Tag) => void }) {
           <SelectItem value="squared">Squared</SelectItem>
         </SelectContent>
       </Select>
-      <Button onClick={onActionClick} variant="secondary" size="lg">
-        <Plus size={20} style={{ marginRight: "8px" }} /> Add Tag
+      <Button onClick={onActionClick}>
+        <Plus size={12} className="mr-3" /> Add
       </Button>
-      <Button onClick={onActionClick} variant="secondary">
-        <SmilePlusIcon size={20} />
-      </Button>
+      <EmojiPicker
+        onAction={(emoji) =>
+          onAction({
+            text: emoji,
+            tagContentType: "3d-emoji",
+            tagShape: "emoji",
+            tagVariant: "ghost",
+          })
+        }
+      />
     </div>
   );
 }

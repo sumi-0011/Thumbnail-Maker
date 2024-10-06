@@ -10,6 +10,7 @@ import { useCheckTagOverflow } from "./hooks/useCheckTagOverflow";
 import { usePreview } from "./hooks/usePreview";
 import { usePallette } from "./hooks/usePallette";
 import TagSheet from "./TagSheet";
+import PallettePicker from "./PallettePicker";
 
 function ThumbnailMaker() {
   const { canvasBg, tagStyle } = usePallette();
@@ -65,27 +66,25 @@ function ThumbnailMaker() {
   };
 
   return (
-    <div className="mx-auto max-w-[768px]">
+    <div className="mx-auto flex max-w-[768px] flex-col gap-4">
       <h1 className="mb-7 text-center text-[80px] text-white">
         Thumbnail Maker
       </h1>
       <AddTagSection onAction={handleAddTag} />
-      <div className="mt-8">
-        <CanvasContainer
-          previewRef={previewRef}
-          bgColor={canvasBg}
-          tagsContainerRef={tagsContainerRef}
-        >
-          {tags.map((tag, index) => (
-            <TagItem
-              key={index}
-              tag={tag}
-              onRemove={() => handleRemoveTag(index)}
-              onClick={() => setOpenTagSheetIndex(index)}
-            />
-          ))}
-        </CanvasContainer>
-      </div>
+      <CanvasContainer
+        previewRef={previewRef}
+        bgColor={canvasBg}
+        tagsContainerRef={tagsContainerRef}
+      >
+        {tags.map((tag, index) => (
+          <TagItem
+            key={index}
+            tag={tag}
+            onRemove={() => handleRemoveTag(index)}
+            onClick={() => setOpenTagSheetIndex(index)}
+          />
+        ))}
+      </CanvasContainer>
       <TagSheet
         key={openTagSheetIndex}
         isOpen={openTagSheetIndex !== null}
@@ -97,9 +96,12 @@ function ThumbnailMaker() {
         }
         onAction={handleChangeTag}
       />
-      <Button variant="secondary" onClick={onDownload} className="mt-6">
-        <Image size={20} style={{ marginRight: "10px" }} /> 이미지 다운로드
-      </Button>
+      <div className="flex items-center justify-between">
+        <PallettePicker />
+        <Button onClick={onDownload}>
+          <Image size={20} className="mr-2" /> Download Image
+        </Button>
+      </div>
     </div>
   );
 }
