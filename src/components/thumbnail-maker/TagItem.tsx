@@ -7,16 +7,18 @@ export function TagItem({
   tag,
   onRemove,
   onClick,
+  className,
 }: {
   tag: Tag;
   onRemove: () => void;
   onClick: () => void;
+  className?: string;
 }) {
   return (
-    <div className="group relative" onClick={onClick}>
+    <div className={cn("group relative", className)} onClick={onClick}>
       <TagItemView tag={tag} />
       <div
-        className="absolute -right-1 -top-1  hidden h-6 w-6 cursor-pointer justify-center rounded-full bg-white/80 p-0.5 align-middle group-hover:flex"
+        className="absolute -right-1 -top-1  hidden h-6 w-6 cursor-default justify-center rounded-full bg-white/80 p-0.5 align-middle group-hover:flex"
         onClick={(e) => {
           e.stopPropagation();
           onRemove();

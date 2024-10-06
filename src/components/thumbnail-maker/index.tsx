@@ -11,6 +11,7 @@ import { usePreview } from "./hooks/usePreview";
 import { usePallette } from "./hooks/usePallette";
 import TagSheet from "./TagSheet";
 import PallettePicker from "./PallettePicker";
+import { cn } from "src/lib/utils";
 
 function ThumbnailMaker() {
   const { canvasBg, tagStyle } = usePallette();
@@ -81,7 +82,12 @@ function ThumbnailMaker() {
             key={index}
             tag={tag}
             onRemove={() => handleRemoveTag(index)}
-            onClick={() => setOpenTagSheetIndex(index)}
+            onClick={() =>
+              tag.tagContentType !== "3d-emoji" && setOpenTagSheetIndex(index)
+            }
+            className={cn(
+              tag.tagContentType ? "cursor-default" : "cursor-pointer"
+            )}
           />
         ))}
       </CanvasContainer>
