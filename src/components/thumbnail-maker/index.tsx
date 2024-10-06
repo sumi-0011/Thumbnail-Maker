@@ -7,14 +7,12 @@ import { CanvasContainer } from "./CanvasContainer";
 import { TagItem } from "./TagItem";
 import { useCheckTagOverflow } from "./hooks/useCheckTagOverflow";
 import { usePreview } from "./hooks/usePreview";
-import { usePallette } from "./hooks/usePallette";
 import TagSheet from "./TagSheet";
 import PallettePicker from "./PallettePicker";
 import { cn } from "src/lib/utils";
 import { PaletteProvider } from "./Palette.context";
 
 function ThumbnailMaker() {
-  const { canvasBg, tagStyle } = usePallette();
   const { previewRef, onDownload } = usePreview();
   const { tagsContainerRef, checkOverflow, showOverflowToast } =
     useCheckTagOverflow();
@@ -75,7 +73,6 @@ function ThumbnailMaker() {
         <AddTagSection onAction={handleAddTag} />
         <CanvasContainer
           previewRef={previewRef}
-          bgColor={canvasBg}
           tagsContainerRef={tagsContainerRef}
         >
           {tags.map((tag, index) => (
@@ -96,7 +93,6 @@ function ThumbnailMaker() {
           key={openTagSheetIndex}
           isOpen={openTagSheetIndex !== null}
           onClose={() => setOpenTagSheetIndex(null)}
-          paletteTagStyle={tagStyle}
           tag={
             openTagSheetIndex !== null
               ? tags[openTagSheetIndex]

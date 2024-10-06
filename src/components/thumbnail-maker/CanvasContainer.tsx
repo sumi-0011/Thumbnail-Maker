@@ -4,12 +4,10 @@ import { useCurrentPaletteStyle } from "./Palette.context";
 
 export function CanvasContainer({
   previewRef,
-  bgColor,
   tagsContainerRef,
   children,
 }: {
   previewRef: React.RefObject<HTMLDivElement>;
-  bgColor: string;
   tagsContainerRef: React.RefObject<HTMLDivElement>;
   children: React.ReactNode;
 }) {

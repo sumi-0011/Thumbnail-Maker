@@ -13,20 +13,21 @@ import { Button } from "../ui/button";
 import { TagItemView } from "./TagItem";
 import { Input } from "../ui/input";
 import { PaletteTagStyle, tagStyleMap } from "./pallette.constants";
+import { getTagStyleKey } from "./utils";
+import { useCurrentPaletteStyle } from "./Palette.context";
 
 function TagSheet({
   isOpen,
   onClose,
   tag: initTag,
   onAction,
-  paletteTagStyle,
 }: {
   isOpen: boolean;
   onClose: () => void;
   tag: Tag;
   onAction: (newTag: Tag) => void;
-  paletteTagStyle: PaletteTagStyle;
 }) {
+  const paletteStyle = useCurrentPaletteStyle();
   const [tag, setTag] = useState<Tag>(initTag);
 
   const onSaveClick = () => {
@@ -44,7 +45,7 @@ function TagSheet({
           <div className="flex min-h-[200px] scale-50 items-center justify-center">
             <TagItemView
               tag={tag}
-              tagStyle={paletteTagStyle[`${tag.tagVariant}-${tag.tagShape}`]}
+              tagStyle={paletteStyle.tagStyle[getTagStyleKey(tag)]}
             />
           </div>
           <div>
@@ -62,6 +63,7 @@ function TagSheet({
                   ...tag,
                   tagVariant: style.variant,
                   tagShape: style.shape,
+                  text: "tag",
                 };
 
                 return (
@@ -73,9 +75,7 @@ function TagSheet({
                     <TagItemView
                       tag={currentTag}
                       tagStyle={
-                        paletteTagStyle[
-                          `${currentTag.tagVariant}-${currentTag.tagShape}`
-                        ]
+                        paletteStyle.tagStyle[getTagStyleKey(currentTag)]
                       }
                     />
                   </button>
