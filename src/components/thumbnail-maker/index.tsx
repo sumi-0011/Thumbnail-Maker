@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Image } from "lucide-react";
 import { Button } from "../ui/button";
-import { PALLETTE } from "./constants";
 import { Tag } from "./tag.types";
 import { AddTagSection } from "./AddTagSection";
 import { CanvasContainer } from "./CanvasContainer";
@@ -81,6 +80,7 @@ function ThumbnailMaker() {
           <TagItem
             key={index}
             tag={tag}
+            paletteTagStyle={tagStyle}
             onRemove={() => handleRemoveTag(index)}
             onClick={() =>
               tag.tagContentType !== "3d-emoji" && setOpenTagSheetIndex(index)
@@ -95,6 +95,7 @@ function ThumbnailMaker() {
         key={openTagSheetIndex}
         isOpen={openTagSheetIndex !== null}
         onClose={() => setOpenTagSheetIndex(null)}
+        paletteTagStyle={tagStyle}
         tag={
           openTagSheetIndex !== null
             ? tags[openTagSheetIndex]

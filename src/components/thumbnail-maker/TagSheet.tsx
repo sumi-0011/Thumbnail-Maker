@@ -12,18 +12,20 @@ import { Tag } from "./tag.types";
 import { Button } from "../ui/button";
 import { TagItemView } from "./TagItem";
 import { Input } from "../ui/input";
-import { tagStyleMap } from "./constants";
+import { PaletteTagStyle, tagStyleMap } from "./pallette.constants";
 
 function TagSheet({
   isOpen,
   onClose,
   tag: initTag,
   onAction,
+  paletteTagStyle,
 }: {
   isOpen: boolean;
   onClose: () => void;
   tag: Tag;
   onAction: (newTag: Tag) => void;
+  paletteTagStyle: PaletteTagStyle;
 }) {
   const [tag, setTag] = useState<Tag>(initTag);
 
@@ -40,7 +42,10 @@ function TagSheet({
         </SheetHeader>
         <div className="flex min-w-fit flex-col gap-4 overflow-y-auto">
           <div className="flex min-h-[200px] scale-50 items-center justify-center">
-            <TagItemView tag={tag} />
+            <TagItemView
+              tag={tag}
+              tagStyle={paletteTagStyle[`${tag.tagVariant}-${tag.tagShape}`]}
+            />
           </div>
           <div>
             <p className="mb-4 text-sm text-white">태그 텍스트</p>
@@ -65,7 +70,14 @@ function TagSheet({
                     className="h-fit w-fit origin-top-left scale-50 transform transition-all duration-300 ease-in-out"
                     onClick={() => setTag(currentTag)}
                   >
-                    <TagItemView tag={currentTag} />
+                    <TagItemView
+                      tag={currentTag}
+                      tagStyle={
+                        paletteTagStyle[
+                          `${currentTag.tagVariant}-${currentTag.tagShape}`
+                        ]
+                      }
+                    />
                   </button>
                 );
               })}

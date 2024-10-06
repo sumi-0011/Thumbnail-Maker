@@ -18,6 +18,7 @@ export function CanvasContainer({
         background: bgColor,
         aspectRatio: canvasSize.aspectRatio,
         padding: canvasSize.padding,
+        backgroundSize: "100%",
       }}
       className="max-h-full w-[768px] overflow-hidden rounded-lg"
     >
