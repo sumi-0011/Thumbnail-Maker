@@ -11,6 +11,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { Tag, TagShape, TagVariant } from "./assets/palette.types";
 import { EmojiPicker } from "./EmojiPicker";
+
 interface Props {
   onAction: (tag: Tag) => void;
 }
