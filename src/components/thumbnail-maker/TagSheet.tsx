@@ -67,13 +67,9 @@ function TagSheet({ isOpen, onClose, tag: initTag, onAction }: Props) {
                 return (
                   <button
                     key={getTagStyleKey(currentTag)}
+                    type="button"
                     className="h-fit w-fit origin-top-left scale-50 transform transition-all duration-300 ease-in-out"
-                    onClick={() =>
-                      setTag({
-                        ...currentTag,
-                        text: tag.text,
-                      })
-                    }
+                    onClick={() => setTag({ ...currentTag, text: tag.text })}
                   >
                     <TagItemView
                       tag={currentTag}

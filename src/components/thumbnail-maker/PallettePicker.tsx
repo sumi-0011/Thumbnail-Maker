@@ -1,6 +1,6 @@
 import { cn } from "src/lib/utils";
 import { usePalette, usePaletteAction } from "./Palette.context";
-import { PALETTE } from "./assets/pallette.constants";
+import { PALETTE } from "./assets/palette.constants";
 import { PaletteVariant } from "./assets/palette.types";
 
 export function PallettePicker() {
@@ -10,7 +10,7 @@ export function PallettePicker() {
   return (
     <div className="flex gap-1.5">
       {Object.entries(PALETTE).map(([variant, palette]) => (
-        <div
+        <button
           key={variant}
           className={cn(
             "h-8 w-8 rounded-[4px]",
@@ -19,7 +19,9 @@ export function PallettePicker() {
           )}
           style={{ background: palette.paletteBackground }}
           onClick={() => onPaletteChange(variant as PaletteVariant)}
-        ></div>
+          aria-label={`Select ${variant} palette`}
+          aria-pressed={currentPalette === variant}
+        />
       ))}
     </div>
   );

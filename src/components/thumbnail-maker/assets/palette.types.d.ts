@@ -10,7 +10,7 @@ export type Tag = {
   tagContentType?: TagContentType;
 };
 
-export type PalletTag = `${TagVariant}-${TagShape}`;
+export type PaletteTag = `${TagVariant}-${TagShape}`;
 
 export type PaletteVariant =
   | "blue_gradient"
@@ -24,7 +24,7 @@ export type PaletteVariant =
   | "orange_light"
   | "pink_light";
 
-export type PaletteTagStyle = { [key in PalletTag]: CSSProperties };
+export type PaletteTagStyle = { [key in PaletteTag]: CSSProperties };
 
 export type PaletteStyle = {
   background: string;

@@ -1,5 +1,5 @@
 import { createContext, PropsWithChildren, useContext, useState } from "react";
-import { PALETTE } from "./assets/pallette.constants";
+import { PALETTE } from "./assets/palette.constants";
 import { PaletteVariant } from "./assets/palette.types";
 
 interface PaletteContextType {
