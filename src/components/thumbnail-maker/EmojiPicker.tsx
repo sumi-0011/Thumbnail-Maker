@@ -10,7 +10,11 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 
-function EmojiPicker({ onAction }: { onAction: (emoji: EmojiType) => void }) {
+interface Props {
+  onAction: (emoji: EmojiType) => void;
+}
+
+export function EmojiPicker({ onAction }: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   const pickerRef = useRef(null);
@@ -47,5 +51,3 @@ function EmojiPicker({ onAction }: { onAction: (emoji: EmojiType) => void }) {
     </div>
   );
 }
-
-export default EmojiPicker;

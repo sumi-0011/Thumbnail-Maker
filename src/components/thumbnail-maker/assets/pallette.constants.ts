@@ -1,18 +1,6 @@
-import { CSSProperties } from "react";
+import { PaletteStyle, PaletteVariant } from "./palette.types";
 
-export const tagVariant = ["filled", "outlined", "ghost"] as const;
-export const tagShape = ["round", "squared", "emoji"] as const;
-
-type TagVariant = (typeof tagVariant)[number];
-type TagShape = (typeof tagShape)[number];
-
-export type PalletTag = `${TagVariant}-${TagShape}`;
-
-export const tagStyleMap = tagVariant.flatMap((variant) =>
-  tagShape.map((shape) => ({ variant, shape }))
-);
-
-export const paletteVariant = [
+export const paletteVariant: PaletteVariant[] = [
   "blue_gradient",
   "rose_gradient",
   "yellow_dark",
@@ -24,27 +12,6 @@ export const paletteVariant = [
   "orange_light",
   "pink_light",
 ] as const;
-export type PaletteVariant =
-  | "blue_gradient"
-  | "rose_gradient"
-  | "yellow_dark"
-  | "green_dark"
-  | "blue_dark"
-  | "purple_light"
-  | "blue_light"
-  | "green_light"
-  | "orange_light"
-  | "pink_light";
-
-export type PaletteTagStyle = { [key in PalletTag]: CSSProperties };
-
-export type PaletteStyle = {
-  background: string;
-  paletteBackground: string;
-  tagStyle: {
-    [key in PalletTag]: CSSProperties;
-  };
-};
 
 export const PALETTE: Record<PaletteVariant, PaletteStyle> = {
   blue_gradient: {

@@ -1,16 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { Image } from "lucide-react";
 import { Button } from "../ui/button";
-import { Tag } from "./tag.types";
 import { AddTagSection } from "./AddTagSection";
 import { CanvasContainer } from "./CanvasContainer";
 import { TagItem } from "./TagItem";
 import { useCheckTagOverflow } from "./hooks/useCheckTagOverflow";
 import { usePreview } from "./hooks/usePreview";
 import TagSheet from "./TagSheet";
-import PallettePicker from "./PallettePicker";
+import { PallettePicker } from "./PallettePicker";
 import { cn } from "src/lib/utils";
 import { PaletteProvider } from "./Palette.context";
+import { Tag } from "./assets/palette.types";
 
 function ThumbnailMaker() {
   const { previewRef, onDownload } = usePreview();

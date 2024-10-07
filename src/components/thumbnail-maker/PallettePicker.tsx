@@ -1,14 +1,9 @@
-import React from "react";
-import {
-  PALETTE,
-  PaletteStyle,
-  PaletteVariant,
-  paletteVariant,
-} from "./pallette.constants";
 import { cn } from "src/lib/utils";
 import { usePalette, usePaletteAction } from "./Palette.context";
+import { PALETTE } from "./assets/pallette.constants";
+import { PaletteVariant } from "./assets/palette.types";
 
-function PallettePicker() {
+export function PallettePicker() {
   const { currentPalette } = usePalette();
   const { onPaletteChange } = usePaletteAction();
 
@@ -19,8 +14,8 @@ function PallettePicker() {
           key={variant}
           className={cn(
             "h-8 w-8 rounded-[4px]",
-            currentPalette === variant ? "border-[1px] border-white" : "",
-            "bg-cover"
+            "bg-cover",
+            currentPalette === variant ? "border-[1px] border-white" : ""
           )}
           style={{ background: palette.paletteBackground }}
           onClick={() => onPaletteChange(variant as PaletteVariant)}
@@ -29,5 +24,3 @@ function PallettePicker() {
     </div>
   );
 }
-
-export default PallettePicker;

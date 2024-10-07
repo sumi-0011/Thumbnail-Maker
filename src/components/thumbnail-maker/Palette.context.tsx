@@ -1,10 +1,6 @@
-import React, {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useState,
-} from "react";
-import { PALETTE, PaletteVariant } from "./pallette.constants";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
+import { PALETTE } from "./assets/pallette.constants";
+import { PaletteVariant } from "./assets/palette.types";
 
 interface PaletteContextType {
   currentPalette: PaletteVariant;

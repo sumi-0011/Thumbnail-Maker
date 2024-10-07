@@ -1,16 +1,18 @@
 import { cn } from "src/lib/utils";
-import { canvasSize } from "./constants";
+import { canvasSize } from "./assets/size.constants";
 import { useCurrentPaletteStyle } from "./Palette.context";
+
+interface Props {
+  previewRef: React.RefObject<HTMLDivElement>;
+  tagsContainerRef: React.RefObject<HTMLDivElement>;
+  children: React.ReactNode;
+}
 
 export function CanvasContainer({
   previewRef,
   tagsContainerRef,
   children,
-}: {
-  previewRef: React.RefObject<HTMLDivElement>;
-  tagsContainerRef: React.RefObject<HTMLDivElement>;
-  children: React.ReactNode;
-}) {
+}: Props) {
   const paletteStyle = useCurrentPaletteStyle();
   return (
     <div

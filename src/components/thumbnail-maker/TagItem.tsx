@@ -1,23 +1,19 @@
 import { X } from "lucide-react";
 import { cn } from "src/lib/utils";
-import { Tag } from "./tag.types";
-import { PaletteTagStyle } from "./pallette.constants";
-import { tagSize } from "./constants";
+import { tagSize } from "./assets/size.constants";
 import { CSSProperties } from "react";
-import { getTagStyleKey } from "./utils";
+import { getTagStyleKey } from "./assets/utils";
 import { useCurrentPaletteStyle } from "./Palette.context";
+import { Tag } from "./assets/palette.types";
 
-export function TagItem({
-  tag,
-  onRemove,
-  onClick,
-  className,
-}: {
+interface Props {
   tag: Tag;
   onRemove: () => void;
   onClick: () => void;
   className?: string;
-}) {
+}
+
+export function TagItem({ tag, onRemove, onClick, className }: Props) {
   const paletteStyle = useCurrentPaletteStyle();
   return (
     <div className={cn("group relative", className)} onClick={onClick}>
@@ -38,13 +34,12 @@ export function TagItem({
   );
 }
 
-export function TagItemView({
-  tag,
-  tagStyle,
-}: {
+interface TagItemViewProps {
   tag: Tag;
   tagStyle: CSSProperties;
-}) {
+}
+
+export function TagItemView({ tag, tagStyle }: TagItemViewProps) {
   return (
     <div
       style={{

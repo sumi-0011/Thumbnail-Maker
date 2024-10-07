@@ -1,5 +1,4 @@
-import { PalletTag } from "./pallette.constants";
-import { Tag } from "./types";
+import { Tag, PalletTag } from "./palette.types";
 
 export const getTagStyleKey = (tag: Tag) => {
   return `${tag.tagVariant}-${tag.tagShape}` as PalletTag;

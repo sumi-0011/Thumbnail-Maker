@@ -1,5 +1,3 @@
-import { TagVariant, TagShape } from "./tag.types";
-
 export const canvasSize = {
   aspectRatio: "1080/565",
   padding: "40px 50px",

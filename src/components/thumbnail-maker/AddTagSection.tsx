@@ -7,12 +7,15 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
-import { Plus, SmilePlusIcon } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useState } from "react";
-import { Tag, TagShape, TagVariant } from "./tag.types";
-import EmojiPicker from "./EmojiPicker";
+import { Tag, TagShape, TagVariant } from "./assets/palette.types";
+import { EmojiPicker } from "./EmojiPicker";
+interface Props {
+  onAction: (tag: Tag) => void;
+}
 
-export function AddTagSection({ onAction }: { onAction: (tag: Tag) => void }) {
+export function AddTagSection({ onAction }: Props) {
   const [inputValue, setInputValue] = useState("");
   const [tagVariant, setTagVariant] = useState<TagVariant>("filled");
   const [tagShape, setTagShape] = useState<TagShape>("round");
