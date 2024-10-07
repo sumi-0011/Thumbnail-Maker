@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 import { cn } from "src/lib/utils";
-import { CSSProperties } from "react";
+import { CSSProperties, useEffect } from "react";
 import { getTagStyleKey } from "./assets/utils";
 import { useCurrentPaletteStyle } from "./Palette.context";
 import { Tag } from "./assets/palette.types";
@@ -40,6 +40,17 @@ interface TagItemViewProps {
 }
 
 export function TagItemView({ tag, tagStyle }: TagItemViewProps) {
+  const src =
+    "https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/3d-emoji/1st_place_medal_3d.png";
+  const fuc = async () => {
+    const image = await fetch(src);
+    console.log("image: ", image);
+  };
+
+  useEffect(() => {
+    fuc();
+  }, []);
+
   return (
     <div
       className={cn(
@@ -50,7 +61,8 @@ export function TagItemView({ tag, tagStyle }: TagItemViewProps) {
       <span>
         {tag.tagContentType === "3d-emoji" ? (
           <img
-            src={tag.text.url}
+            src={src}
+            // src={tag.text.url}
             width={90}
             height={90}
             style={{ pointerEvents: "none" }}

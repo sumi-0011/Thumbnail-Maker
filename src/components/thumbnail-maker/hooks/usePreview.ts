@@ -12,7 +12,13 @@ export const usePreview = () => {
 
     try {
       const div = previewRef.current;
-      const canvas = await html2canvas(div, { scale: 2 });
+      const canvas = await html2canvas(previewRef.current, {
+        allowTaint: true,
+        useCORS: true,
+      });
+
+      console.log("canvas: ", canvas);
+      // const canvas = await html2canvas(div, { scale: 2 });
       canvas.toBlob((blob) => {
         if (blob !== null) {
           saveAs(blob, "result.png");
