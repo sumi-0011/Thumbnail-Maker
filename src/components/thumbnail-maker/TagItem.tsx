@@ -1,10 +1,10 @@
 import { X } from "lucide-react";
 import { cn } from "src/lib/utils";
-import { tagSize } from "./assets/size.constants";
 import { CSSProperties } from "react";
 import { getTagStyleKey } from "./assets/utils";
 import { useCurrentPaletteStyle } from "./Palette.context";
 import { Tag } from "./assets/palette.types";
+import { cva } from "class-variance-authority";
 
 interface Props {
   tag: Tag;
@@ -42,13 +42,10 @@ interface TagItemViewProps {
 export function TagItemView({ tag, tagStyle }: TagItemViewProps) {
   return (
     <div
-      style={{
-        ...tagSize.base,
-        ...tagStyle,
-      }}
       className={cn(
-        "relative flex min-w-fit max-w-full cursor-pointer select-none items-center overflow-hidden truncate whitespace-nowrap rounded-full transition-all duration-300 ease-in-out"
+        tagVariants({ variant: tag.tagVariant, shape: tag.tagShape })
       )}
+      style={tagStyle}
     >
       <span>
         {tag.tagContentType === "3d-emoji" ? (
@@ -65,3 +62,50 @@ export function TagItemView({ tag, tagStyle }: TagItemViewProps) {
     </div>
   );
 }
+
+const tagVariants = cva(
+  "relative flex min-w-fit max-w-full cursor-pointer select-none items-center overflow-hidden truncate whitespace-nowrap rounded-full transition-all duration-300 ease-in-out",
+  {
+    variants: {
+      variant: {
+        filled: "px-6",
+        outlined: "px-6 border-[4px] border-white/70 bg-white/10 text-white",
+        ghost: "px-3 bg-transparent color-white",
+      },
+      size: {
+        base: "h-[90px] text-[48px] font-bold leading-[90px]",
+      },
+      shape: {
+        round: "rounded-[45px]",
+        squared: "rounded-[16px]",
+        emoji: "rounded-0 p-0",
+      },
+    },
+    compoundVariants: [
+      {
+        variant: "filled",
+        shape: "round",
+        className: "filled-round",
+      },
+      {
+        variant: "filled",
+        shape: "squared",
+        className: "filled-squared",
+      },
+      {
+        variant: "outlined",
+        shape: "round",
+        className: "outlined-round",
+      },
+      {
+        variant: "outlined",
+        shape: "squared",
+        className: "outlined-squared",
+      },
+    ],
+    defaultVariants: {
+      variant: "filled",
+      size: "base",
+    },
+  }
+);

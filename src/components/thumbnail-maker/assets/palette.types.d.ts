@@ -29,5 +29,5 @@ export type PaletteTagStyle = { [key in PalletTag]: CSSProperties };
 export type PaletteStyle = {
   background: string;
   paletteBackground: string;
-  tagStyle: PaletteTagStyle;
+  tagStyle: Partial<PaletteTagStyle>;
 };
