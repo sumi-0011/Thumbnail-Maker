@@ -25,6 +25,7 @@
     "@transmart/cli": "^0.2.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "emoji-picker-element": "^1.22.8",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
     "i18next": "^23.5.1",
