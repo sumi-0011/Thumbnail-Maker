@@ -90,7 +90,6 @@ function ThumbnailMaker() {
           ))}
         </CanvasContainer>
         <TagSheet
-          key={openTagSheetIndex}
           isOpen={openTagSheetIndex !== null}
           onClose={() => setOpenTagSheetIndex(null)}
           tag={

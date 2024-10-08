@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   SheetContent,
   SheetHeader,
@@ -16,10 +16,10 @@ import { Tag, TagShape, TagVariant } from "./assets/palette.types";
 
 const selectTagStyleMap: { variant: TagVariant; shape: TagShape }[] = [
   { variant: "filled", shape: "round" },
-  { variant: "filled", shape: "squared" },
   { variant: "outlined", shape: "round" },
-  { variant: "outlined", shape: "squared" },
   { variant: "ghost", shape: "squared" },
+  { variant: "filled", shape: "squared" },
+  { variant: "outlined", shape: "squared" },
 ];
 
 interface Props {
@@ -33,6 +33,11 @@ function TagSheet({ isOpen, onClose, tag: initTag, onAction }: Props) {
   const paletteStyle = useCurrentPaletteStyle();
   const [tag, setTag] = useState<Tag>(initTag);
 
+  useEffect(() => {
+    if (!initTag.text) return;
+    setTag(initTag);
+  }, [initTag]);
+
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent inner="center">
@@ -40,35 +45,36 @@ function TagSheet({ isOpen, onClose, tag: initTag, onAction }: Props) {
           <SheetTitle>Change Tag</SheetTitle>
           <SheetDescription>Try changing the tag as you want!</SheetDescription>
         </SheetHeader>
-        <div className="flex min-w-fit flex-col gap-4 overflow-y-auto">
-          <div className="flex min-h-[200px] scale-50 items-center justify-center">
+        <div className="flex min-w-fit flex-col overflow-y-auto pt-[14px]">
+          <div className="mb-12 flex min-h-[120px] w-full items-center justify-center rounded-[8px] bg-[#212129]">
             <TagItemView
               tag={tag}
               tagStyle={paletteStyle.tagStyle[getTagStyleKey(tag)]}
+              size="small"
             />
           </div>
-          <div>
-            <p className="mb-4 text-sm text-white">태그 텍스트</p>
+          <div className="mb-8">
+            <p className="mb-3 text-[13px] text-[#9292A1]">Tag text</p>
             <Input
               value={tag.text}
               onChange={(e) => setTag({ ...tag, text: e.target.value })}
             />
           </div>
           <div>
-            <p className="mb-4 text-sm text-white">태그 스타일</p>
-            <div className="flex flex-wrap gap-2">
+            <p className="mb-5 text-[13px] text-[#9292A1]">Tag style</p>
+            <div className="grid grid-cols-3 gap-4">
               {selectTagStyleMap.map((style) => {
                 const currentTag: Tag = {
                   tagVariant: style.variant,
                   tagShape: style.shape,
-                  text: "tag",
+                  text: "TAG",
                 };
 
                 return (
                   <button
                     key={getTagStyleKey(currentTag)}
                     type="button"
-                    className="h-fit w-fit origin-top-left scale-50 transform transition-all duration-300 ease-in-out"
+                    className="h-fit w-fit origin-top-left transform transition-all duration-300 ease-in-out"
                     onClick={() => setTag({ ...currentTag, text: tag.text })}
                   >
                     <TagItemView
@@ -76,6 +82,7 @@ function TagSheet({ isOpen, onClose, tag: initTag, onAction }: Props) {
                       tagStyle={
                         paletteStyle.tagStyle[getTagStyleKey(currentTag)]
                       }
+                      size="small"
                     />
                   </button>
                 );
@@ -83,8 +90,11 @@ function TagSheet({ isOpen, onClose, tag: initTag, onAction }: Props) {
             </div>
           </div>
         </div>
-        <SheetFooter>
-          <Button onClick={() => onAction(tag)}>Save changes</Button>
+        <SheetFooter className="mt-[96px] flex justify-center gap-2 sm:justify-center">
+          <Button onClick={() => onAction(tag)} variant="secondary">
+            Delete
+          </Button>
+          <Button onClick={() => onAction(tag)}>Save</Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>

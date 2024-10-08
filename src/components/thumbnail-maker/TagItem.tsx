@@ -37,13 +37,18 @@ export function TagItem({ tag, onRemove, onClick, className }: Props) {
 interface TagItemViewProps {
   tag: Tag;
   tagStyle: CSSProperties;
+  size?: "base" | "small";
 }
 
-export function TagItemView({ tag, tagStyle }: TagItemViewProps) {
+export function TagItemView({
+  tag,
+  tagStyle,
+  size = "base",
+}: TagItemViewProps) {
   return (
     <div
       className={cn(
-        tagVariants({ variant: tag.tagVariant, shape: tag.tagShape })
+        tagVariants({ variant: tag.tagVariant, shape: tag.tagShape, size })
       )}
       style={tagStyle}
     >
@@ -74,6 +79,7 @@ const tagVariants = cva(
       },
       size: {
         base: "h-[90px] text-[48px] font-bold leading-[90px]",
+        small: "h-[48px] text-[24px] font-bold leading-[48px] px-3",
       },
       shape: {
         round: "rounded-[45px]",
@@ -83,24 +89,24 @@ const tagVariants = cva(
     },
     compoundVariants: [
       {
-        variant: "filled",
         shape: "round",
-        className: "filled-round",
+        size: "small",
+        className: "px-3 rounded-[24px]",
       },
       {
-        variant: "filled",
         shape: "squared",
-        className: "filled-squared",
+        size: "small",
+        className: "px-3 rounded-[8px]",
       },
       {
         variant: "outlined",
-        shape: "round",
-        className: "outlined-round",
+        size: "small",
+        className: "border-[2px] border-white/70",
       },
       {
-        variant: "outlined",
-        shape: "squared",
-        className: "outlined-squared",
+        variant: "ghost",
+        size: "small",
+        className: "px-[7px]",
       },
     ],
     defaultVariants: {
