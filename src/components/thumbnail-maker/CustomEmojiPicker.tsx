@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import ThreeDEmojiMap from "src/assets/emojis/3d-emoji-map.json";
+import { cn } from "src/lib/utils";
 
 const categories = Object.keys(ThreeDEmojiMap);
 console.log("categories: ", categories);
@@ -33,6 +34,7 @@ type EmojiType = {
   group: string;
   keywords: string[];
   unicode: string;
+  image: string;
 };
 
 interface Props {
@@ -40,7 +42,7 @@ interface Props {
 }
 
 const getImage = (emoji: EmojiType) => {
-  return `https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/3d-fluent-emojis/${emoji.group}/${emoji.cldr}/3D/${emoji.cldr}_3d.png`;
+  return `https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/3d-fluent-emojis/${emoji.image}`;
 };
 
 const CustomEmojiPicker = ({}: Props) => {
@@ -69,7 +71,6 @@ const CustomEmojiPicker = ({}: Props) => {
         {categories.map((category) => {
           const emojis =
             ThreeDEmojiMap[category as keyof typeof ThreeDEmojiMap];
-          console.log("emojis: ", emojis);
           return (
             <TabsContent
               value={category}
@@ -77,7 +78,11 @@ const CustomEmojiPicker = ({}: Props) => {
             >
               <div className="flex flex-wrap gap-1">
                 {Object.values(emojis).map((emoji, index) => (
-                  <button key={index} onClick={() => handleEmojiClick(emoji)}>
+                  <button
+                    key={index}
+                    onClick={() => handleEmojiClick(emoji)}
+                    className={emoji.cldr}
+                  >
                     <EmojiItem emoji={emoji} />
                   </button>
                 ))}
@@ -121,7 +126,12 @@ function EmojiItem({ emoji }: { emoji: EmojiType }) {
   }
 
   return (
-    <div className="flex-0 flex h-[38px] w-[38px] items-center justify-center">
+    <div
+      className={cn(
+        emoji.cldr,
+        "flex-0 flex h-[38px] w-[38px] items-center justify-center"
+      )}
+    >
       <img
         width={24}
         height={24}
