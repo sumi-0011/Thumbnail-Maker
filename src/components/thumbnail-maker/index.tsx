@@ -11,6 +11,7 @@ import { PallettePicker } from "./PallettePicker";
 import { cn } from "src/lib/utils";
 import { PaletteProvider } from "./Palette.context";
 import { Tag } from "./assets/palette.types";
+import Drag from "./Drag";
 
 function ThumbnailMaker() {
   const { previewRef, onDownload } = usePreview();
@@ -106,6 +107,9 @@ function ThumbnailMaker() {
           </Button>
         </div>
       </PaletteProvider>
+      <div className="flex flex-wrap items-center gap-4">
+        <Drag />
+      </div>
     </div>
   );
 }
