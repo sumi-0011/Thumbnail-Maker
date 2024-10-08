@@ -40,17 +40,6 @@ interface TagItemViewProps {
 }
 
 export function TagItemView({ tag, tagStyle }: TagItemViewProps) {
-  const src =
-    "https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/3d-emoji/1st_place_medal_3d.png";
-  const fuc = async () => {
-    const image = await fetch(src);
-    console.log("image: ", image);
-  };
-
-  useEffect(() => {
-    fuc();
-  }, []);
-
   return (
     <div
       className={cn(
@@ -61,8 +50,7 @@ export function TagItemView({ tag, tagStyle }: TagItemViewProps) {
       <span>
         {tag.tagContentType === "3d-emoji" ? (
           <img
-            src={src}
-            // src={tag.text.url}
+            src={`https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/3d-fluent-emojis${tag.text.image}`}
             width={90}
             height={90}
             style={{ pointerEvents: "none" }}

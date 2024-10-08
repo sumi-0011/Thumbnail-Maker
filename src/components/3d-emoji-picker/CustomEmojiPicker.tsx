@@ -2,79 +2,51 @@ import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import ThreeDEmojiMap from "src/assets/emojis/3d-emoji-map.json";
 import { cn } from "src/lib/utils";
-
-const categories = Object.keys(ThreeDEmojiMap);
-console.log("categories: ", categories);
-// [
-//   "animals&nature",
-//   "flags",
-//   "travel&places",
-//   "smileys&emotion",
-//   "objects",
-//   "food&drink",
-//   "symbols",
-//   "activities",
-//   "people&body"
-// ]
-
-const CategoryEmojiMap = {
-  "animals&nature": "🐶",
-  flags: "🚩",
-  "travel&places": "🛫",
-  "smileys&emotion": "😊",
-  objects: "🔍",
-  "food&drink": "🍔",
-  symbols: "✡️",
-  activities: "⚽️",
-  "people&body": "👤",
-};
-type EmojiType = {
-  cldr: string;
-  glyph: string;
-  group: string;
-  keywords: string[];
-  unicode: string;
-  image: string;
-};
+import { EmojiType } from "./index.types";
+import {
+  THREE_D__EMOJI_CATEGORIES,
+  THREE_D_EMOJI_CATEGORY_EMOJI_MAP,
+} from "./index.constants";
 
 interface Props {
-  // onEmojiSelect: (emoji: EmojiType) => void;
+  onEmojiSelect: (emoji: EmojiType) => void;
 }
 
 const getImage = (emoji: EmojiType) => {
   return `https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/3d-fluent-emojis/${emoji.image}`;
 };
 
-const CustomEmojiPicker = ({}: Props) => {
-  const [selectedTab, setSelectedTab] = useState("animals&nature");
+const CustomEmojiPicker = ({ onEmojiSelect }: Props) => {
+  // const [selectedTab, setSelectedTab] = useState("animals&nature");
 
   const handleEmojiClick = (emoji: EmojiType) => {
-    console.log("emoji: ", emoji);
-    // if (onEmojiSelect) {
-    //   onEmojiSelect(emoji);
-    // }
+    onEmojiSelect(emoji);
   };
 
   return (
-    <div className="h-[360px] max-w-[360px] rounded-lg border shadow-md">
-      <Tabs defaultValue="animals&nature" onValueChange={setSelectedTab}>
-        <TabsList className="flex h-[38px] gap-1 p-0">
-          {categories.map((category) => (
+    <div className="h-[360px] max-w-[360px] rounded-lg border bg-[#1D2027] shadow-md">
+      <Tabs defaultValue="animals&nature">
+        <TabsList className="flex h-[38px] gap-1 p-1">
+          {THREE_D__EMOJI_CATEGORIES.map((category) => (
             <TabsTrigger
               className="h-[38px] w-[38px] flex-1 p-0 text-[28px]"
               value={category}
             >
-              {CategoryEmojiMap[category as keyof typeof CategoryEmojiMap]}
+              {
+                THREE_D_EMOJI_CATEGORY_EMOJI_MAP[
+                  category as keyof typeof THREE_D_EMOJI_CATEGORY_EMOJI_MAP
+                ]
+              }
             </TabsTrigger>
           ))}
         </TabsList>
-        {categories.map((category) => {
+        {THREE_D__EMOJI_CATEGORIES.map((category) => {
           const emojis =
             ThreeDEmojiMap[category as keyof typeof ThreeDEmojiMap];
           return (
             <TabsContent
               value={category}
-              className="mt-4 max-h-[300px] overflow-y-auto"
+              className="mt-4 max-h-[300px] overflow-y-auto p-1"
             >
               <div className="flex flex-wrap gap-1">
                 {Object.values(emojis).map((emoji, index) => (

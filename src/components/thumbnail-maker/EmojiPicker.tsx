@@ -8,8 +8,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-
-type EmojiType = any;
+import CustomEmojiPicker, {
+  EmojiType,
+} from "../3d-emoji-picker/CustomEmojiPicker";
+import { cn } from "src/lib/utils";
 
 interface Props {
   onAction: (emoji: EmojiType) => void;
@@ -41,7 +43,14 @@ export function EmojiPicker({ onAction }: Props) {
         </Tooltip>
       </TooltipProvider>
 
-      <div className="absolute right-0 z-10 mt-2" ref={pickerRef}>
+      <div
+        className={cn(
+          "absolute right-0 z-10 mt-2",
+          isOpen ? "block" : "hidden"
+        )}
+        ref={pickerRef}
+      >
+        <CustomEmojiPicker onEmojiSelect={onAction} />
         {/* <Picker
           isOpen={isOpen}
           handleEmojiSelect={(selectedEmoji: EmojiType) => {
