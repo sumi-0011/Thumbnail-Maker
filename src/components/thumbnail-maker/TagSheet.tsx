@@ -33,6 +33,7 @@ function TagSheet({ isOpen, onClose, tag: initTag, onAction }: Props) {
   const paletteStyle = useCurrentPaletteStyle();
   const [tag, setTag] = useState<Tag>(initTag);
 
+  // NOTE: sheet open animation을 위해 useEffect 사용
   useEffect(() => {
     if (!initTag.text) return;
     setTag(initTag);
