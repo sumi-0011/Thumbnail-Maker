@@ -101,7 +101,7 @@ const tagVariants = cva(
       {
         variant: "outlined",
         size: "small",
-        className: "border-[2px] border-white/70",
+        className: "!border-[2px] border-white/70",
       },
       {
         variant: "ghost",
