@@ -64,7 +64,7 @@ export function TagItemView({ tag, tagStyle }: TagItemViewProps) {
 }
 
 const tagVariants = cva(
-  "relative flex min-w-fit max-w-full cursor-pointer select-none items-center overflow-hidden truncate whitespace-nowrap rounded-full transition-all duration-300 ease-in-out",
+  "relative flex min-w-fit max-w-full cursor-pointer select-none items-center overflow-hidden truncate whitespace-nowrap transition-all duration-300 ease-in-out",
   {
     variants: {
       variant: {

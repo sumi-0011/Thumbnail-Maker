@@ -11,14 +11,14 @@ import {
 
 import { cn } from "src/lib/utils";
 import { EmojiType } from "../3d-emoji-picker";
-import CustomEmojiPicker from "../3d-emoji-picker/CustomEmojiPicker";
+import { ThreeDEmojiPicker } from "../3d-emoji-picker";
 
 interface Props {
   onAction: (emoji: EmojiType) => void;
 }
 
 export function EmojiPicker({ onAction }: Props) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const pickerRef = useRef(null);
   useOutsideClick(pickerRef, () => setIsOpen(false));
@@ -50,14 +50,7 @@ export function EmojiPicker({ onAction }: Props) {
         )}
         ref={pickerRef}
       >
-        <CustomEmojiPicker onEmojiSelect={onAction} />
-        {/* <Picker
-          isOpen={isOpen}
-          handleEmojiSelect={(selectedEmoji: EmojiType) => {
-            console.log("selectedEmoji: ", selectedEmoji);
-            onAction(selectedEmoji);
-          }}
-        /> */}
+        <ThreeDEmojiPicker onEmojiSelect={onAction} />
       </div>
     </div>
   );

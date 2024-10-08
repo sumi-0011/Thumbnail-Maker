@@ -11,7 +11,6 @@ import { PallettePicker } from "./PallettePicker";
 import { cn } from "src/lib/utils";
 import { PaletteProvider } from "./Palette.context";
 import { Tag } from "./assets/palette.types";
-import EmojiPicker from "../3d-emoji-picker/CustomEmojiPicker";
 
 function ThumbnailMaker() {
   const { previewRef, onDownload } = usePreview();

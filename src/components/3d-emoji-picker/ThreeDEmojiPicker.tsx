@@ -16,9 +16,7 @@ const getImage = (emoji: EmojiType) => {
   return `https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/3d-fluent-emojis/${emoji.image}`;
 };
 
-const CustomEmojiPicker = ({ onEmojiSelect }: Props) => {
-  // const [selectedTab, setSelectedTab] = useState("animals&nature");
-
+export const ThreeDEmojiPicker = ({ onEmojiSelect }: Props) => {
   const handleEmojiClick = (emoji: EmojiType) => {
     onEmojiSelect(emoji);
   };
@@ -26,10 +24,10 @@ const CustomEmojiPicker = ({ onEmojiSelect }: Props) => {
   return (
     <div className="h-[360px] max-w-[360px] rounded-lg border bg-[#1D2027] shadow-md">
       <Tabs defaultValue="animals&nature">
-        <TabsList className="flex h-[38px] gap-1 p-1">
+        <TabsList className="flex gap-1 py-1 ">
           {THREE_D__EMOJI_CATEGORIES.map((category) => (
             <TabsTrigger
-              className="h-[38px] w-[38px] flex-1 p-0 text-[28px]"
+              className="h-9 w-9 flex-1 px-1 py-0 text-[24px]"
               value={category}
             >
               {
@@ -46,7 +44,7 @@ const CustomEmojiPicker = ({ onEmojiSelect }: Props) => {
           return (
             <TabsContent
               value={category}
-              className="mt-4 max-h-[300px] overflow-y-auto p-1"
+              className="max-h-[300px] overflow-y-auto p-1"
             >
               <div className="flex flex-wrap gap-1">
                 {Object.values(emojis).map((emoji, index) => (
@@ -67,8 +65,6 @@ const CustomEmojiPicker = ({ onEmojiSelect }: Props) => {
   );
 };
 
-export default CustomEmojiPicker;
-
 function EmojiItem({ emoji }: { emoji: EmojiType }) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -86,13 +82,13 @@ function EmojiItem({ emoji }: { emoji: EmojiType }) {
 
   if (isLoading) {
     return (
-      <div className="flex-0 h-[38px] w-[38px] animate-pulse rounded bg-gray-200"></div>
+      <div className="flex-0 h-[38px] w-[38px] animate-pulse rounded bg-gray-700"></div>
     );
   }
 
   if (hasError) {
     return (
-      <div className="flex-0 flex h-[38px] w-[38px] items-center justify-center bg-red-100 text-red-500">
+      <div className="flex-0 flex h-[38px] w-[38px] items-center justify-center bg-red-100/50 text-red-500">
         !
       </div>
     );
@@ -106,11 +102,11 @@ function EmojiItem({ emoji }: { emoji: EmojiType }) {
       )}
     >
       <img
-        width={24}
-        height={24}
+        width={32}
+        height={32}
         src={getImage(emoji)}
         alt={emoji.cldr}
-        className="h-7 w-7 object-contain"
+        className="h-8 w-8 object-contain"
       />
     </div>
   );
