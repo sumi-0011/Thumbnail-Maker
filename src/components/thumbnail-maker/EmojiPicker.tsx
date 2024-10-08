@@ -8,17 +8,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import CustomEmojiPicker, {
-  EmojiType,
-} from "../3d-emoji-picker/CustomEmojiPicker";
+
 import { cn } from "src/lib/utils";
+import { EmojiType } from "../3d-emoji-picker";
+import CustomEmojiPicker from "../3d-emoji-picker/CustomEmojiPicker";
 
 interface Props {
   onAction: (emoji: EmojiType) => void;
 }
 
 export function EmojiPicker({ onAction }: Props) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const pickerRef = useRef(null);
   useOutsideClick(pickerRef, () => setIsOpen(false));

@@ -80,6 +80,7 @@ function EmojiItem({ emoji }: { emoji: EmojiType }) {
     img.onerror = () => {
       setIsLoading(false);
       setHasError(true);
+      console.log("emoji", emoji.cldr, emoji.group);
     };
   }, [emoji]);
 
