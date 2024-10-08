@@ -1,35 +1,37 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetDescription,
   Sheet,
-  SheetClose,
   SheetFooter,
 } from "../ui/sheet";
-import { Tag } from "./tag.types";
 import { Button } from "../ui/button";
 import { TagItemView } from "./TagItem";
 import { Input } from "../ui/input";
-import { tagStyleMap } from "./constants";
+import { getTagStyleKey } from "./assets/utils";
+import { useCurrentPaletteStyle } from "./Palette.context";
+import { Tag, TagShape, TagVariant } from "./assets/palette.types";
 
-function TagSheet({
-  isOpen,
-  onClose,
-  tag: initTag,
-  onAction,
-}: {
+const selectTagStyleMap: { variant: TagVariant; shape: TagShape }[] = [
+  { variant: "filled", shape: "round" },
+  { variant: "filled", shape: "squared" },
+  { variant: "outlined", shape: "round" },
+  { variant: "outlined", shape: "squared" },
+  { variant: "ghost", shape: "squared" },
+];
+
+interface Props {
   isOpen: boolean;
   onClose: () => void;
   tag: Tag;
   onAction: (newTag: Tag) => void;
-}) {
-  const [tag, setTag] = useState<Tag>(initTag);
+}
 
-  const onSaveClick = () => {
-    onAction(tag);
-  };
+function TagSheet({ isOpen, onClose, tag: initTag, onAction }: Props) {
+  const paletteStyle = useCurrentPaletteStyle();
+  const [tag, setTag] = useState<Tag>(initTag);
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -40,7 +42,10 @@ function TagSheet({
         </SheetHeader>
         <div className="flex min-w-fit flex-col gap-4 overflow-y-auto">
           <div className="flex min-h-[200px] scale-50 items-center justify-center">
-            <TagItemView tag={tag} />
+            <TagItemView
+              tag={tag}
+              tagStyle={paletteStyle.tagStyle[getTagStyleKey(tag)]}
+            />
           </div>
           <div>
             <p className="mb-4 text-sm text-white">태그 텍스트</p>
@@ -52,20 +57,26 @@ function TagSheet({
           <div>
             <p className="mb-4 text-sm text-white">태그 스타일</p>
             <div className="flex flex-wrap gap-2">
-              {tagStyleMap.map((style) => {
-                const currentTag = {
-                  ...tag,
+              {selectTagStyleMap.map((style) => {
+                const currentTag: Tag = {
                   tagVariant: style.variant,
                   tagShape: style.shape,
+                  text: "tag",
                 };
 
                 return (
                   <button
-                    key={style.variant + style.shape}
+                    key={getTagStyleKey(currentTag)}
+                    type="button"
                     className="h-fit w-fit origin-top-left scale-50 transform transition-all duration-300 ease-in-out"
-                    onClick={() => setTag(currentTag)}
+                    onClick={() => setTag({ ...currentTag, text: tag.text })}
                   >
-                    <TagItemView tag={currentTag} />
+                    <TagItemView
+                      tag={currentTag}
+                      tagStyle={
+                        paletteStyle.tagStyle[getTagStyleKey(currentTag)]
+                      }
+                    />
                   </button>
                 );
               })}
@@ -73,9 +84,7 @@ function TagSheet({
           </div>
         </div>
         <SheetFooter>
-          {/* <SheetClose asChild> */}
-          <Button onClick={onSaveClick}>Save changes</Button>
-          {/* </SheetClose> */}
+          <Button onClick={() => onAction(tag)}>Save changes</Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>
