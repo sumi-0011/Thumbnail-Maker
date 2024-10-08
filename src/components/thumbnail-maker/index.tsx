@@ -67,10 +67,10 @@ function ThumbnailMaker() {
 
   return (
     <div className="mx-auto flex max-w-[768px] flex-col gap-4">
-      <h1 className="mb-7 text-center text-[80px] text-white">
+      {/* <h1 className="mb-7 text-center text-[80px] text-white">
         Thumbnail Maker
-      </h1>
-      <PaletteProvider>
+      </h1> */}
+      {/* <PaletteProvider>
         <AddTagSection onAction={handleAddTag} />
         <CanvasContainer
           previewRef={previewRef}
@@ -107,7 +107,7 @@ function ThumbnailMaker() {
             <Image size={20} className="mr-2" /> Download Image
           </Button>
         </div>
-      </PaletteProvider>
+      </PaletteProvider> */}
       <EmojiPicker />
     </div>
   );
