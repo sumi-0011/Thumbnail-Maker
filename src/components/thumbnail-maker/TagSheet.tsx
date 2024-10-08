@@ -35,10 +35,10 @@ function TagSheet({ isOpen, onClose, tag: initTag, onAction }: Props) {
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent>
+      <SheetContent inner="center">
         <SheetHeader>
-          <SheetTitle>태그 변경하기</SheetTitle>
-          <SheetDescription>원하는대로 태그를 변경해보세요!</SheetDescription>
+          <SheetTitle>Change Tag</SheetTitle>
+          <SheetDescription>Try changing the tag as you want!</SheetDescription>
         </SheetHeader>
         <div className="flex min-w-fit flex-col gap-4 overflow-y-auto">
           <div className="flex min-h-[200px] scale-50 items-center justify-center">
