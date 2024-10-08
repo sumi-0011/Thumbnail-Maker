@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 import { cn } from "src/lib/utils";
-import { CSSProperties, useEffect } from "react";
+import { CSSProperties } from "react";
 import { getTagStyleKey } from "./assets/utils";
 import { useCurrentPaletteStyle } from "./Palette.context";
 import { Tag } from "./assets/palette.types";

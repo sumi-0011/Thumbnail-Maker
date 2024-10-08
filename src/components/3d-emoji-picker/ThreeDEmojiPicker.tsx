@@ -4,7 +4,7 @@ import ThreeDEmojiMap from "src/assets/emojis/3d-emoji-map.json";
 import { cn } from "src/lib/utils";
 import { EmojiType } from "./index.types";
 import {
-  THREE_D__EMOJI_CATEGORIES,
+  THREE_D_EMOJI_CATEGORIES,
   THREE_D_EMOJI_CATEGORY_EMOJI_MAP,
 } from "./index.constants";
 
@@ -25,8 +25,9 @@ export const ThreeDEmojiPicker = ({ onEmojiSelect }: Props) => {
     <div className="h-[360px] max-w-[360px] rounded-lg border bg-[#1D2027] shadow-md">
       <Tabs defaultValue="animals&nature">
         <TabsList className="flex gap-1 py-1 ">
-          {THREE_D__EMOJI_CATEGORIES.map((category) => (
+          {THREE_D_EMOJI_CATEGORIES.map((category) => (
             <TabsTrigger
+              key={category}
               className="h-9 w-9 flex-1 px-1 py-0 text-[24px]"
               value={category}
             >
@@ -38,11 +39,12 @@ export const ThreeDEmojiPicker = ({ onEmojiSelect }: Props) => {
             </TabsTrigger>
           ))}
         </TabsList>
-        {THREE_D__EMOJI_CATEGORIES.map((category) => {
+        {THREE_D_EMOJI_CATEGORIES.map((category) => {
           const emojis =
             ThreeDEmojiMap[category as keyof typeof ThreeDEmojiMap];
           return (
             <TabsContent
+              key={category}
               value={category}
               className="max-h-[300px] overflow-y-auto p-1"
             >
@@ -50,6 +52,7 @@ export const ThreeDEmojiPicker = ({ onEmojiSelect }: Props) => {
                 {Object.values(emojis).map((emoji, index) => (
                   <button
                     key={index}
+                    type="button"
                     onClick={() => handleEmojiClick(emoji)}
                     className={emoji.cldr}
                   >
@@ -76,13 +79,12 @@ function EmojiItem({ emoji }: { emoji: EmojiType }) {
     img.onerror = () => {
       setIsLoading(false);
       setHasError(true);
-      console.log("emoji", emoji.cldr, emoji.group);
     };
   }, [emoji]);
 
   if (isLoading) {
     return (
-      <div className="flex-0 h-[38px] w-[38px] animate-pulse rounded bg-gray-700"></div>
+      <div className="flex-0 h-[38px] w-[38px] animate-pulse rounded bg-gray-700" />
     );
   }
 
