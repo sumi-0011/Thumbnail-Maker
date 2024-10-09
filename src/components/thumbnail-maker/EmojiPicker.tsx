@@ -1,4 +1,3 @@
-import { Picker, EmojiType } from "ms-3d-emoji-picker";
 import { Button } from "../ui/button";
 import { useRef, useState } from "react";
 import { SmilePlusIcon } from "lucide-react";
@@ -9,6 +8,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+
+import { cn } from "src/lib/utils";
+import { EmojiType } from "../3d-emoji-picker";
+import { ThreeDEmojiPicker } from "../3d-emoji-picker";
 
 interface Props {
   onAction: (emoji: EmojiType) => void;
@@ -40,13 +43,14 @@ export function EmojiPicker({ onAction }: Props) {
         </Tooltip>
       </TooltipProvider>
 
-      <div className="absolute right-0 z-10 mt-2" ref={pickerRef}>
-        <Picker
-          isOpen={isOpen}
-          handleEmojiSelect={(selectedEmoji: EmojiType) =>
-            onAction(selectedEmoji)
-          }
-        />
+      <div
+        className={cn(
+          "absolute right-0 z-10 mt-2",
+          isOpen ? "block" : "hidden"
+        )}
+        ref={pickerRef}
+      >
+        <ThreeDEmojiPicker onEmojiSelect={onAction} />
       </div>
     </div>
   );

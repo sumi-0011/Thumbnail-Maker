@@ -50,7 +50,7 @@ export function TagItemView({ tag, tagStyle }: TagItemViewProps) {
       <span>
         {tag.tagContentType === "3d-emoji" ? (
           <img
-            src={tag.text.url}
+            src={`https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/3d-fluent-emojis${tag.text.image}`}
             width={90}
             height={90}
             style={{ pointerEvents: "none" }}
@@ -64,7 +64,7 @@ export function TagItemView({ tag, tagStyle }: TagItemViewProps) {
 }
 
 const tagVariants = cva(
-  "relative flex min-w-fit max-w-full cursor-pointer select-none items-center overflow-hidden truncate whitespace-nowrap rounded-full transition-all duration-300 ease-in-out",
+  "relative flex min-w-fit max-w-full cursor-pointer select-none items-center overflow-hidden truncate whitespace-nowrap transition-all duration-300 ease-in-out",
   {
     variants: {
       variant: {
