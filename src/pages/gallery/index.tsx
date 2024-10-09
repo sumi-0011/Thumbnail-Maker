@@ -15,14 +15,17 @@ export default function GalleryPage() {
       <Helmet>
         <title>Thumbnail Maker</title>
       </Helmet>
-      <div className="grid grid-cols-3 gap-4">
-        {templates.map((template) => (
-          <GalleryItem
-            key={template.id}
-            template={template}
-            onClick={onItemClick}
-          />
-        ))}
+      <div className="mx-auto max-w-[1024px]">
+        <h1 className="text-2xl font-bold">Gallery</h1>
+        <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3">
+          {templates.map((template) => (
+            <GalleryItem
+              key={template.id}
+              template={template}
+              onClick={onItemClick}
+            />
+          ))}
+        </div>
       </div>
     </>
   );
