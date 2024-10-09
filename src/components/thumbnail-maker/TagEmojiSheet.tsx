@@ -13,6 +13,7 @@ import { Input } from "../ui/input";
 import { getTagStyleKey } from "./assets/utils";
 import { useCurrentPaletteStyle } from "./Palette.context";
 import { Tag, TagShape, TagVariant } from "./assets/palette.types";
+import { EmojiType, ThreeDEmojiPicker } from "../3d-emoji-picker";
 
 const selectTagStyleMap: { variant: TagVariant; shape: TagShape }[] = [
   { variant: "filled", shape: "round" },
@@ -32,7 +33,7 @@ interface Props {
   onRemove: () => void;
 }
 
-function TagSheet({
+function TagEmojiSheet({
   isOpen,
   onClose,
   tag: initTag,
@@ -42,8 +43,8 @@ function TagSheet({
   const paletteStyle = useCurrentPaletteStyle();
   const [tag, setTag] = useState<Tag>(initTag);
 
-  const onChangeTagStyle = (variant: TagVariant, shape: TagShape) => {
-    setTag({ ...tag, tagVariant: variant, tagShape: shape });
+  const onChangeEmoji = (emoji: EmojiType) => {
+    setTag({ ...tag, content: { type: "3d-emoji", value: emoji } });
   };
 
   // NOTE: sheet open animation을 위해 useEffect 사용
@@ -54,10 +55,12 @@ function TagSheet({
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent inner="center">
+      <SheetContent inner="center" className="!max-w-[410px] px-6">
         <SheetHeader>
-          <SheetTitle>Change Tag</SheetTitle>
-          <SheetDescription>Try changing the tag as you want!</SheetDescription>
+          <SheetTitle>Change Emoji</SheetTitle>
+          <SheetDescription>
+            Try changing the emoji as you want!
+          </SheetDescription>
         </SheetHeader>
         <div className="flex min-w-fit flex-col overflow-y-auto pt-[14px]">
           <div className="mb-12 flex min-h-[120px] w-full items-center justify-center rounded-[8px] bg-[#212129]">
@@ -67,47 +70,8 @@ function TagSheet({
               size="small"
             />
           </div>
-          <div className="mb-8">
-            <p className="mb-3 text-[13px] text-[#9292A1]">Tag text</p>
-            <Input
-              value={tag.content.value}
-              onChange={(e) =>
-                setTag({
-                  ...tag,
-                  content: { ...tag.content, value: e.target.value },
-                })
-              }
-            />
-          </div>
           <div>
-            <p className="mb-5 text-[13px] text-[#9292A1]">Tag style</p>
-            <div className="grid grid-cols-3 gap-4">
-              {selectTagStyleMap.map((style) => {
-                const currentTag: Tag = {
-                  id: 0,
-                  tagVariant: style.variant,
-                  tagShape: style.shape,
-                  content: { type: "text", value: "TAG" },
-                };
-
-                return (
-                  <button
-                    key={getTagStyleKey(currentTag)}
-                    type="button"
-                    className="h-fit w-fit origin-top-left transform transition-all duration-300 ease-in-out"
-                    onClick={() => onChangeTagStyle(style.variant, style.shape)}
-                  >
-                    <TagItemView
-                      tag={currentTag}
-                      tagStyle={
-                        paletteStyle.tagStyle[getTagStyleKey(currentTag)]
-                      }
-                      size="small"
-                    />
-                  </button>
-                );
-              })}
-            </div>
+            <ThreeDEmojiPicker onEmojiSelect={onChangeEmoji} />
           </div>
         </div>
         <SheetFooter className="mt-[96px] flex justify-center gap-2 sm:justify-center">
@@ -121,4 +85,4 @@ function TagSheet({
   );
 }
 
-export default TagSheet;
+export default TagEmojiSheet;
