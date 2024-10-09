@@ -5480,6 +5480,11 @@ use-sidecar@^1.1.2:
     detect-node-es "^1.1.0"
     tslib "^2.0.0"
 
+use-storage-state@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/use-storage-state/-/use-storage-state-5.0.0.tgz#afc0bae2f546fd9db2903aa275aaa59268e77f64"
+  integrity sha512-YT1lR2p1mMecj1Cjl9440hZrjhYjRiBMmpoxFWK31s2aDbSmVMnZBXO4qyz5/x4IdWOWjvIQMaDRn2uwqVidQQ==
+
 use-sync-external-store@^1.2.0:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.2.tgz#c3b6390f3a30eba13200d2302dcdf1e7b57b2ef9"

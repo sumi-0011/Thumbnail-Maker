@@ -1,4 +1,4 @@
-import { useStorageState } from "@toss/react";
+import useStorageState from "use-storage-state";
 import { THUMBNAIL_MAKER_STORAGE_KEY } from "../assets/constants";
 import { Tag } from "../assets/palette.types";
 import { useRef } from "react";
