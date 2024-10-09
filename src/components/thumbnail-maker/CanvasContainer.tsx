@@ -15,25 +15,24 @@ export function CanvasContainer({
 }: Props) {
   const paletteStyle = useCurrentPaletteStyle();
   return (
-    <div
-      ref={previewRef}
-      key={paletteStyle.background}
-      style={{
-        background: paletteStyle.background,
-        aspectRatio: canvasSize.aspectRatio,
-        padding: canvasSize.padding,
-      }}
-      className={cn(
-        "max-h-full w-[768px] overflow-hidden rounded-lg ",
-        "bg-cover bg-center bg-no-repeat"
-      )}
-    >
+    <div className="max-h-full w-[768px] overflow-hidden rounded-lg">
       <div
-        ref={tagsContainerRef}
-        style={{ gap: canvasSize.gap }}
-        className="flex h-full flex-wrap content-start"
+        ref={previewRef}
+        key={paletteStyle.background}
+        style={{
+          background: paletteStyle.background,
+          aspectRatio: canvasSize.aspectRatio,
+          padding: canvasSize.padding,
+        }}
+        className={cn("bg-cover bg-center bg-no-repeat")}
       >
-        {children}
+        <div
+          ref={tagsContainerRef}
+          style={{ gap: canvasSize.gap }}
+          className="flex h-full flex-wrap content-start"
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
