@@ -5,6 +5,7 @@ import { getTagStyleKey } from "./assets/utils";
 import { useCurrentPaletteStyle } from "./Palette.context";
 import { Tag } from "./assets/palette.types";
 import { cva } from "class-variance-authority";
+import { get3DEmojiImage } from "../3d-emoji-picker";
 
 interface Props {
   tag: Tag;
@@ -53,15 +54,15 @@ export function TagItemView({
       style={tagStyle}
     >
       <span>
-        {tag.tagContentType === "3d-emoji" ? (
+        {tag.content.type === "3d-emoji" ? (
           <img
-            src={`https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/3d-fluent-emojis${tag.text.image}`}
+            src={get3DEmojiImage(tag.content.value)}
             width={90}
             height={90}
             style={{ pointerEvents: "none" }}
           />
         ) : (
-          tag.text
+          tag.content.value
         )}
       </span>
     </div>

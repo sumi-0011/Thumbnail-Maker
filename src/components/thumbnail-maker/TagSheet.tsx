@@ -25,8 +25,10 @@ const selectTagStyleMap: { variant: TagVariant; shape: TagShape }[] = [
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+
   tag: Tag;
-  onAction: (newTag: Tag) => void;
+
+  onStyleChange: (newTag: Tag) => void;
   onRemove: () => void;
 }
 
@@ -34,15 +36,19 @@ function TagSheet({
   isOpen,
   onClose,
   tag: initTag,
-  onAction,
+  onStyleChange,
   onRemove,
 }: Props) {
   const paletteStyle = useCurrentPaletteStyle();
   const [tag, setTag] = useState<Tag>(initTag);
 
+  const onChangeTagStyle = (variant: TagVariant, shape: TagShape) => {
+    setTag({ ...tag, tagVariant: variant, tagShape: shape });
+  };
+
   // NOTE: sheet open animation을 위해 useEffect 사용
   useEffect(() => {
-    if (!initTag.text) return;
+    if (!initTag.content.value) return;
     setTag(initTag);
   }, [initTag]);
 
@@ -64,8 +70,13 @@ function TagSheet({
           <div className="mb-8">
             <p className="mb-3 text-[13px] text-[#9292A1]">Tag text</p>
             <Input
-              value={tag.text}
-              onChange={(e) => setTag({ ...tag, text: e.target.value })}
+              value={tag.content.value}
+              onChange={(e) =>
+                setTag({
+                  ...tag,
+                  content: { ...tag.content, value: e.target.value },
+                })
+              }
             />
           </div>
           <div>
@@ -73,9 +84,10 @@ function TagSheet({
             <div className="grid grid-cols-3 gap-4">
               {selectTagStyleMap.map((style) => {
                 const currentTag: Tag = {
+                  id: 0,
                   tagVariant: style.variant,
                   tagShape: style.shape,
-                  text: "TAG",
+                  content: { type: "text", value: "TAG" },
                 };
 
                 return (
@@ -83,7 +95,7 @@ function TagSheet({
                     key={getTagStyleKey(currentTag)}
                     type="button"
                     className="h-fit w-fit origin-top-left transform transition-all duration-300 ease-in-out"
-                    onClick={() => setTag({ ...currentTag, text: tag.text })}
+                    onClick={() => onChangeTagStyle(style.variant, style.shape)}
                   >
                     <TagItemView
                       tag={currentTag}
@@ -102,7 +114,7 @@ function TagSheet({
           <Button onClick={onRemove} variant="secondary">
             Delete
           </Button>
-          <Button onClick={() => onAction(tag)}>Save</Button>
+          <Button onClick={() => onStyleChange(tag)}>Save</Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>

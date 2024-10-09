@@ -81,10 +81,10 @@ function ThumbnailMaker() {
               tag={tag}
               onRemove={() => handleRemoveTag(index)}
               onClick={() =>
-                tag.tagContentType !== "3d-emoji" && setOpenTagSheetIndex(index)
+                tag.content.type !== "3d-emoji" && setOpenTagSheetIndex(index)
               }
               className={cn(
-                tag.tagContentType ? "cursor-default" : "cursor-pointer"
+                tag.content.type !== "3d-emoji" && "cursor-pointer"
               )}
             />
           ))}
@@ -95,9 +95,14 @@ function ThumbnailMaker() {
           tag={
             openTagSheetIndex !== null
               ? tags[openTagSheetIndex]
-              : { text: "", tagVariant: "filled", tagShape: "round" }
+              : {
+                  id: 0,
+                  content: { type: "text", value: "" },
+                  tagVariant: "filled",
+                  tagShape: "round",
+                }
           }
-          onAction={handleChangeTag}
+          onStyleChange={handleChangeTag}
           onRemove={() => {
             if (openTagSheetIndex === null) return;
             handleRemoveTag(openTagSheetIndex);

@@ -11,6 +11,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { Tag, TagShape, TagVariant } from "./assets/palette.types";
 import { EmojiPicker } from "./EmojiPicker";
+import { EmojiType } from "../3d-emoji-picker";
 
 interface Props {
   onAction: (tag: Tag) => void;
@@ -23,13 +24,31 @@ export function AddTagSection({ onAction }: Props) {
 
   const onActionClick = async () => {
     if (inputValue.trim() === "") return;
+    const id = new Date().getTime();
 
     onAction({
-      text: inputValue,
+      id,
+      content: {
+        type: "text",
+        value: inputValue,
+      },
       tagVariant: tagVariant,
       tagShape: tagShape,
     });
     setInputValue("");
+  };
+
+  const onEmojiClick = (emoji: EmojiType) => {
+    const id = new Date().getTime();
+    onAction({
+      id,
+      content: {
+        type: "3d-emoji",
+        value: emoji,
+      },
+      tagShape: "emoji",
+      tagVariant: "ghost",
+    });
   };
 
   return (
@@ -77,16 +96,7 @@ export function AddTagSection({ onAction }: Props) {
       <Button onClick={onActionClick}>
         <Plus size={12} className="mr-3" /> Add
       </Button>
-      <EmojiPicker
-        onAction={(emoji) =>
-          onAction({
-            text: emoji,
-            tagContentType: "3d-emoji",
-            tagShape: "emoji",
-            tagVariant: "ghost",
-          })
-        }
-      />
+      <EmojiPicker onAction={onEmojiClick} />
     </div>
   );
 }
