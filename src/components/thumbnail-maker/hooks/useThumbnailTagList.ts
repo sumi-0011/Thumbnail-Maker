@@ -16,10 +16,10 @@ export function useThumbnailTagList() {
     setTags(newTags);
   };
 
-  const onRemoveTag = (index: number) => {
+  const onRemoveTag = (tagId: number) => {
     prevTags.current = tags;
 
-    const newTags = tags.filter((_, i) => i !== index);
+    const newTags = tags.filter((tag) => tag.id !== tagId);
     setTags(newTags);
   };
 
@@ -27,11 +27,13 @@ export function useThumbnailTagList() {
     setTags(prevTags.current);
   };
 
-  const onUpdateTag = (index: number, newTag: Tag) => {
+  const onUpdateTag = (tagId: number, newTag: Tag) => {
     prevTags.current = tags;
 
-    const newTags = [...tags];
-    newTags[index] = newTag;
+    const newTags = tags.map((tag) =>
+      tag.id === tagId ? { ...tag, ...newTag } : tag
+    );
+
     setTags(newTags);
   };
 

@@ -14,6 +14,7 @@ import { Tag } from "./assets/palette.types";
 import TagEmojiSheet from "./TagEmojiSheet";
 import { TemplateSaveButton } from "./TemplateSaveButton";
 import { useThumbnailTagList } from "./hooks/useThumbnailTagList";
+import { EMPTY_TAG } from "./assets/constants";
 
 function ThumbnailMaker() {
   const { previewRef, onDownload } = usePreview();
@@ -23,13 +24,7 @@ function ThumbnailMaker() {
   const { tags, onAddTag, onRemoveTag, onRollbackTags, onUpdateTag } =
     useThumbnailTagList();
 
-  const [openTagSheetIndex, setOpenTagSheetIndex] = useState<number | null>(
-    null
-  );
-
-  const handleRemoveTag = (index: number) => {
-    onRemoveTag(index);
-  };
+  const [openTagSheet, setOpenTagSheet] = useState<Tag | null>(null);
 
   const handleAddTag = (newTag: (typeof tags)[0]) => {
     onAddTag(newTag);
@@ -45,9 +40,9 @@ function ThumbnailMaker() {
   };
 
   const handleChangeTag = async (newTag: Tag) => {
-    if (openTagSheetIndex === null) return;
+    if (openTagSheet === null) return;
 
-    onUpdateTag(openTagSheetIndex, newTag);
+    onUpdateTag(openTagSheet.id, newTag);
 
     requestAnimationFrame(() => {
       const overflow = checkOverflow();
@@ -55,7 +50,7 @@ function ThumbnailMaker() {
         showOverflowToast(overflow);
         onRollbackTags();
       } else {
-        setOpenTagSheetIndex(null);
+        setOpenTagSheet(null);
       }
     });
   };
@@ -71,12 +66,12 @@ function ThumbnailMaker() {
           previewRef={previewRef}
           tagsContainerRef={tagsContainerRef}
         >
-          {tags.map((tag, index) => (
+          {tags.map((tag) => (
             <TagItem
-              key={index}
+              key={tag.id}
               tag={tag}
-              onRemove={() => handleRemoveTag(index)}
-              onClick={() => setOpenTagSheetIndex(index)}
+              onRemove={() => onRemoveTag(tag.id)}
+              onClick={() => setOpenTagSheet(tag)}
               className={cn(
                 tag.content.type !== "3d-emoji" && "cursor-pointer"
               )}
@@ -85,48 +80,28 @@ function ThumbnailMaker() {
         </CanvasContainer>
         <TagSheet
           isOpen={
-            openTagSheetIndex !== null &&
-            tags[openTagSheetIndex].content.type !== "3d-emoji"
+            openTagSheet !== null && openTagSheet.content.type !== "3d-emoji"
           }
-          onClose={() => setOpenTagSheetIndex(null)}
-          tag={
-            openTagSheetIndex !== null
-              ? tags[openTagSheetIndex]
-              : {
-                  id: 0,
-                  content: { type: "text", value: "" },
-                  tagVariant: "filled",
-                  tagShape: "round",
-                }
-          }
+          onClose={() => setOpenTagSheet(null)}
+          tag={openTagSheet ?? EMPTY_TAG}
           onStyleChange={handleChangeTag}
           onRemove={() => {
-            if (openTagSheetIndex === null) return;
-            handleRemoveTag(openTagSheetIndex);
-            setOpenTagSheetIndex(null);
+            if (openTagSheet === null) return;
+            onRemoveTag(openTagSheet.id);
+            setOpenTagSheet(null);
           }}
         />
         <TagEmojiSheet
           isOpen={
-            openTagSheetIndex !== null &&
-            tags[openTagSheetIndex].content.type === "3d-emoji"
+            openTagSheet !== null && openTagSheet.content.type === "3d-emoji"
           }
-          onClose={() => setOpenTagSheetIndex(null)}
-          tag={
-            openTagSheetIndex !== null
-              ? tags[openTagSheetIndex]
-              : {
-                  id: 0,
-                  content: { type: "text", value: "" },
-                  tagVariant: "filled",
-                  tagShape: "round",
-                }
-          }
+          onClose={() => setOpenTagSheet(null)}
+          tag={openTagSheet ?? EMPTY_TAG}
           onStyleChange={handleChangeTag}
           onRemove={() => {
-            if (openTagSheetIndex === null) return;
-            handleRemoveTag(openTagSheetIndex);
-            setOpenTagSheetIndex(null);
+            if (openTagSheet === null) return;
+            onRemoveTag(openTagSheet.id);
+            setOpenTagSheet(null);
           }}
         />
         <div className="flex items-center justify-between">
