@@ -67,7 +67,7 @@ function ThumbnailMaker() {
 
   return (
     <div className="mx-auto flex max-w-[768px] flex-col gap-4">
-      <h1 className="mb-7 text-center text-[80px] text-white">
+      <h1 className="mb-7 text-center text-[60px] text-[#C1CCFF]">
         Thumbnail Maker
       </h1>
       <PaletteProvider>
