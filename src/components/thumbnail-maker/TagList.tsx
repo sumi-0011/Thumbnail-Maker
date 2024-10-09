@@ -9,6 +9,7 @@ interface Props {
 
 export function TagList({ setOpenTagSheet }: Props) {
   const { tags, onRemoveTag } = useThumbnailTagList();
+  console.log("tags: ", tags);
 
   return (
     <>

@@ -13,6 +13,8 @@ import { Input } from "../ui/input";
 import { getTagStyleKey } from "./assets/utils";
 import { useCurrentPaletteStyle } from "./Palette.context";
 import { Tag, TagShape, TagVariant } from "./assets/palette.types";
+import { useSelectedTag, useSelectedTagAction } from "./Tag.context";
+import { EMPTY_TAG } from "./assets/constants";
 
 const selectTagStyleMap: { variant: TagVariant; shape: TagShape }[] = [
   { variant: "filled", shape: "round" },
@@ -23,24 +25,15 @@ const selectTagStyleMap: { variant: TagVariant; shape: TagShape }[] = [
 ];
 
 interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-
-  tag: Tag;
-
   onStyleChange: (newTag: Tag) => void;
-  onRemove: () => void;
+  onRemove: (tagId: number) => void;
 }
 
-export function TagChangeSheet({
-  isOpen,
-  onClose,
-  tag: initTag,
-  onStyleChange,
-  onRemove,
-}: Props) {
+export function TagChangeSheet({ onStyleChange, onRemove }: Props) {
   const paletteStyle = useCurrentPaletteStyle();
-  const [tag, setTag] = useState<Tag>(initTag);
+  const { clearSelectedTag: onClose } = useSelectedTagAction();
+
+  const { tag, setTag, isOpen } = useSheetTag();
 
   const onChangeTagStyle = (variant: TagVariant, shape: TagShape) => {
     setTag({ ...tag, tagVariant: variant, tagShape: shape });
@@ -55,12 +48,6 @@ export function TagChangeSheet({
       onStyleChange(tag);
     }
   };
-
-  // NOTE: sheet open animation을 위해 useEffect 사용
-  useEffect(() => {
-    if (!initTag.content.value) return;
-    setTag(initTag);
-  }, [initTag]);
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -91,7 +78,7 @@ export function TagChangeSheet({
           </div>
         </div>
         <SheetFooter className="mt-[96px] flex justify-center gap-2 sm:justify-center">
-          <Button onClick={onRemove} variant="secondary">
+          <Button onClick={() => onRemove(tag.id)} variant="secondary">
             Delete
           </Button>
           <Button onClick={() => onStyleChange(tag)}>Save</Button>
@@ -135,3 +122,18 @@ function TagStylePicker({
     </div>
   );
 }
+
+const useSheetTag = () => {
+  const { selectedTag } = useSelectedTag();
+
+  const [tag, setTag] = useState<Tag>(selectedTag ?? EMPTY_TAG);
+
+  const isOpen = selectedTag?.content.type === "text";
+
+  useEffect(() => {
+    if (!selectedTag) return;
+    setTag(selectedTag);
+  }, [selectedTag]);
+
+  return { tag, setTag, isOpen };
+};

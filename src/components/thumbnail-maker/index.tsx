@@ -1,21 +1,17 @@
-import { useEffect, useState } from "react";
 import { Image } from "lucide-react";
 import { Button } from "../ui/button";
 import { AddTagSection } from "./AddTagSection";
 import { CanvasContainer } from "./CanvasContainer";
-import { TagItem } from "./TagItem";
 import { useCheckTagOverflow } from "./hooks/useCheckTagOverflow";
 import { usePreview } from "./hooks/usePreview";
 import { TagChangeSheet } from "./TagChangeSheet";
 import { PallettePicker } from "./PallettePicker";
-import { cn } from "src/lib/utils";
-import { PaletteProvider } from "./Palette.context";
 import { Tag } from "./assets/palette.types";
-import TagEmojiSheet from "./TagEmojiSheet";
+import { TagEmojiSheet } from "./TagEmojiSheet";
 import { TemplateSaveButton } from "./TemplateSaveButton";
 import { useThumbnailTagList } from "./hooks/useThumbnailTagList";
-import { EMPTY_TAG } from "./assets/constants";
 import { TagList } from "./TagList";
+import { useSelectedTag, useSelectedTagAction } from "./Tag.context";
 
 function ThumbnailMaker() {
   const { previewRef, onDownload } = usePreview();
@@ -25,7 +21,7 @@ function ThumbnailMaker() {
   const { tags, onAddTag, onRemoveTag, onRollbackTags, onUpdateTag } =
     useThumbnailTagList();
 
-  const [openTagSheet, setOpenTagSheet] = useState<Tag | null>(null);
+  const { onSelectTag, clearSelectedTag } = useSelectedTagAction();
 
   const handleAddTag = (newTag: (typeof tags)[0]) => {
     onAddTag(newTag);
@@ -41,9 +37,7 @@ function ThumbnailMaker() {
   };
 
   const handleChangeTag = async (newTag: Tag) => {
-    if (openTagSheet === null) return;
-
-    onUpdateTag(openTagSheet.id, newTag);
+    onUpdateTag(newTag.id, newTag);
 
     requestAnimationFrame(() => {
       const overflow = checkOverflow();
@@ -51,9 +45,14 @@ function ThumbnailMaker() {
         showOverflowToast(overflow);
         onRollbackTags();
       } else {
-        setOpenTagSheet(null);
+        clearSelectedTag();
       }
     });
+  };
+
+  const handleRemoveTag = (tagId: number) => {
+    onRemoveTag(tagId);
+    clearSelectedTag();
   };
 
   return (
@@ -61,50 +60,31 @@ function ThumbnailMaker() {
       <h1 className="mb-7 text-center text-[80px] text-white">
         Thumbnail Maker
       </h1>
-      <PaletteProvider>
-        <AddTagSection onAction={handleAddTag} />
-        <CanvasContainer
-          previewRef={previewRef}
-          tagsContainerRef={tagsContainerRef}
-        >
-          <TagList setOpenTagSheet={setOpenTagSheet} />
-        </CanvasContainer>
-        <TagChangeSheet
-          isOpen={
-            openTagSheet !== null && openTagSheet.content.type !== "3d-emoji"
-          }
-          onClose={() => setOpenTagSheet(null)}
-          tag={openTagSheet ?? EMPTY_TAG}
-          onStyleChange={handleChangeTag}
-          onRemove={() => {
-            if (openTagSheet === null) return;
-            onRemoveTag(openTagSheet.id);
-            setOpenTagSheet(null);
-          }}
-        />
-        <TagEmojiSheet
-          isOpen={
-            openTagSheet !== null && openTagSheet.content.type === "3d-emoji"
-          }
-          onClose={() => setOpenTagSheet(null)}
-          tag={openTagSheet ?? EMPTY_TAG}
-          onStyleChange={handleChangeTag}
-          onRemove={() => {
-            if (openTagSheet === null) return;
-            onRemoveTag(openTagSheet.id);
-            setOpenTagSheet(null);
-          }}
-        />
-        <div className="flex items-center justify-between">
-          <PallettePicker />
-          <div className="flex items-center gap-2">
-            <TemplateSaveButton />
-            <Button onClick={onDownload}>
-              <Image size={20} className="mr-2" /> Download Image
-            </Button>
-          </div>
+
+      <AddTagSection onAction={handleAddTag} />
+      <CanvasContainer
+        previewRef={previewRef}
+        tagsContainerRef={tagsContainerRef}
+      >
+        <TagList setOpenTagSheet={onSelectTag} />
+      </CanvasContainer>
+      <TagChangeSheet
+        onStyleChange={handleChangeTag}
+        onRemove={handleRemoveTag}
+      />
+      <TagEmojiSheet
+        onStyleChange={handleChangeTag}
+        onRemove={handleRemoveTag}
+      />
+      <div className="flex items-center justify-between">
+        <PallettePicker />
+        <div className="flex items-center gap-2">
+          <TemplateSaveButton />
+          <Button onClick={onDownload}>
+            <Image size={20} className="mr-2" /> Download Image
+          </Button>
         </div>
-      </PaletteProvider>
+      </div>
     </div>
   );
 }
