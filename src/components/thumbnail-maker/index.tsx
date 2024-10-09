@@ -6,7 +6,7 @@ import { CanvasContainer } from "./CanvasContainer";
 import { TagItem } from "./TagItem";
 import { useCheckTagOverflow } from "./hooks/useCheckTagOverflow";
 import { usePreview } from "./hooks/usePreview";
-import TagSheet from "./TagSheet";
+import { TagChangeSheet } from "./TagChangeSheet";
 import { PallettePicker } from "./PallettePicker";
 import { cn } from "src/lib/utils";
 import { PaletteProvider } from "./Palette.context";
@@ -16,6 +16,7 @@ import { TemplateSaveButton } from "./TemplateSaveButton";
 import { useThumbnailTagList } from "./hooks/useThumbnailTagList";
 import { EMPTY_TAG } from "./assets/constants";
 import { TagList } from "./TagList";
+import { TagProvider } from "./Tag.context";
 
 function ThumbnailMaker() {
   const { previewRef, onDownload } = usePreview();
@@ -62,48 +63,50 @@ function ThumbnailMaker() {
         Thumbnail Maker
       </h1>
       <PaletteProvider>
-        <AddTagSection onAction={handleAddTag} />
-        <CanvasContainer
-          previewRef={previewRef}
-          tagsContainerRef={tagsContainerRef}
-        >
-          <TagList setOpenTagSheet={setOpenTagSheet} />
-        </CanvasContainer>
-        <TagSheet
-          isOpen={
-            openTagSheet !== null && openTagSheet.content.type !== "3d-emoji"
-          }
-          onClose={() => setOpenTagSheet(null)}
-          tag={openTagSheet ?? EMPTY_TAG}
-          onStyleChange={handleChangeTag}
-          onRemove={() => {
-            if (openTagSheet === null) return;
-            onRemoveTag(openTagSheet.id);
-            setOpenTagSheet(null);
-          }}
-        />
-        <TagEmojiSheet
-          isOpen={
-            openTagSheet !== null && openTagSheet.content.type === "3d-emoji"
-          }
-          onClose={() => setOpenTagSheet(null)}
-          tag={openTagSheet ?? EMPTY_TAG}
-          onStyleChange={handleChangeTag}
-          onRemove={() => {
-            if (openTagSheet === null) return;
-            onRemoveTag(openTagSheet.id);
-            setOpenTagSheet(null);
-          }}
-        />
-        <div className="flex items-center justify-between">
-          <PallettePicker />
-          <div className="flex items-center gap-2">
-            <TemplateSaveButton />
-            <Button onClick={onDownload}>
-              <Image size={20} className="mr-2" /> Download Image
-            </Button>
+        <TagProvider>
+          <AddTagSection onAction={handleAddTag} />
+          <CanvasContainer
+            previewRef={previewRef}
+            tagsContainerRef={tagsContainerRef}
+          >
+            <TagList setOpenTagSheet={setOpenTagSheet} />
+          </CanvasContainer>
+          <TagChangeSheet
+            isOpen={
+              openTagSheet !== null && openTagSheet.content.type !== "3d-emoji"
+            }
+            onClose={() => setOpenTagSheet(null)}
+            tag={openTagSheet ?? EMPTY_TAG}
+            onStyleChange={handleChangeTag}
+            onRemove={() => {
+              if (openTagSheet === null) return;
+              onRemoveTag(openTagSheet.id);
+              setOpenTagSheet(null);
+            }}
+          />
+          <TagEmojiSheet
+            isOpen={
+              openTagSheet !== null && openTagSheet.content.type === "3d-emoji"
+            }
+            onClose={() => setOpenTagSheet(null)}
+            tag={openTagSheet ?? EMPTY_TAG}
+            onStyleChange={handleChangeTag}
+            onRemove={() => {
+              if (openTagSheet === null) return;
+              onRemoveTag(openTagSheet.id);
+              setOpenTagSheet(null);
+            }}
+          />
+          <div className="flex items-center justify-between">
+            <PallettePicker />
+            <div className="flex items-center gap-2">
+              <TemplateSaveButton />
+              <Button onClick={onDownload}>
+                <Image size={20} className="mr-2" /> Download Image
+              </Button>
+            </div>
           </div>
-        </div>
+        </TagProvider>
       </PaletteProvider>
     </div>
   );
