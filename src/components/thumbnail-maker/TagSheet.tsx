@@ -27,9 +27,16 @@ interface Props {
   onClose: () => void;
   tag: Tag;
   onAction: (newTag: Tag) => void;
+  onRemove: () => void;
 }
 
-function TagSheet({ isOpen, onClose, tag: initTag, onAction }: Props) {
+function TagSheet({
+  isOpen,
+  onClose,
+  tag: initTag,
+  onAction,
+  onRemove,
+}: Props) {
   const paletteStyle = useCurrentPaletteStyle();
   const [tag, setTag] = useState<Tag>(initTag);
 
@@ -92,7 +99,7 @@ function TagSheet({ isOpen, onClose, tag: initTag, onAction }: Props) {
           </div>
         </div>
         <SheetFooter className="mt-[96px] flex justify-center gap-2 sm:justify-center">
-          <Button onClick={() => onAction(tag)} variant="secondary">
+          <Button onClick={onRemove} variant="secondary">
             Delete
           </Button>
           <Button onClick={() => onAction(tag)}>Save</Button>

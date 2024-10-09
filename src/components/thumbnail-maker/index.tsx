@@ -98,6 +98,11 @@ function ThumbnailMaker() {
               : { text: "", tagVariant: "filled", tagShape: "round" }
           }
           onAction={handleChangeTag}
+          onRemove={() => {
+            if (openTagSheetIndex === null) return;
+            handleRemoveTag(openTagSheetIndex);
+            setOpenTagSheetIndex(null);
+          }}
         />
         <div className="flex items-center justify-between">
           <PallettePicker />
