@@ -15,6 +15,7 @@ import TagEmojiSheet from "./TagEmojiSheet";
 import { TemplateSaveButton } from "./TemplateSaveButton";
 import { useThumbnailTagList } from "./hooks/useThumbnailTagList";
 import { EMPTY_TAG } from "./assets/constants";
+import { TagList } from "./TagList";
 
 function ThumbnailMaker() {
   const { previewRef, onDownload } = usePreview();
@@ -66,17 +67,7 @@ function ThumbnailMaker() {
           previewRef={previewRef}
           tagsContainerRef={tagsContainerRef}
         >
-          {tags.map((tag) => (
-            <TagItem
-              key={tag.id}
-              tag={tag}
-              onRemove={() => onRemoveTag(tag.id)}
-              onClick={() => setOpenTagSheet(tag)}
-              className={cn(
-                tag.content.type !== "3d-emoji" && "cursor-pointer"
-              )}
-            />
-          ))}
+          <TagList setOpenTagSheet={setOpenTagSheet} />
         </CanvasContainer>
         <TagSheet
           isOpen={
