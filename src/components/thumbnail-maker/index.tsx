@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image } from "lucide-react";
 import { Button } from "../ui/button";
 import { AddTagSection } from "./AddTagSection";
@@ -12,36 +12,34 @@ import { cn } from "src/lib/utils";
 import { PaletteProvider } from "./Palette.context";
 import { Tag } from "./assets/palette.types";
 import TagEmojiSheet from "./TagEmojiSheet";
+import { TemplateSaveButton } from "./TemplateSaveButton";
+import { useThumbnailTagList } from "./hooks/useThumbnailTagList";
 
 function ThumbnailMaker() {
   const { previewRef, onDownload } = usePreview();
   const { tagsContainerRef, checkOverflow, showOverflowToast } =
     useCheckTagOverflow();
 
-  const [tags, setTags] = useState<Tag[]>([]);
+  const { tags, onAddTag, onRemoveTag, onRollbackTags, onUpdateTag } =
+    useThumbnailTagList();
+
   const [openTagSheetIndex, setOpenTagSheetIndex] = useState<number | null>(
     null
   );
 
-  const onTagsUpdate = (newTags: Tag[]) => {
-    setTags(newTags);
-  };
-
   const handleRemoveTag = (index: number) => {
-    const newTags = tags.filter((_, i) => i !== index);
-    onTagsUpdate(newTags);
+    onRemoveTag(index);
   };
 
   const handleAddTag = (newTag: (typeof tags)[0]) => {
-    const newTags = [...tags, newTag];
-    onTagsUpdate(newTags);
+    onAddTag(newTag);
 
     //  requestAnimationFrame을 사용하여 다음 렌더링 사이클에서 오버플로우를 체크함으로써, DOM 업데이트가 완료된 후에 체크
     requestAnimationFrame(() => {
       const overflow = checkOverflow();
       if (overflow) {
         showOverflowToast(overflow);
-        onTagsUpdate(tags);
+        onRollbackTags();
       }
     });
   };
@@ -49,16 +47,13 @@ function ThumbnailMaker() {
   const handleChangeTag = async (newTag: Tag) => {
     if (openTagSheetIndex === null) return;
 
-    const prevTags = [...tags];
-    const newTags = [...tags];
-    newTags[openTagSheetIndex] = newTag;
-    onTagsUpdate(newTags);
+    onUpdateTag(openTagSheetIndex, newTag);
 
     requestAnimationFrame(() => {
       const overflow = checkOverflow();
       if (overflow) {
         showOverflowToast(overflow);
-        onTagsUpdate(prevTags);
+        onRollbackTags();
       } else {
         setOpenTagSheetIndex(null);
       }
@@ -136,9 +131,12 @@ function ThumbnailMaker() {
         />
         <div className="flex items-center justify-between">
           <PallettePicker />
-          <Button onClick={onDownload}>
-            <Image size={20} className="mr-2" /> Download Image
-          </Button>
+          <div className="flex items-center gap-2">
+            <TemplateSaveButton />
+            <Button onClick={onDownload}>
+              <Image size={20} className="mr-2" /> Download Image
+            </Button>
+          </div>
         </div>
       </PaletteProvider>
     </div>

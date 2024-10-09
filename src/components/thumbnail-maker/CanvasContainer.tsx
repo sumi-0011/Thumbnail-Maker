@@ -1,5 +1,5 @@
 import { cn } from "src/lib/utils";
-import { canvasSize } from "./assets/size.constants";
+import { canvasSize } from "./assets/constants";
 import { useCurrentPaletteStyle } from "./Palette.context";
 
 interface Props {
