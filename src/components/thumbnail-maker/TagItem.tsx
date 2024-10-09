@@ -53,18 +53,17 @@ export function TagItemView({
       )}
       style={tagStyle}
     >
-      <span>
-        {tag.content.type === "3d-emoji" ? (
-          <img
-            src={get3DEmojiImage(tag.content.value)}
-            width={90}
-            height={90}
-            style={{ pointerEvents: "none" }}
-          />
-        ) : (
-          tag.content.value
-        )}
-      </span>
+      {tag.content.type === "3d-emoji" ? (
+        <img
+          src={get3DEmojiImage(tag.content.value)}
+          width={90}
+          height={90}
+          style={{ pointerEvents: "none" }}
+          className="h-full w-full"
+        />
+      ) : (
+        tag.content.value
+      )}
     </div>
   );
 }
@@ -108,6 +107,12 @@ const tagVariants = cva(
         variant: "ghost",
         size: "small",
         className: "px-[7px]",
+      },
+      {
+        variant: "ghost",
+        shape: "emoji",
+        size: "small",
+        className: "h-16 w-16",
       },
     ],
     defaultVariants: {

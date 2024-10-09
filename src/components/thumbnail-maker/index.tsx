@@ -11,6 +11,7 @@ import { PallettePicker } from "./PallettePicker";
 import { cn } from "src/lib/utils";
 import { PaletteProvider } from "./Palette.context";
 import { Tag } from "./assets/palette.types";
+import TagEmojiSheet from "./TagEmojiSheet";
 
 function ThumbnailMaker() {
   const { previewRef, onDownload } = usePreview();
@@ -80,9 +81,7 @@ function ThumbnailMaker() {
               key={index}
               tag={tag}
               onRemove={() => handleRemoveTag(index)}
-              onClick={() =>
-                tag.content.type !== "3d-emoji" && setOpenTagSheetIndex(index)
-              }
+              onClick={() => setOpenTagSheetIndex(index)}
               className={cn(
                 tag.content.type !== "3d-emoji" && "cursor-pointer"
               )}
@@ -90,7 +89,33 @@ function ThumbnailMaker() {
           ))}
         </CanvasContainer>
         <TagSheet
-          isOpen={openTagSheetIndex !== null}
+          isOpen={
+            openTagSheetIndex !== null &&
+            tags[openTagSheetIndex].content.type !== "3d-emoji"
+          }
+          onClose={() => setOpenTagSheetIndex(null)}
+          tag={
+            openTagSheetIndex !== null
+              ? tags[openTagSheetIndex]
+              : {
+                  id: 0,
+                  content: { type: "text", value: "" },
+                  tagVariant: "filled",
+                  tagShape: "round",
+                }
+          }
+          onStyleChange={handleChangeTag}
+          onRemove={() => {
+            if (openTagSheetIndex === null) return;
+            handleRemoveTag(openTagSheetIndex);
+            setOpenTagSheetIndex(null);
+          }}
+        />
+        <TagEmojiSheet
+          isOpen={
+            openTagSheetIndex !== null &&
+            tags[openTagSheetIndex].content.type === "3d-emoji"
+          }
           onClose={() => setOpenTagSheetIndex(null)}
           tag={
             openTagSheetIndex !== null
