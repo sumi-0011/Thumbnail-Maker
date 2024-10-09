@@ -80,7 +80,7 @@ function ThumbnailMaker() {
         <PallettePicker />
         <div className="flex items-center gap-2">
           <TemplateSaveButton />
-          <Button onClick={onDownload}>
+          <Button onClick={() => onDownload()}>
             <Image size={20} className="mr-2" /> Download Image
           </Button>
         </div>
