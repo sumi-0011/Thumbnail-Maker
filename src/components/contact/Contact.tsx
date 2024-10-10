@@ -12,10 +12,12 @@ function Contact() {
           <span className="text-sm font-medium">CONTACT US</span>
         </PopoverTrigger>
         <PopoverContent>
+          {/* <p>문의사항이 있으시면 GitHub 이슈를 등록해 주세요. 최대한 빠르게 답변 드리겠습니다.</p> */}
           <p>please register github issue</p>
           <a
             href="https://github.com/sumi-0011/Thumbnail-Maker/issues"
             target="_blank"
+            rel="noreferrer"
           >
             <div className="mt-3 flex w-fit items-center gap-2 rounded-full border-2 border-white/70 px-3 py-[6px] hover:bg-white/10">
               <Github size={20} />

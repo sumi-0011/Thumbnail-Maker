@@ -9,49 +9,27 @@ import {
 } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { TagItemView } from "./TagItem";
-import { Input } from "../ui/input";
 import { getTagStyleKey } from "./assets/utils";
 import { useCurrentPaletteStyle } from "./Palette.context";
 import { Tag, TagShape, TagVariant } from "./assets/palette.types";
 import { EmojiType, ThreeDEmojiPicker } from "../3d-emoji-picker";
-
-const selectTagStyleMap: { variant: TagVariant; shape: TagShape }[] = [
-  { variant: "filled", shape: "round" },
-  { variant: "outlined", shape: "round" },
-  { variant: "ghost", shape: "squared" },
-  { variant: "filled", shape: "squared" },
-  { variant: "outlined", shape: "squared" },
-];
+import { useSelectedTag, useSelectedTagAction } from "./Tag.context";
+import { EMPTY_TAG } from "./assets/constants";
 
 interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-
-  tag: Tag;
-
   onStyleChange: (newTag: Tag) => void;
-  onRemove: () => void;
+  onRemove: (tagId: number) => void;
 }
 
-function TagEmojiSheet({
-  isOpen,
-  onClose,
-  tag: initTag,
-  onStyleChange,
-  onRemove,
-}: Props) {
+export function TagEmojiSheet({ onStyleChange, onRemove }: Props) {
   const paletteStyle = useCurrentPaletteStyle();
-  const [tag, setTag] = useState<Tag>(initTag);
+  const { clearSelectedTag: onClose } = useSelectedTagAction();
+
+  const { tag, setTag, isOpen } = useSheetTag();
 
   const onChangeEmoji = (emoji: EmojiType) => {
     setTag({ ...tag, content: { type: "3d-emoji", value: emoji } });
   };
-
-  // NOTE: sheet open animation을 위해 useEffect 사용
-  useEffect(() => {
-    if (!initTag.content.value) return;
-    setTag(initTag);
-  }, [initTag]);
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -75,7 +53,7 @@ function TagEmojiSheet({
           </div>
         </div>
         <SheetFooter className="mt-[96px] flex justify-center gap-2 sm:justify-center">
-          <Button onClick={onRemove} variant="secondary">
+          <Button onClick={() => onRemove(tag.id)} variant="secondary">
             Delete
           </Button>
           <Button onClick={() => onStyleChange(tag)}>Save</Button>
@@ -85,4 +63,17 @@ function TagEmojiSheet({
   );
 }
 
-export default TagEmojiSheet;
+const useSheetTag = () => {
+  const { selectedTag } = useSelectedTag();
+
+  const [tag, setTag] = useState<Tag>(selectedTag ?? EMPTY_TAG);
+
+  const isOpen = selectedTag?.content.type === "3d-emoji";
+
+  useEffect(() => {
+    if (!selectedTag) return;
+    setTag(selectedTag);
+  }, [selectedTag]);
+
+  return { tag, setTag, isOpen };
+};

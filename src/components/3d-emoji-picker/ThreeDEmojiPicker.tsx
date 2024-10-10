@@ -49,9 +49,9 @@ export const ThreeDEmojiPicker = ({ onEmojiSelect }: Props) => {
               className="max-h-[300px] overflow-y-auto p-1"
             >
               <div className="flex flex-wrap justify-center gap-1">
-                {Object.values(emojis).map((emoji, index) => (
+                {Object.values(emojis).map((emoji) => (
                   <div
-                    key={index}
+                    key={emoji.cldr}
                     onClick={() => handleEmojiClick(emoji)}
                     className={emoji.cldr}
                   >

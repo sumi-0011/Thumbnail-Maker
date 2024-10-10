@@ -1,68 +1,58 @@
-import { useState } from "react";
 import { Image } from "lucide-react";
 import { Button } from "../ui/button";
 import { AddTagSection } from "./AddTagSection";
 import { CanvasContainer } from "./CanvasContainer";
-import { TagItem } from "./TagItem";
 import { useCheckTagOverflow } from "./hooks/useCheckTagOverflow";
 import { usePreview } from "./hooks/usePreview";
-import TagSheet from "./TagSheet";
-import { PallettePicker } from "./PallettePicker";
-import { cn } from "src/lib/utils";
-import { PaletteProvider } from "./Palette.context";
+import { TagChangeSheet } from "./TagChangeSheet";
+import { PalettePicker } from "./PalettePicker";
 import { Tag } from "./assets/palette.types";
-import TagEmojiSheet from "./TagEmojiSheet";
+import { TagEmojiSheet } from "./TagEmojiSheet";
+import { TemplateSaveButton } from "./TemplateSaveButton";
+import { useThumbnailTagList } from "./hooks/useThumbnailTagList";
+import { TagList } from "./TagList";
+import { useSelectedTag, useSelectedTagAction } from "./Tag.context";
 
 function ThumbnailMaker() {
   const { previewRef, onDownload } = usePreview();
   const { tagsContainerRef, checkOverflow, showOverflowToast } =
     useCheckTagOverflow();
 
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [openTagSheetIndex, setOpenTagSheetIndex] = useState<number | null>(
-    null
-  );
+  const { tags, onAddTag, onRemoveTag, onRollbackTags, onUpdateTag } =
+    useThumbnailTagList();
 
-  const onTagsUpdate = (newTags: Tag[]) => {
-    setTags(newTags);
-  };
-
-  const handleRemoveTag = (index: number) => {
-    const newTags = tags.filter((_, i) => i !== index);
-    onTagsUpdate(newTags);
-  };
+  const { onSelectTag, clearSelectedTag } = useSelectedTagAction();
 
   const handleAddTag = (newTag: (typeof tags)[0]) => {
-    const newTags = [...tags, newTag];
-    onTagsUpdate(newTags);
+    onAddTag(newTag);
 
     //  requestAnimationFrame을 사용하여 다음 렌더링 사이클에서 오버플로우를 체크함으로써, DOM 업데이트가 완료된 후에 체크
     requestAnimationFrame(() => {
       const overflow = checkOverflow();
       if (overflow) {
         showOverflowToast(overflow);
-        onTagsUpdate(tags);
+        onRollbackTags();
       }
     });
   };
 
   const handleChangeTag = async (newTag: Tag) => {
-    if (openTagSheetIndex === null) return;
-
-    const prevTags = [...tags];
-    const newTags = [...tags];
-    newTags[openTagSheetIndex] = newTag;
-    onTagsUpdate(newTags);
+    onUpdateTag(newTag.id, newTag);
 
     requestAnimationFrame(() => {
       const overflow = checkOverflow();
       if (overflow) {
         showOverflowToast(overflow);
-        onTagsUpdate(prevTags);
+        onRollbackTags();
       } else {
-        setOpenTagSheetIndex(null);
+        clearSelectedTag();
       }
     });
+  };
+
+  const handleRemoveTag = (tagId: number) => {
+    onRemoveTag(tagId);
+    clearSelectedTag();
   };
 
   return (
@@ -70,77 +60,31 @@ function ThumbnailMaker() {
       <h1 className="mb-7 text-center text-[60px] text-[#C1CCFF]">
         Thumbnail Maker
       </h1>
-      <PaletteProvider>
-        <AddTagSection onAction={handleAddTag} />
-        <CanvasContainer
-          previewRef={previewRef}
-          tagsContainerRef={tagsContainerRef}
-        >
-          {tags.map((tag, index) => (
-            <TagItem
-              key={index}
-              tag={tag}
-              onRemove={() => handleRemoveTag(index)}
-              onClick={() => setOpenTagSheetIndex(index)}
-              className={cn(
-                tag.content.type !== "3d-emoji" && "cursor-pointer"
-              )}
-            />
-          ))}
-        </CanvasContainer>
-        <TagSheet
-          isOpen={
-            openTagSheetIndex !== null &&
-            tags[openTagSheetIndex].content.type !== "3d-emoji"
-          }
-          onClose={() => setOpenTagSheetIndex(null)}
-          tag={
-            openTagSheetIndex !== null
-              ? tags[openTagSheetIndex]
-              : {
-                  id: 0,
-                  content: { type: "text", value: "" },
-                  tagVariant: "filled",
-                  tagShape: "round",
-                }
-          }
-          onStyleChange={handleChangeTag}
-          onRemove={() => {
-            if (openTagSheetIndex === null) return;
-            handleRemoveTag(openTagSheetIndex);
-            setOpenTagSheetIndex(null);
-          }}
-        />
-        <TagEmojiSheet
-          isOpen={
-            openTagSheetIndex !== null &&
-            tags[openTagSheetIndex].content.type === "3d-emoji"
-          }
-          onClose={() => setOpenTagSheetIndex(null)}
-          tag={
-            openTagSheetIndex !== null
-              ? tags[openTagSheetIndex]
-              : {
-                  id: 0,
-                  content: { type: "text", value: "" },
-                  tagVariant: "filled",
-                  tagShape: "round",
-                }
-          }
-          onStyleChange={handleChangeTag}
-          onRemove={() => {
-            if (openTagSheetIndex === null) return;
-            handleRemoveTag(openTagSheetIndex);
-            setOpenTagSheetIndex(null);
-          }}
-        />
-        <div className="flex items-center justify-between">
-          <PallettePicker />
+
+      <AddTagSection onAction={handleAddTag} />
+      <CanvasContainer
+        previewRef={previewRef}
+        tagsContainerRef={tagsContainerRef}
+      >
+        <TagList setOpenTagSheet={onSelectTag} />
+      </CanvasContainer>
+      <TagChangeSheet
+        onStyleChange={handleChangeTag}
+        onRemove={handleRemoveTag}
+      />
+      <TagEmojiSheet
+        onStyleChange={handleChangeTag}
+        onRemove={handleRemoveTag}
+      />
+      <div className="flex items-center justify-between">
+        <PalettePicker />
+        <div className="flex items-center gap-2">
+          <TemplateSaveButton />
           <Button onClick={onDownload}>
             <Image size={20} className="mr-2" /> Download Image
           </Button>
         </div>
-      </PaletteProvider>
+      </div>
     </div>
   );
 }
