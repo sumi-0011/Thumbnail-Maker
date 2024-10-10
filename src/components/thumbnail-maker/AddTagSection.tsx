@@ -24,6 +24,7 @@ export function AddTagSection({ onAction }: Props) {
 
   const onActionClick = async () => {
     if (inputValue.trim() === "") return;
+
     const id = new Date().getTime();
 
     onAction({
@@ -60,6 +61,7 @@ export function AddTagSection({ onAction }: Props) {
         placeholder="Enter a tag"
         // enter 누르면
         onKeyDown={(e) => {
+          if (e.nativeEvent.isComposing || e.keyCode === 229) return;
           if (e.key === "Enter") {
             onActionClick();
           }
