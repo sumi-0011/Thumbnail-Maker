@@ -11,7 +11,12 @@ export default function App() {
   const queryClient = useMemo(() => new QueryClient({}), []);
 
   useEffect(() => {
-    ReactGA.initialize(`${import.meta.env.VITE_APP_GA_ID}`);
+    const gaId = import.meta.env.VITE_APP_GA_ID;
+    if (gaId) {
+      ReactGA.initialize(gaId);
+    } else {
+      console.error("Google Analytics ID is not set in environment variables");
+    }
   }, []);
 
   return (
