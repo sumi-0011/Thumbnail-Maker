@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { useTranslation } from "react-i18next";
 import GalleryItem, { Template } from "src/components/gallery/GalleryItem";
 
-import templates from "src/assets/templates/template.json";
 import useStorageState from "use-storage-state";
 import {
   THUMBNAIL_MAKER_STORAGE_KEY,
