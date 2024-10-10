@@ -1,6 +1,8 @@
 import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { PALETTE } from "./assets/palette.constants";
 import { PaletteVariant } from "./assets/palette.types";
+import useStorageState from "use-storage-state";
+import { THUMBNAIL_MAKERS_PALETTE_STORAGE_KEY } from "./assets/constants";
 
 interface PaletteContextType {
   currentPalette: PaletteVariant;
@@ -10,14 +12,19 @@ interface PaletteActionContextType {
   onPaletteChange: (palette: PaletteVariant) => void;
 }
 
+// 차라리 zustand 쓰는게 더 낫지 않을까?
 const PaletteContext = createContext<PaletteContextType | undefined>(undefined);
 const PaletteActionContext = createContext<
   PaletteActionContextType | undefined
 >(undefined);
 
 export const PaletteProvider = ({ children }: PropsWithChildren) => {
-  const [currentPalette, setCurrentPalette] =
-    useState<PaletteVariant>("blue_gradient");
+  const [currentPalette, setCurrentPalette] = useStorageState<PaletteVariant>(
+    THUMBNAIL_MAKERS_PALETTE_STORAGE_KEY,
+    {
+      defaultValue: "blue_gradient",
+    }
+  );
 
   const setPalette = (palette: PaletteVariant) => {
     setCurrentPalette(palette);

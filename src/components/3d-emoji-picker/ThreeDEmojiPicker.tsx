@@ -50,14 +50,13 @@ export const ThreeDEmojiPicker = ({ onEmojiSelect }: Props) => {
             >
               <div className="flex flex-wrap justify-center gap-1">
                 {Object.values(emojis).map((emoji) => (
-                  <button
+                  <div
                     key={emoji.cldr}
-                    type="button"
                     onClick={() => handleEmojiClick(emoji)}
                     className={emoji.cldr}
                   >
                     <EmojiItem emoji={emoji} />
-                  </button>
+                  </div>
                 ))}
               </div>
             </TabsContent>

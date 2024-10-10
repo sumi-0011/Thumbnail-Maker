@@ -9,21 +9,19 @@ import { PalettePicker } from "./PalettePicker";
 import { Tag } from "./assets/palette.types";
 import { TagEmojiSheet } from "./TagEmojiSheet";
 import { TemplateSaveButton } from "./TemplateSaveButton";
-import { useThumbnailTagList } from "./hooks/useThumbnailTagList";
 import { TagList } from "./TagList";
-import { useSelectedTag, useSelectedTagAction } from "./Tag.context";
+import { useSelectedTagAction, useTagAction } from "./Tag.context";
 
 function ThumbnailMaker() {
   const { previewRef, onDownload } = usePreview();
   const { tagsContainerRef, checkOverflow, showOverflowToast } =
     useCheckTagOverflow();
 
-  const { tags, onAddTag, onRemoveTag, onRollbackTags, onUpdateTag } =
-    useThumbnailTagList();
+  const { onAddTag, onRemoveTag, onRollbackTags, onUpdateTag } = useTagAction();
 
   const { onSelectTag, clearSelectedTag } = useSelectedTagAction();
 
-  const handleAddTag = (newTag: (typeof tags)[0]) => {
+  const handleAddTag = (newTag: Tag) => {
     onAddTag(newTag);
 
     //  requestAnimationFrame을 사용하여 다음 렌더링 사이클에서 오버플로우를 체크함으로써, DOM 업데이트가 완료된 후에 체크
