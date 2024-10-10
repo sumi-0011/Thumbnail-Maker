@@ -1,9 +1,9 @@
 import { ScrollText } from "lucide-react";
 import { Button } from "../ui/button";
-import { useThumbnailTagList } from "./hooks/useThumbnailTagList";
+import { useTagList } from "./Tag.context";
 
 export function TemplateSaveButton() {
-  const { tags } = useThumbnailTagList();
+  const { tags } = useTagList();
 
   return (
     <div>

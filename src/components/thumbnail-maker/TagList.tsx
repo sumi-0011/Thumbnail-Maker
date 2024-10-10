@@ -1,15 +1,15 @@
 import { cn } from "src/lib/utils";
-import { useThumbnailTagList } from "./hooks/useThumbnailTagList";
 import { TagItem } from "./TagItem";
 import { Tag } from "./assets/palette.types";
+import { useTagAction, useTagList } from "./Tag.context";
 
 interface Props {
   setOpenTagSheet: (tag: Tag) => void;
 }
 
 export function TagList({ setOpenTagSheet }: Props) {
-  const { tags, onRemoveTag } = useThumbnailTagList();
-  console.log("tags: ", tags);
+  const { tags } = useTagList();
+  const { onRemoveTag } = useTagAction();
 
   return (
     <>
