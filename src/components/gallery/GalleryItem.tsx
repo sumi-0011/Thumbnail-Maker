@@ -8,7 +8,7 @@ export type Template = {
   title: string;
   description: string;
   thumbnail: string;
-  content: {
+  data: {
     pallet: {
       type: PaletteVariant | string;
     };
@@ -27,9 +27,9 @@ function GalleryItem({ template, onClick }: GalleryItemProps) {
       className="group relative cursor-pointer overflow-hidden"
       onClick={() => onClick(template)}
     >
-      {/* <div className="overflow-hidden rounded-md">
+      <div className="overflow-hidden rounded-md">
         <img src={template.thumbnail} alt={template.title} draggable={false} />
-      </div> */}
+      </div>
       {/* hover 했을떄 나타나기 */}
       <div
         className={cn(

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import GalleryItem, { Template } from "src/components/gallery/GalleryItem";
@@ -13,8 +13,13 @@ import {
   PaletteVariant,
   Tag,
 } from "src/components/thumbnail-maker/assets/palette.types";
+import { supabase } from "src/lib/supabaseClient";
+import { useNavigate } from "react-router-dom";
 
 export default function GalleryPage() {
+  const templates = useTemplates();
+  const navigate = useNavigate();
+
   const [, setTags] = useStorageState<Tag[]>(THUMBNAIL_MAKER_STORAGE_KEY, {
     defaultValue: [],
   });
@@ -28,13 +33,14 @@ export default function GalleryPage() {
 
   const onItemClick = (template: Template) => {
     console.log("template: ", template);
-    const tags: Tag[] = JSON.parse(template.content.tags);
+    const tags: Tag[] = JSON.parse(template.data.tags);
     // TODO: custom palette 추가
-    const palette: PaletteVariant = template.content.pallet
-      .type as PaletteVariant;
+    const palette: PaletteVariant = template.data.pallet.type as PaletteVariant;
 
     setTags(tags);
     setPalette(palette);
+
+    navigate(`/?templateId=${template.id}`);
   };
 
   return (
@@ -44,6 +50,9 @@ export default function GalleryPage() {
       </Helmet>
       <div className="mx-auto max-w-[1024px]">
         <h1 className="text-2xl font-bold">Gallery</h1>
+        <p className="mt-2 text-base text-gray-300">
+          Create thumbnails easily using templates made by others! 🎨🚀
+        </p>
         <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3">
           {templates.map((template) => (
             <GalleryItem
@@ -57,3 +66,27 @@ export default function GalleryPage() {
     </>
   );
 }
+
+const useTemplates = () => {
+  const [templates, setTemplates] = useState<Template[]>([]);
+
+  async function getTemplates(): Promise<Template[]> {
+    let { data: templates, error } = await supabase
+      .from("template")
+      .select("*");
+    console.log("templates, error: ", templates, error);
+
+    if (error) {
+      console.error("Error fetching templates:", error);
+      return [];
+    }
+
+    return (templates as Template[]) || [];
+  }
+
+  useEffect(() => {
+    getTemplates().then(setTemplates);
+  }, []);
+
+  return templates;
+};
