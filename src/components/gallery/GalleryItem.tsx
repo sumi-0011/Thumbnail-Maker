@@ -1,21 +1,18 @@
-import React from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "../ui/card";
 import { ArrowRightIcon } from "lucide-react";
 import { cn } from "src/lib/utils";
+import { PaletteVariant, Tag } from "../thumbnail-maker/assets/palette.types";
 
 export type Template = {
   id: number;
   title: string;
   description: string;
   thumbnail: string;
-  data: string;
+  content: {
+    pallet: {
+      type: PaletteVariant | string;
+    };
+    tags: string;
+  };
 };
 
 interface GalleryItemProps {
@@ -46,17 +43,6 @@ function GalleryItem({ template, onClick }: GalleryItemProps) {
         </button>
       </div>
     </div>
-    // <Card onClick={() => onClick(template)}>
-    //   <CardHeader>
-    //     {" "}
-    //     <img src={template.thumbnail} alt={template.title} />
-    //     {/* <CardTitle>{template.title}</CardTitle>
-    //     <CardDescription>{template.description}</CardDescription> */}
-    //   </CardHeader>
-    //   {/* <CardContent>
-    //     <img src={template.thumbnail} alt={template.title} />
-    //   </CardContent> */}
-    // </Card>
   );
 }
 

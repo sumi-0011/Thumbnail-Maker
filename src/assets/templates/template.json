@@ -4,41 +4,71 @@
     "title": "Template 1",
     "description": "Template 1 description",
     "thumbnail": "https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/templates/base/frontend-folder.png",
-    "data": "[{\"id\":1728476933553,\"content\":{\"type\":\"text\",\"value\":\"프론트엔드\"},\"tagVariant\":\"filled\",\"tagShape\":\"round\"},{\"id\":1728476939582,\"content\":{\"type\":\"text\",\"value\":\"개발자 관점으로\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477013323,\"content\":{\"type\":\"text\",\"value\":\"바라보는\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477021968,\"content\":{\"type\":\"text\",\"value\":\"관심사의 분리와\"},\"tagVariant\":\"filled\",\"tagShape\":\"squared\"},{\"id\":1728477024768,\"content\":{\"type\":\"text\",\"value\":\"좋은 폴더 구조\"},\"tagVariant\":\"outlined\",\"tagShape\":\"squared\"},{\"id\":1728477033967,\"content\":{\"type\":\"3d-emoji\",\"value\":{\"cldr\":\"sparkles\",\"glyph\":\"✨\",\"group\":\"activities\",\"keywords\":[\"*\",\"sparkle\",\"sparkles\",\"star\"],\"unicode\":\"2728\",\"image\":\"/activities/sparkles/3D/sparkles_3d.png\"}},\"tagShape\":\"emoji\",\"tagVariant\":\"ghost\"}]"
+    "content": {
+      "pallet": {
+        "type": "blue_gradient"
+      },
+      "tags": "[{\"id\":1728476933553,\"content\":{\"type\":\"text\",\"value\":\"프론트엔드\"},\"tagVariant\":\"filled\",\"tagShape\":\"round\"},{\"id\":1728476939582,\"content\":{\"type\":\"text\",\"value\":\"개발자 관점으로\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477013323,\"content\":{\"type\":\"text\",\"value\":\"바라보는\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477021968,\"content\":{\"type\":\"text\",\"value\":\"관심사의 분리와\"},\"tagVariant\":\"filled\",\"tagShape\":\"squared\"},{\"id\":1728477024768,\"content\":{\"type\":\"text\",\"value\":\"좋은 폴더 구조\"},\"tagVariant\":\"outlined\",\"tagShape\":\"squared\"},{\"id\":1728477033967,\"content\":{\"type\":\"3d-emoji\",\"value\":{\"cldr\":\"sparkles\",\"glyph\":\"✨\",\"group\":\"activities\",\"keywords\":[\"*\",\"sparkle\",\"sparkles\",\"star\"],\"unicode\":\"2728\",\"image\":\"/activities/sparkles/3D/sparkles_3d.png\"}},\"tagShape\":\"emoji\",\"tagVariant\":\"ghost\"}]"
+    }
   },
   {
     "id": 2,
     "title": "Template 2",
     "description": "Template 2 description",
     "thumbnail": "https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/templates/base/frontend-folder.png",
-    "data": "[{\"id\":1728476933553,\"content\":{\"type\":\"text\",\"value\":\"프론트엔드\"},\"tagVariant\":\"filled\",\"tagShape\":\"round\"},{\"id\":1728476939582,\"content\":{\"type\":\"text\",\"value\":\"개발자 관점으로\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477013323,\"content\":{\"type\":\"text\",\"value\":\"바라보는\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477021968,\"content\":{\"type\":\"text\",\"value\":\"관심사의 분리와\"},\"tagVariant\":\"filled\",\"tagShape\":\"squared\"},{\"id\":1728477024768,\"content\":{\"type\":\"text\",\"value\":\"좋은 폴더 구조\"},\"tagVariant\":\"outlined\",\"tagShape\":\"squared\"},{\"id\":1728477033967,\"content\":{\"type\":\"3d-emoji\",\"value\":{\"cldr\":\"sparkles\",\"glyph\":\"✨\",\"group\":\"activities\",\"keywords\":[\"*\",\"sparkle\",\"sparkles\",\"star\"],\"unicode\":\"2728\",\"image\":\"/activities/sparkles/3D/sparkles_3d.png\"}},\"tagShape\":\"emoji\",\"tagVariant\":\"ghost\"}]"
+    "content": {
+      "pallet": {
+        "type": "blue_gradient"
+      },
+      "tags": "[{\"id\":1728476933553,\"content\":{\"type\":\"text\",\"value\":\"프론트엔드\"},\"tagVariant\":\"filled\",\"tagShape\":\"round\"},{\"id\":1728476939582,\"content\":{\"type\":\"text\",\"value\":\"개발자 관점으로\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477013323,\"content\":{\"type\":\"text\",\"value\":\"바라보는\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477021968,\"content\":{\"type\":\"text\",\"value\":\"관심사의 분리와\"},\"tagVariant\":\"filled\",\"tagShape\":\"squared\"},{\"id\":1728477024768,\"content\":{\"type\":\"text\",\"value\":\"좋은 폴더 구조\"},\"tagVariant\":\"outlined\",\"tagShape\":\"squared\"},{\"id\":1728477033967,\"content\":{\"type\":\"3d-emoji\",\"value\":{\"cldr\":\"sparkles\",\"glyph\":\"✨\",\"group\":\"activities\",\"keywords\":[\"*\",\"sparkle\",\"sparkles\",\"star\"],\"unicode\":\"2728\",\"image\":\"/activities/sparkles/3D/sparkles_3d.png\"}},\"tagShape\":\"emoji\",\"tagVariant\":\"ghost\"}]"
+    }
   },
   {
     "id": 3,
     "title": "Template 1",
     "description": "Template 1 description",
     "thumbnail": "https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/templates/base/frontend-folder.png",
-    "data": "[{\"id\":1728476933553,\"content\":{\"type\":\"text\",\"value\":\"프론트엔드\"},\"tagVariant\":\"filled\",\"tagShape\":\"round\"},{\"id\":1728476939582,\"content\":{\"type\":\"text\",\"value\":\"개발자 관점으로\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477013323,\"content\":{\"type\":\"text\",\"value\":\"바라보는\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477021968,\"content\":{\"type\":\"text\",\"value\":\"관심사의 분리와\"},\"tagVariant\":\"filled\",\"tagShape\":\"squared\"},{\"id\":1728477024768,\"content\":{\"type\":\"text\",\"value\":\"좋은 폴더 구조\"},\"tagVariant\":\"outlined\",\"tagShape\":\"squared\"},{\"id\":1728477033967,\"content\":{\"type\":\"3d-emoji\",\"value\":{\"cldr\":\"sparkles\",\"glyph\":\"✨\",\"group\":\"activities\",\"keywords\":[\"*\",\"sparkle\",\"sparkles\",\"star\"],\"unicode\":\"2728\",\"image\":\"/activities/sparkles/3D/sparkles_3d.png\"}},\"tagShape\":\"emoji\",\"tagVariant\":\"ghost\"}]"
+    "content": {
+      "pallet": {
+        "type": "blue_gradient"
+      },
+      "tags": "[{\"id\":1728476933553,\"content\":{\"type\":\"text\",\"value\":\"프론트엔드\"},\"tagVariant\":\"filled\",\"tagShape\":\"round\"},{\"id\":1728476939582,\"content\":{\"type\":\"text\",\"value\":\"개발자 관점으로\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477013323,\"content\":{\"type\":\"text\",\"value\":\"바라보는\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477021968,\"content\":{\"type\":\"text\",\"value\":\"관심사의 분리와\"},\"tagVariant\":\"filled\",\"tagShape\":\"squared\"},{\"id\":1728477024768,\"content\":{\"type\":\"text\",\"value\":\"좋은 폴더 구조\"},\"tagVariant\":\"outlined\",\"tagShape\":\"squared\"},{\"id\":1728477033967,\"content\":{\"type\":\"3d-emoji\",\"value\":{\"cldr\":\"sparkles\",\"glyph\":\"✨\",\"group\":\"activities\",\"keywords\":[\"*\",\"sparkle\",\"sparkles\",\"star\"],\"unicode\":\"2728\",\"image\":\"/activities/sparkles/3D/sparkles_3d.png\"}},\"tagShape\":\"emoji\",\"tagVariant\":\"ghost\"}]"
+    }
   },
   {
     "id": 3,
     "title": "Template 1",
     "description": "Template 1 description",
     "thumbnail": "https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/templates/base/frontend-folder.png",
-    "data": "[{\"id\":1728476933553,\"content\":{\"type\":\"text\",\"value\":\"프론트엔드\"},\"tagVariant\":\"filled\",\"tagShape\":\"round\"},{\"id\":1728476939582,\"content\":{\"type\":\"text\",\"value\":\"개발자 관점으로\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477013323,\"content\":{\"type\":\"text\",\"value\":\"바라보는\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477021968,\"content\":{\"type\":\"text\",\"value\":\"관심사의 분리와\"},\"tagVariant\":\"filled\",\"tagShape\":\"squared\"},{\"id\":1728477024768,\"content\":{\"type\":\"text\",\"value\":\"좋은 폴더 구조\"},\"tagVariant\":\"outlined\",\"tagShape\":\"squared\"},{\"id\":1728477033967,\"content\":{\"type\":\"3d-emoji\",\"value\":{\"cldr\":\"sparkles\",\"glyph\":\"✨\",\"group\":\"activities\",\"keywords\":[\"*\",\"sparkle\",\"sparkles\",\"star\"],\"unicode\":\"2728\",\"image\":\"/activities/sparkles/3D/sparkles_3d.png\"}},\"tagShape\":\"emoji\",\"tagVariant\":\"ghost\"}]"
+    "content": {
+      "pallet": {
+        "type": "blue_gradient"
+      },
+      "tags": "[{\"id\":1728476933553,\"content\":{\"type\":\"text\",\"value\":\"프론트엔드\"},\"tagVariant\":\"filled\",\"tagShape\":\"round\"},{\"id\":1728476939582,\"content\":{\"type\":\"text\",\"value\":\"개발자 관점으로\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477013323,\"content\":{\"type\":\"text\",\"value\":\"바라보는\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477021968,\"content\":{\"type\":\"text\",\"value\":\"관심사의 분리와\"},\"tagVariant\":\"filled\",\"tagShape\":\"squared\"},{\"id\":1728477024768,\"content\":{\"type\":\"text\",\"value\":\"좋은 폴더 구조\"},\"tagVariant\":\"outlined\",\"tagShape\":\"squared\"},{\"id\":1728477033967,\"content\":{\"type\":\"3d-emoji\",\"value\":{\"cldr\":\"sparkles\",\"glyph\":\"✨\",\"group\":\"activities\",\"keywords\":[\"*\",\"sparkle\",\"sparkles\",\"star\"],\"unicode\":\"2728\",\"image\":\"/activities/sparkles/3D/sparkles_3d.png\"}},\"tagShape\":\"emoji\",\"tagVariant\":\"ghost\"}]"
+    }
   },
   {
     "id": 3,
     "title": "Template 1",
     "description": "Template 1 description",
     "thumbnail": "https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/templates/base/frontend-folder.png",
-    "data": "[{\"id\":1728476933553,\"content\":{\"type\":\"text\",\"value\":\"프론트엔드\"},\"tagVariant\":\"filled\",\"tagShape\":\"round\"},{\"id\":1728476939582,\"content\":{\"type\":\"text\",\"value\":\"개발자 관점으로\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477013323,\"content\":{\"type\":\"text\",\"value\":\"바라보는\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477021968,\"content\":{\"type\":\"text\",\"value\":\"관심사의 분리와\"},\"tagVariant\":\"filled\",\"tagShape\":\"squared\"},{\"id\":1728477024768,\"content\":{\"type\":\"text\",\"value\":\"좋은 폴더 구조\"},\"tagVariant\":\"outlined\",\"tagShape\":\"squared\"},{\"id\":1728477033967,\"content\":{\"type\":\"3d-emoji\",\"value\":{\"cldr\":\"sparkles\",\"glyph\":\"✨\",\"group\":\"activities\",\"keywords\":[\"*\",\"sparkle\",\"sparkles\",\"star\"],\"unicode\":\"2728\",\"image\":\"/activities/sparkles/3D/sparkles_3d.png\"}},\"tagShape\":\"emoji\",\"tagVariant\":\"ghost\"}]"
+    "content": {
+      "pallet": {
+        "type": "blue_gradient"
+      },
+      "tags": "[{\"id\":1728476933553,\"content\":{\"type\":\"text\",\"value\":\"프론트엔드\"},\"tagVariant\":\"filled\",\"tagShape\":\"round\"},{\"id\":1728476939582,\"content\":{\"type\":\"text\",\"value\":\"개발자 관점으로\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477013323,\"content\":{\"type\":\"text\",\"value\":\"바라보는\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477021968,\"content\":{\"type\":\"text\",\"value\":\"관심사의 분리와\"},\"tagVariant\":\"filled\",\"tagShape\":\"squared\"},{\"id\":1728477024768,\"content\":{\"type\":\"text\",\"value\":\"좋은 폴더 구조\"},\"tagVariant\":\"outlined\",\"tagShape\":\"squared\"},{\"id\":1728477033967,\"content\":{\"type\":\"3d-emoji\",\"value\":{\"cldr\":\"sparkles\",\"glyph\":\"✨\",\"group\":\"activities\",\"keywords\":[\"*\",\"sparkle\",\"sparkles\",\"star\"],\"unicode\":\"2728\",\"image\":\"/activities/sparkles/3D/sparkles_3d.png\"}},\"tagShape\":\"emoji\",\"tagVariant\":\"ghost\"}]"
+    }
   },
   {
     "id": 3,
     "title": "Template 1",
     "description": "Template 1 description",
     "thumbnail": "https://avahrjwyynzeocqpyfhw.supabase.co/storage/v1/object/public/templates/base/frontend-folder.png",
-    "data": "[{\"id\":1728476933553,\"content\":{\"type\":\"text\",\"value\":\"프론트엔드\"},\"tagVariant\":\"filled\",\"tagShape\":\"round\"},{\"id\":1728476939582,\"content\":{\"type\":\"text\",\"value\":\"개발자 관점으로\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477013323,\"content\":{\"type\":\"text\",\"value\":\"바라보는\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477021968,\"content\":{\"type\":\"text\",\"value\":\"관심사의 분리와\"},\"tagVariant\":\"filled\",\"tagShape\":\"squared\"},{\"id\":1728477024768,\"content\":{\"type\":\"text\",\"value\":\"좋은 폴더 구조\"},\"tagVariant\":\"outlined\",\"tagShape\":\"squared\"},{\"id\":1728477033967,\"content\":{\"type\":\"3d-emoji\",\"value\":{\"cldr\":\"sparkles\",\"glyph\":\"✨\",\"group\":\"activities\",\"keywords\":[\"*\",\"sparkle\",\"sparkles\",\"star\"],\"unicode\":\"2728\",\"image\":\"/activities/sparkles/3D/sparkles_3d.png\"}},\"tagShape\":\"emoji\",\"tagVariant\":\"ghost\"}]"
+    "content": {
+      "pallet": {
+        "type": "blue_gradient"
+      },
+      "tags": "[{\"id\":1728476933553,\"content\":{\"type\":\"text\",\"value\":\"프론트엔드\"},\"tagVariant\":\"filled\",\"tagShape\":\"round\"},{\"id\":1728476939582,\"content\":{\"type\":\"text\",\"value\":\"개발자 관점으로\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477013323,\"content\":{\"type\":\"text\",\"value\":\"바라보는\"},\"tagVariant\":\"ghost\",\"tagShape\":\"squared\"},{\"id\":1728477021968,\"content\":{\"type\":\"text\",\"value\":\"관심사의 분리와\"},\"tagVariant\":\"filled\",\"tagShape\":\"squared\"},{\"id\":1728477024768,\"content\":{\"type\":\"text\",\"value\":\"좋은 폴더 구조\"},\"tagVariant\":\"outlined\",\"tagShape\":\"squared\"},{\"id\":1728477033967,\"content\":{\"type\":\"3d-emoji\",\"value\":{\"cldr\":\"sparkles\",\"glyph\":\"✨\",\"group\":\"activities\",\"keywords\":[\"*\",\"sparkle\",\"sparkles\",\"star\"],\"unicode\":\"2728\",\"image\":\"/activities/sparkles/3D/sparkles_3d.png\"}},\"tagShape\":\"emoji\",\"tagVariant\":\"ghost\"}]"
+    }
   }
 ]
