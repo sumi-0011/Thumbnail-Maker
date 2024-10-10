@@ -1,13 +1,23 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider } from "react-router-dom";
 import { createRouter } from "./router";
 import { ThemeProvider } from "./components/theme-provider";
 import { Toaster } from "./components/ui/sonner";
+import ReactGA from "react-ga4";
 
 export default function App() {
   const queryClient = useMemo(() => new QueryClient({}), []);
+
+  useEffect(() => {
+    const gaId = import.meta.env.VITE_APP_GA_ID;
+    if (gaId) {
+      ReactGA.initialize(gaId);
+    } else {
+      console.error("Google Analytics ID is not set in environment variables");
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
