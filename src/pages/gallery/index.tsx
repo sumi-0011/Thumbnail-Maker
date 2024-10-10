@@ -18,25 +18,10 @@ export default function GalleryPage() {
   const templates = useTemplates();
   const navigate = useNavigate();
 
-  const [, setTags] = useStorageState<Tag[]>(THUMBNAIL_MAKER_STORAGE_KEY, {
-    defaultValue: [],
-  });
-
-  const [, setPalette] = useStorageState<PaletteVariant>(
-    THUMBNAIL_MAKERS_PALETTE_STORAGE_KEY,
-    {
-      defaultValue: "blue_gradient",
-    }
-  );
+  const { onUseTemplate } = useUseTemplate();
 
   const onItemClick = (template: Template) => {
-    console.log("template: ", template);
-    const tags: Tag[] = JSON.parse(template.data.tags);
-    // TODO: custom palette 추가
-    const palette: PaletteVariant = template.data.pallet.type as PaletteVariant;
-
-    setTags(tags);
-    setPalette(palette);
+    onUseTemplate(template);
 
     navigate(`/?templateId=${template.id}`);
   };
@@ -64,6 +49,27 @@ export default function GalleryPage() {
     </>
   );
 }
+
+const useUseTemplate = () => {
+  const [, setTags] = useStorageState<Tag[]>(THUMBNAIL_MAKER_STORAGE_KEY, {
+    defaultValue: [],
+  });
+
+  const [, setPalette] = useStorageState<PaletteVariant>(
+    THUMBNAIL_MAKERS_PALETTE_STORAGE_KEY
+  );
+
+  const onUseTemplate = (template: Template) => {
+    const tags: Tag[] = JSON.parse(template.data.tags);
+    // TODO: custom palette 추가
+    const palette: PaletteVariant = template.data.pallet.type as PaletteVariant;
+
+    setTags(tags);
+    setPalette(palette);
+  };
+
+  return { onUseTemplate };
+};
 
 const useTemplates = () => {
   const [templates, setTemplates] = useState<Template[]>([]);

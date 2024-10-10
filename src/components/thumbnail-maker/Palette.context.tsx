@@ -12,6 +12,7 @@ interface PaletteActionContextType {
   onPaletteChange: (palette: PaletteVariant) => void;
 }
 
+// 차라리 zustand 쓰는게 더 낫지 않을까?
 const PaletteContext = createContext<PaletteContextType | undefined>(undefined);
 const PaletteActionContext = createContext<
   PaletteActionContextType | undefined
