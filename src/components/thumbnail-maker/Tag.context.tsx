@@ -10,17 +10,20 @@ interface SelectTagActionContextType {
   clearSelectedTag: () => void;
 }
 
-const SelectedTagContext = createContext<SelectTagContextType | undefined>(
-  undefined
-);
+const SelectedTagContext = createContext<SelectTagContextType | undefined>({
+  selectedTag: null,
+});
 const SelectTagActionContext = createContext<
   SelectTagActionContextType | undefined
->(undefined);
+>({
+  onSelectTag: () => {},
+  clearSelectedTag: () => {},
+});
 
 export const TagProvider = ({ children }: PropsWithChildren) => {
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
 
-  const setTag = (tag: Tag) => {
+  const onSelectTag = (tag: Tag) => {
     setSelectedTag(tag);
   };
 
@@ -31,7 +34,7 @@ export const TagProvider = ({ children }: PropsWithChildren) => {
   return (
     <SelectedTagContext.Provider value={{ selectedTag }}>
       <SelectTagActionContext.Provider
-        value={{ onSelectTag: setTag, clearSelectedTag }}
+        value={{ onSelectTag, clearSelectedTag }}
       >
         {children}
       </SelectTagActionContext.Provider>

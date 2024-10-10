@@ -7,7 +7,7 @@ export const canvasSize = {
 export const THUMBNAIL_MAKER_STORAGE_KEY = "@thumbnail-maker/tags";
 
 export const EMPTY_TAG = {
-  id: 0,
+  id: -1,
   content: { type: "text", value: "" },
   tagVariant: "filled",
   tagShape: "round",

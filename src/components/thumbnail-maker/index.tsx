@@ -5,7 +5,7 @@ import { CanvasContainer } from "./CanvasContainer";
 import { useCheckTagOverflow } from "./hooks/useCheckTagOverflow";
 import { usePreview } from "./hooks/usePreview";
 import { TagChangeSheet } from "./TagChangeSheet";
-import { PallettePicker } from "./PallettePicker";
+import { PalettePicker } from "./PalettePicker";
 import { Tag } from "./assets/palette.types";
 import { TagEmojiSheet } from "./TagEmojiSheet";
 import { TemplateSaveButton } from "./TemplateSaveButton";
@@ -77,7 +77,7 @@ function ThumbnailMaker() {
         onRemove={handleRemoveTag}
       />
       <div className="flex items-center justify-between">
-        <PallettePicker />
+        <PalettePicker />
         <div className="flex items-center gap-2">
           <TemplateSaveButton />
           <Button onClick={onDownload}>
