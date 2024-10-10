@@ -3,7 +3,7 @@ import { usePalette, usePaletteAction } from "./Palette.context";
 import { PALETTE } from "./assets/palette.constants";
 import { PaletteVariant } from "./assets/palette.types";
 
-export function PallettePicker() {
+export function PalettePicker() {
   const { currentPalette } = usePalette();
   const { onPaletteChange } = usePaletteAction();
 

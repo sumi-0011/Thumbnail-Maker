@@ -13,6 +13,8 @@ import { Input } from "../ui/input";
 import { getTagStyleKey } from "./assets/utils";
 import { useCurrentPaletteStyle } from "./Palette.context";
 import { Tag, TagShape, TagVariant } from "./assets/palette.types";
+import { useSelectedTag, useSelectedTagAction } from "./Tag.context";
+import { EMPTY_TAG } from "./assets/constants";
 
 const selectTagStyleMap: { variant: TagVariant; shape: TagShape }[] = [
   { variant: "filled", shape: "round" },
@@ -23,34 +25,29 @@ const selectTagStyleMap: { variant: TagVariant; shape: TagShape }[] = [
 ];
 
 interface Props {
-  isOpen: boolean;
-  onClose: () => void;
-
-  tag: Tag;
-
   onStyleChange: (newTag: Tag) => void;
-  onRemove: () => void;
+  onRemove: (tagId: number) => void;
 }
 
-function TagSheet({
-  isOpen,
-  onClose,
-  tag: initTag,
-  onStyleChange,
-  onRemove,
-}: Props) {
+export function TagChangeSheet({ onStyleChange, onRemove }: Props) {
   const paletteStyle = useCurrentPaletteStyle();
-  const [tag, setTag] = useState<Tag>(initTag);
+  const { clearSelectedTag: onClose } = useSelectedTagAction();
+
+  const { tag, setTag, isOpen } = useSheetTag();
 
   const onChangeTagStyle = (variant: TagVariant, shape: TagShape) => {
     setTag({ ...tag, tagVariant: variant, tagShape: shape });
   };
 
-  // NOTE: sheet open animation을 위해 useEffect 사용
-  useEffect(() => {
-    if (!initTag.content.value) return;
-    setTag(initTag);
-  }, [initTag]);
+  const onChangeTagContent = (value: string) => {
+    setTag({ ...tag, content: { type: "text", value } });
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      onStyleChange(tag);
+    }
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -71,47 +68,17 @@ function TagSheet({
             <p className="mb-3 text-[13px] text-[#9292A1]">Tag text</p>
             <Input
               value={tag.content.value}
-              onChange={(e) =>
-                setTag({
-                  ...tag,
-                  content: { ...tag.content, value: e.target.value },
-                })
-              }
+              onChange={(e) => onChangeTagContent(e.target.value)}
+              onKeyDown={onKeyDown}
             />
           </div>
           <div>
             <p className="mb-5 text-[13px] text-[#9292A1]">Tag style</p>
-            <div className="grid grid-cols-3 gap-4">
-              {selectTagStyleMap.map((style) => {
-                const currentTag: Tag = {
-                  id: 0,
-                  tagVariant: style.variant,
-                  tagShape: style.shape,
-                  content: { type: "text", value: "TAG" },
-                };
-
-                return (
-                  <button
-                    key={getTagStyleKey(currentTag)}
-                    type="button"
-                    className="h-fit w-fit origin-top-left transform transition-all duration-300 ease-in-out"
-                    onClick={() => onChangeTagStyle(style.variant, style.shape)}
-                  >
-                    <TagItemView
-                      tag={currentTag}
-                      tagStyle={
-                        paletteStyle.tagStyle[getTagStyleKey(currentTag)]
-                      }
-                      size="small"
-                    />
-                  </button>
-                );
-              })}
-            </div>
+            <TagStylePicker onClick={onChangeTagStyle} />
           </div>
         </div>
         <SheetFooter className="mt-[96px] flex justify-center gap-2 sm:justify-center">
-          <Button onClick={onRemove} variant="secondary">
+          <Button onClick={() => onRemove(tag.id)} variant="secondary">
             Delete
           </Button>
           <Button onClick={() => onStyleChange(tag)}>Save</Button>
@@ -121,4 +88,52 @@ function TagSheet({
   );
 }
 
-export default TagSheet;
+function TagStylePicker({
+  onClick,
+}: {
+  onClick: (variant: TagVariant, shape: TagShape) => void;
+}) {
+  const paletteStyle = useCurrentPaletteStyle();
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      {selectTagStyleMap.map((style) => {
+        const currentTag: Tag = {
+          id: 0,
+          tagVariant: style.variant,
+          tagShape: style.shape,
+          content: { type: "text", value: "TAG" },
+        };
+
+        return (
+          <button
+            key={getTagStyleKey(currentTag)}
+            type="button"
+            className="h-fit w-fit origin-top-left transform transition-all duration-300 ease-in-out"
+            onClick={() => onClick(style.variant, style.shape)}
+          >
+            <TagItemView
+              tag={currentTag}
+              tagStyle={paletteStyle.tagStyle[getTagStyleKey(currentTag)]}
+              size="small"
+            />
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+const useSheetTag = () => {
+  const { selectedTag } = useSelectedTag();
+
+  const [tag, setTag] = useState<Tag>(selectedTag ?? EMPTY_TAG);
+
+  const isOpen = selectedTag?.content.type === "text";
+
+  useEffect(() => {
+    if (!selectedTag) return;
+    setTag(selectedTag);
+  }, [selectedTag]);
+
+  return { tag, setTag, isOpen };
+};
