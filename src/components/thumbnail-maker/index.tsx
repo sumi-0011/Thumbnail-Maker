@@ -20,6 +20,7 @@ function ThumbnailMaker() {
 
   const { tags, onAddTag, onRemoveTag, onRollbackTags, onUpdateTag } =
     useThumbnailTagList();
+  console.log("tags: ", tags);
 
   const { onSelectTag, clearSelectedTag } = useSelectedTagAction();
 

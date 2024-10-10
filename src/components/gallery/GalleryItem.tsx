@@ -4,6 +4,7 @@ import { PaletteVariant, Tag } from "../thumbnail-maker/assets/palette.types";
 
 export type Template = {
   id: number;
+  userId: string;
   title: string;
   description: string;
   thumbnail: string;
@@ -26,9 +27,9 @@ function GalleryItem({ template, onClick }: GalleryItemProps) {
       className="group relative cursor-pointer overflow-hidden"
       onClick={() => onClick(template)}
     >
-      <div className="overflow-hidden rounded-md">
+      {/* <div className="overflow-hidden rounded-md">
         <img src={template.thumbnail} alt={template.title} draggable={false} />
-      </div>
+      </div> */}
       {/* hover 했을떄 나타나기 */}
       <div
         className={cn(

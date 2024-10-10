@@ -5,6 +5,7 @@ export const canvasSize = {
 } as const;
 
 export const THUMBNAIL_MAKER_STORAGE_KEY = "@thumbnail-maker/tags";
+export const THUMBNAIL_MAKERS_PALETTE_STORAGE_KEY = "@thumbnail-maker/palette";
 
 export const EMPTY_TAG = {
   id: -1,
