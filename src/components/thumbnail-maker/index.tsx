@@ -13,7 +13,7 @@ import { TagList } from "./TagList";
 import { useSelectedTagAction, useTagAction } from "./Tag.context";
 
 function ThumbnailMaker() {
-  const { previewRef, onDownload } = usePreview();
+  const { previewRef, onDownload, getImageFile } = usePreview();
   const { tagsContainerRef, checkOverflow, showOverflowToast } =
     useCheckTagOverflow();
 
@@ -77,7 +77,7 @@ function ThumbnailMaker() {
       <div className="flex items-center justify-between">
         <PalettePicker />
         <div className="flex items-center gap-2">
-          <SubActionMenu />
+          <SubActionMenu getImageFile={getImageFile} />
           <Button onClick={onDownload}>
             <Image size={20} className="mr-2" /> Download Image
           </Button>
