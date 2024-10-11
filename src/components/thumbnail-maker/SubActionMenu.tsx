@@ -53,7 +53,7 @@ export function SubActionMenu({
               <MenubarItem>Go to Gallery</MenubarItem>
             </Link>
             <MenubarItem onClick={() => setIsSaveTemplateSheetOpen(true)}>
-              Save Template (preparing)
+              Save Template
             </MenubarItem>
             <MenubarSeparator />
           </MenubarContent>
@@ -80,12 +80,19 @@ function SaveTemplateSheet({
   const { tags } = useTagList();
   const { currentPalette } = usePalette();
 
+  const initTitle = tags
+    .map((tag) => (tag.content.type === "text" ? tag.content.value : ""))
+    .join(" ")
+    .replace(/[^\w\s가-힣]/g, "") // 특수 문자 제거
+    .trim(); // 앞뒤 공백 제거
+
   const inputValues = useRef({
-    title: "",
+    title: initTitle,
     description: "",
     blogUrl: "",
     username: "",
   });
+
   const uploadThumbnail = async (
     thumbnail: Blob,
     id: string
@@ -180,6 +187,7 @@ function SaveTemplateSheet({
               className="col-span-3"
               placeholder="Please enter a title"
               onChange={(e) => (inputValues.current.title = e.target.value)}
+              defaultValue={initTitle}
             />
           </div>
           <div className="grid-cols-[80px 1fr] grid items-center gap-4">
