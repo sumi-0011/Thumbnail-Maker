@@ -5,6 +5,26 @@ import { useRef, useState } from "react";
 export const usePreview = () => {
   const previewRef = useRef<HTMLDivElement>(null);
 
+  const getImageFile = async (): Promise<Blob | null> => {
+    if (!previewRef.current) return null;
+
+    try {
+      const canvas = await html2canvas(previewRef.current, {
+        allowTaint: true,
+        useCORS: true,
+      });
+
+      return new Promise<Blob | null>((resolve) => {
+        canvas.toBlob((blob) => {
+          resolve(blob);
+        }, "image/png");
+      });
+    } catch (error) {
+      console.error("Error converting div to image:", error);
+      return null;
+    }
+  };
+
   const handleDownload = async () => {
     if (!previewRef.current) return;
 
@@ -24,5 +44,5 @@ export const usePreview = () => {
     }
   };
 
-  return { previewRef, onDownload: handleDownload };
+  return { previewRef, onDownload: handleDownload, getImageFile };
 };
