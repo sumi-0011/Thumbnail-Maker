@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function GalleryPage() {
   const templates = useTemplates();
+  console.log("templates: ", templates);
   const navigate = useNavigate();
 
   const { onUseTemplate } = useUseTemplate();
@@ -62,7 +63,8 @@ const useUseTemplate = () => {
   const onUseTemplate = (template: Template) => {
     const tags: Tag[] = JSON.parse(template.data.tags);
     // TODO: custom palette 추가
-    const palette: PaletteVariant = template.data.pallet.type as PaletteVariant;
+    const palette: PaletteVariant = template.data.palette
+      .type as PaletteVariant;
 
     setTags(tags);
     setPalette(palette);

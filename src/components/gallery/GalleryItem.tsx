@@ -9,7 +9,7 @@ export type Template = {
   description: string;
   thumbnail: string;
   data: {
-    pallet: {
+    palette: {
       type: PaletteVariant | string;
     };
     tags: string;

@@ -150,7 +150,7 @@ function SaveTemplateSheet({
         createdAt: new Date(),
         data: {
           tags: JSON.stringify(tags),
-          palette: currentPalette,
+          palette: { type: currentPalette },
         },
         thumbnail: imageUrl,
       };
