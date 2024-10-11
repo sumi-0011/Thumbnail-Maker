@@ -26,6 +26,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { supabase } from "src/lib/supabaseClient";
+import { toast } from "sonner";
 
 export function SubActionMenu({
   getImageFile,
@@ -101,68 +102,62 @@ function SaveTemplateSheet({
           // upsert: false,
         });
 
-      console.log("data: ", data);
-
       if (error) {
-        console.error("Error uploading thumbnail:", error);
-        return null;
+        throw new Error("Error uploading thumbnail:", error);
       }
 
-      // // 업로드 성공 시 공개 URL 가져오기
       const { data: urlData } = supabase.storage
         .from("templates")
         .getPublicUrl(`user/${id}`);
 
       if (urlData && urlData.publicUrl) {
-        console.log("Thumbnail uploaded successfully. URL:", urlData.publicUrl);
         return urlData.publicUrl;
       } else {
-        console.error("Failed to get public URL");
-        return null;
+        throw new Error("Failed to get public URL");
       }
-      return null;
     } catch (error) {
-      console.error("Error in uploadThumbnail:", error);
+      console.error("Error uploading thumbnail:", error);
+      toast.error("Error uploading thumbnail");
       return null;
     }
   };
 
   const onSaveTemplate = async () => {
-    const id = new Date().getTime().toString();
-    const userId = "user";
+    try {
+      const id = new Date().getTime().toString();
+      const userId = "user";
 
-    const thumbnail = await getImageFile();
-
-    if (thumbnail) {
+      const thumbnail = await getImageFile();
+      if (!thumbnail) return;
       const imageUrl = await uploadThumbnail(thumbnail, id);
-      if (imageUrl) {
-        // imageUrl을 사용하여 필요한 작업 수행
-        console.log("Uploaded image URL:", imageUrl);
-      } else {
-        // 업로드 실패 처리
-        console.error("Failed to upload thumbnail");
-      }
+      if (!imageUrl) return;
+      // imageUrl을 사용하여 필요한 작업 수행
+
+      const requestData = {
+        id,
+        userId,
+        title: inputValues.current.title,
+        description: inputValues.current.description,
+        url: inputValues.current.blogUrl,
+        username: inputValues.current.username,
+        createdAt: new Date(),
+        data: {
+          tags: JSON.stringify(tags),
+          palette: currentPalette,
+        },
+        thumbnail: imageUrl,
+      };
+
+      const { data, error } = await supabase
+        .from("template")
+        .insert(requestData);
+
+      toast.success("Template saved successfully");
+      onClose();
+    } catch (error) {
+      console.error("Error uploading thumbnail:", error);
+      toast.error("Error uploading thumbnail");
     }
-
-    const data = {
-      id,
-      userId,
-      title: inputValues.current.title,
-      description: inputValues.current.description,
-      url: inputValues.current.blogUrl,
-      username: inputValues.current.username,
-      createdAt: new Date().toISOString(),
-      data: {
-        tags: JSON.stringify(tags),
-        palette: currentPalette,
-      },
-      thumbnail,
-    };
-
-    console.log("data: ", data);
-    // const { error } = await supabase
-    // .from("product")
-    // .insert({ ...formData, image });
   };
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -249,18 +244,4 @@ function SaveTemplateSheet({
   );
 }
 
-const useTemplateSave = () => {
-  const { tags } = useTagList();
-  const { currentPalette } = usePalette();
-  const onSaveTemplate = () => {
-    console.log(tags, currentPalette);
-
-    const userId = "user";
-
-    // const { error } = await supabase
-    // .from("product")
-    // .insert({ ...formData, image });
-  };
-
-  return { onSaveTemplate };
-};
+const useTemplateSave = () => {};
