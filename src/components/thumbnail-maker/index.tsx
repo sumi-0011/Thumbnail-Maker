@@ -8,7 +8,7 @@ import { TagChangeSheet } from "./TagChangeSheet";
 import { PalettePicker } from "./PalettePicker";
 import { Tag } from "./assets/palette.types";
 import { TagEmojiSheet } from "./TagEmojiSheet";
-import { TemplateSaveButton } from "./TemplateSaveButton";
+import { SubActionMenu } from "./SubActionMenu";
 import { TagList } from "./TagList";
 import { useSelectedTagAction, useTagAction } from "./Tag.context";
 
@@ -77,7 +77,7 @@ function ThumbnailMaker() {
       <div className="flex items-center justify-between">
         <PalettePicker />
         <div className="flex items-center gap-2">
-          <TemplateSaveButton />
+          <SubActionMenu />
           <Button onClick={onDownload}>
             <Image size={20} className="mr-2" /> Download Image
           </Button>
