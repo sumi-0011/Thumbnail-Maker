@@ -25,7 +25,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Router>
-          <div className="h-min-screen mx-auto flex h-[900px] min-h-screen w-fit items-center justify-center bg-[#1D2027] p-6">
+          <div className="h-min-screen mx-auto flex h-[900px] min-h-screen w-fit w-full items-center justify-center bg-[#1D2027] p-6">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/gallery" element={<GalleryPage />} />

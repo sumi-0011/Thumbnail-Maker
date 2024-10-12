@@ -13,9 +13,10 @@ import {
 } from "src/components/thumbnail-maker/assets/palette.types";
 import { supabase } from "src/lib/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { Skeleton } from "src/components/ui/skeleton";
 
 export default function GalleryPage() {
-  const templates = useTemplates();
+  const { templates, isLoading } = useTemplates();
   console.log("templates: ", templates);
   const navigate = useNavigate();
 
@@ -32,12 +33,22 @@ export default function GalleryPage() {
       <Helmet>
         <title>Thumbnail Maker</title>
       </Helmet>
-      <div className="mx-auto max-w-[1024px]">
+      <div className="mx-auto h-screen w-full max-w-[1024px] py-[10vh]">
         <h1 className="text-2xl font-bold">Gallery</h1>
         <p className="mt-2 text-base text-gray-300">
           Create thumbnails easily using templates made by others! 🎨🚀
         </p>
         <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3">
+          {isLoading && (
+            <>
+              <Skeleton style={{ aspectRatio: "330/172" }} />
+              <Skeleton style={{ aspectRatio: "330/172" }} />
+              <Skeleton style={{ aspectRatio: "330/172" }} />
+              <Skeleton style={{ aspectRatio: "330/172" }} />
+              <Skeleton style={{ aspectRatio: "330/172" }} />
+              <Skeleton style={{ aspectRatio: "330/172" }} />
+            </>
+          )}
           {templates.map((template) => (
             <GalleryItem
               key={template.id}
@@ -75,6 +86,7 @@ const useUseTemplate = () => {
 
 const useTemplates = () => {
   const [templates, setTemplates] = useState<Template[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   async function getTemplates(): Promise<Template[]> {
     let { data: templates, error } = await supabase
@@ -91,8 +103,15 @@ const useTemplates = () => {
   }
 
   useEffect(() => {
-    getTemplates().then(setTemplates);
+    setIsLoading(true);
+    getTemplates()
+      .then((templates) => {
+        setTemplates(templates);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
-  return templates;
+  return { templates, isLoading };
 };
