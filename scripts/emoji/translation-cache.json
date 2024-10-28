@@ -1,0 +1,122 @@
+{
+  "ant": {
+    "en": "ant",
+    "ko": "개미"
+  },
+  "insect": {
+    "en": "insect",
+    "ko": "곤충"
+  },
+  "bird": {
+    "en": "bird",
+    "ko": "새"
+  },
+  "chick": {
+    "en": "chick",
+    "ko": "병아리"
+  },
+  "badger": {
+    "en": "badger",
+    "ko": "오소리"
+  },
+  "honey badger": {
+    "en": "honey badger",
+    "ko": "꿀 오소리"
+  },
+  "bat": {
+    "en": "bat",
+    "ko": "박쥐"
+  },
+  "vampire": {
+    "en": "vampire",
+    "ko": "뱀파이어"
+  },
+  "black flag": {
+    "en": "black flag",
+    "ko": "검은 깃발"
+  },
+  "waving": {
+    "en": "waving",
+    "ko": "흔들기"
+  },
+  "indulge": {
+    "en": "indulge",
+    "ko": "탐닉하다"
+  },
+  "young": {
+    "en": "young",
+    "ko": "젊은"
+  },
+  "fowl": {
+    "en": "fowl",
+    "ko": "새"
+  },
+  "skirt": {
+    "en": "skirt",
+    "ko": "치마"
+  },
+  "doll": {
+    "en": "doll",
+    "ko": "인형"
+  },
+  "beleaguer": {
+    "en": "beleaguer",
+    "ko": "포위 공격자"
+  },
+  "love": {
+    "en": "love",
+    "ko": "사랑"
+  },
+  "dear": {
+    "en": "dear",
+    "ko": "사랑하는"
+  },
+  "beloved": {
+    "en": "beloved",
+    "ko": "사랑하는"
+  },
+  "colored": {
+    "en": "colored",
+    "ko": "색깔"
+  },
+  "chromatic": {
+    "en": "chromatic",
+    "ko": "색채"
+  },
+  "flutter": {
+    "en": "flutter",
+    "ko": "설레임"
+  },
+  "lumber": {
+    "en": "lumber",
+    "ko": "목재"
+  },
+  "thrash": {
+    "en": "thrash",
+    "ko": "스래쉬"
+  },
+  "lick": {
+    "en": "lick",
+    "ko": "핥다"
+  },
+  "clobber": {
+    "en": "clobber",
+    "ko": "클로버"
+  },
+  "swag": {
+    "en": "swag",
+    "ko": "스웨그"
+  },
+  "flying": {
+    "en": "flying",
+    "ko": "비행"
+  },
+  "flaring": {
+    "en": "flaring",
+    "ko": "플레어"
+  },
+  "fluttering": {
+    "en": "fluttering",
+    "ko": "펄럭이는"
+  }
+}

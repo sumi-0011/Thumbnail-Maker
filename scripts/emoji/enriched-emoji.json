@@ -1,0 +1,133 @@
+{
+  "animals&nature": {
+    "ant": {
+      "cldr": "ant",
+      "glyph": "🐜",
+      "group": "animals&nature",
+      "keywords": [
+        "ant",
+        "insect",
+        "anti",
+        "emmet",
+        "pismire",
+        "counteractive",
+        "worm",
+        "louse"
+      ],
+      "unicode": "1f41c",
+      "image": "/animals&nature/ant/3D/ant_3d.png",
+      "originalKeywords": [
+        "ant",
+        "insect"
+      ]
+    },
+    "baby_chick": {
+      "cldr": "baby_chick",
+      "glyph": "🐤",
+      "group": "animals&nature",
+      "keywords": [
+        "baby",
+        "bird",
+        "chick",
+        "new",
+        "child",
+        "spoil",
+        "indulge",
+        "young",
+        "fowl",
+        "skirt",
+        "boo",
+        "doll",
+        "hoot",
+        "dame",
+        "wench"
+      ],
+      "unicode": "1f424",
+      "image": "/animals&nature/baby_chick/3D/baby_chick_3d.png",
+      "originalKeywords": [
+        "baby",
+        "bird",
+        "chick"
+      ]
+    },
+    "badger": {
+      "cldr": "badger",
+      "glyph": "🦡",
+      "group": "animals&nature",
+      "keywords": [
+        "badger",
+        "honey badger",
+        "pester",
+        "bug",
+        "tease",
+        "harass",
+        "beleaguer",
+        "love",
+        "dear",
+        "beloved",
+        "colored",
+        "chromatic"
+      ],
+      "unicode": "1f9a1",
+      "image": "/animals&nature/badger/3D/badger_3d.png",
+      "originalKeywords": [
+        "badger",
+        "honey badger",
+        "pester"
+      ]
+    },
+    "bat": {
+      "cldr": "bat",
+      "glyph": "🦇",
+      "group": "animals&nature",
+      "keywords": [
+        "bat",
+        "vampire",
+        "flutter",
+        "lumber",
+        "thrash",
+        "lick",
+        "clobber",
+        "lamia"
+      ],
+      "unicode": "1f987",
+      "image": "/animals&nature/bat/3D/bat_3d.png",
+      "originalKeywords": [
+        "bat",
+        "vampire"
+      ]
+    }
+  },
+  "flags": {
+    "black_flag": {
+      "cldr": "black_flag",
+      "glyph": "🏴",
+      "group": "flags",
+      "keywords": [
+        "black flag",
+        "waving",
+        "bleak",
+        "dark",
+        "evil",
+        "sinister",
+        "covert",
+        "pin",
+        "swag",
+        "iris",
+        "sag",
+        "ensign",
+        "wave",
+        "moving",
+        "flying",
+        "flaring",
+        "fluttering"
+      ],
+      "unicode": "1f3f4",
+      "image": "/flags/black_flag/3D/black_flag_3d.png",
+      "originalKeywords": [
+        "black flag",
+        "waving"
+      ]
+    }
+  }
+}

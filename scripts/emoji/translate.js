@@ -2,8 +2,48 @@ const fs = require("fs").promises;
 const axios = require("axios");
 require("dotenv").config();
 
-// DeepL API 설정
+const DEEPL_API_KEY = process.env.DEEPL_API_KEY;
 const DEEPL_API_URL = "https://api-free.deepl.com/v2/translate";
+const CACHE_FILE = "./translation-cache.json";
+const FAILED_FILE = "./failed-translations.json";
+const INPUT_FILE = "./enriched-emoji.json";
+
+// 캐시 로드 함수
+const loadCache = async () => {
+  try {
+    const data = await fs.readFile(CACHE_FILE, "utf-8");
+    const cache = JSON.parse(data);
+    console.log(`Loaded ${Object.keys(cache).length} cached translations`);
+    return cache;
+  } catch (error) {
+    console.log("No existing cache found, starting with empty cache");
+    return {};
+  }
+};
+
+// 실패 기록 로드 함수
+const loadFailedTranslations = async () => {
+  try {
+    const data = await fs.readFile(FAILED_FILE, "utf-8");
+    const failed = JSON.parse(data);
+    console.log(
+      `Loaded ${failed.failedKeywords.length} previously failed translations`
+    );
+    return new Set(failed.failedKeywords);
+  } catch (error) {
+    console.log("No previous failure record found");
+    return new Set();
+  }
+};
+
+const saveCache = async (cache) => {
+  try {
+    await fs.writeFile(CACHE_FILE, JSON.stringify(cache, null, 2));
+    console.log(`Saved ${Object.keys(cache).length} translations to cache`);
+  } catch (error) {
+    console.error("Error saving cache:", error);
+  }
+};
 
 // 고유 키워드 추출 함수
 const extractUniqueKeywords = async (inputPath) => {
@@ -57,19 +97,54 @@ const translateBatch = async (texts) => {
 };
 
 // 번역 사전 생성 함수
-const generateDictionary = async (keywords) => {
+const generateDictionary = async (keywords, cache) => {
   const dictionary = {};
   const batchSize = 50;
   const failedTranslations = new Set();
 
-  console.log(`Total unique keywords: ${keywords.length}`);
+  // 이전 실패 기록 로드
+  const previousFailures = await loadFailedTranslations();
 
-  for (let i = 0; i < keywords.length; i += batchSize) {
-    const batch = keywords.slice(i, i + batchSize);
+  // 키워드 분류
+  const needTranslation = keywords.filter(
+    (keyword) => !cache[keyword] && !previousFailures.has(keyword)
+  );
+  const cachedKeywords = keywords.filter((keyword) => cache[keyword]);
+  const skipKeywords = keywords.filter((keyword) =>
+    previousFailures.has(keyword)
+  );
+
+  console.log(`\nTranslation status:`);
+  console.log(`Total keywords: ${keywords.length}`);
+  console.log(`Found in cache: ${cachedKeywords.length}`);
+  console.log(`Previously failed (skip): ${skipKeywords.length}`);
+  console.log(`Need translation: ${needTranslation.length}`);
+
+  // 캐시된 번역 처리
+  cachedKeywords.forEach((keyword) => {
+    const cached = cache[keyword];
+    if (cached && cached.ko && cached.ko !== keyword) {
+      dictionary[keyword] = cached;
+      console.log(`[CACHE] ✓ ${keyword} -> ${cached.ko}`);
+    } else {
+      failedTranslations.add(keyword);
+      console.log(`[CACHE] ✗ Invalid translation for: ${keyword}`);
+    }
+  });
+
+  // 이전 실패 건 처리
+  skipKeywords.forEach((keyword) => {
+    console.log(`[SKIP] → ${keyword} (previously failed)`);
+    failedTranslations.add(keyword);
+  });
+
+  // 새로운 번역 처리
+  for (let i = 0; i < needTranslation.length; i += batchSize) {
+    const batch = needTranslation.slice(i, i + batchSize);
     const batchNumber = Math.floor(i / batchSize) + 1;
-    const totalBatches = Math.ceil(keywords.length / batchSize);
+    const totalBatches = Math.ceil(needTranslation.length / batchSize);
 
-    console.log(`Processing batch ${batchNumber}/${totalBatches}`);
+    console.log(`\nProcessing batch ${batchNumber}/${totalBatches}`);
 
     try {
       const translationResults = await translateBatch(batch);
@@ -77,32 +152,31 @@ const generateDictionary = async (keywords) => {
       translationResults.forEach(({ original, translated }) => {
         const lowercaseOriginal = original.toLowerCase();
 
-        // 번역 성공 조건:
-        // 1. 번역 결과가 존재하고
-        // 2. 원본과 다르고
-        // 3. 공백이 아닌 경우
         if (
           translated &&
           translated.toLowerCase() !== lowercaseOriginal &&
           translated.trim() !== ""
         ) {
-          dictionary[lowercaseOriginal] = {
+          const translationEntry = {
             en: original,
             ko: translated,
           };
-          console.log(`✓ ${original} -> ${translated}`);
+          dictionary[lowercaseOriginal] = translationEntry;
+          cache[lowercaseOriginal] = translationEntry;
+          console.log(`[NEW] ✓ ${original} -> ${translated}`);
         } else {
           failedTranslations.add(original);
-          console.log(`✗ Failed to translate: ${original}`);
+          console.log(`[NEW] ✗ Failed to translate: ${original}`);
         }
       });
 
       await new Promise((resolve) => setTimeout(resolve, 300));
     } catch (error) {
       console.error(`Error in batch ${batchNumber}:`, error.message);
-      // 에러 발생한 배치의 키워드들을 실패 목록에 추가
-      batch.forEach((keyword) => failedTranslations.add(keyword));
-      // 잠시 대기 후 다음 배치 처리
+      batch.forEach((keyword) => {
+        failedTranslations.add(keyword);
+        console.log(`[NEW] ✗ Error translating: ${keyword}`);
+      });
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
   }
@@ -113,20 +187,39 @@ const generateDictionary = async (keywords) => {
   };
 };
 
-// 번역 결과 검증 함수
-const validateTranslations = (dictionary, originalKeywords) => {
+// 결과 검증 함수 수정
+const validateTranslations = (dictionary, originalKeywords, cache) => {
   const processedCount = Object.keys(dictionary).length;
   const skippedCount = originalKeywords.length - processedCount;
+
+  // 캐시와 새로운 번역 구분 (안전하게 검사)
+  const fromCache = Object.keys(dictionary).filter((key) => {
+    const cacheEntry = cache?.[key];
+    const dictEntry = dictionary?.[key];
+    // 캐시와 사전 모두에 존재하고, 번역 결과가 동일한지 확인
+    return (
+      cacheEntry &&
+      dictEntry &&
+      cacheEntry.ko === dictEntry.ko &&
+      cacheEntry.en === dictEntry.en
+    );
+  }).length;
+
+  const fromNewTranslation = processedCount - fromCache;
 
   console.log("\nTranslation Results:");
   console.log("-------------------");
   console.log(`Total keywords: ${originalKeywords.length}`);
   console.log(`Successfully translated: ${processedCount}`);
+  console.log(`  - From cache: ${fromCache}`);
+  console.log(`  - Newly translated: ${fromNewTranslation}`);
   console.log(`Skipped/Failed: ${skippedCount}`);
 
   return {
     totalCount: originalKeywords.length,
     successCount: processedCount,
+    fromCache,
+    fromNewTranslation,
     failedCount: skippedCount,
   };
 };
@@ -138,22 +231,29 @@ const main = async () => {
   }
 
   try {
-    // 1. 고유 키워드 추출
+    // 1. 캐시 로드
+    const cache = await loadCache();
+
+    // 2. 고유 키워드 추출
     console.log("Extracting unique keywords...");
-    const uniqueKeywords = await extractUniqueKeywords("./input-emoji.json");
+    const uniqueKeywords = await extractUniqueKeywords(INPUT_FILE);
     console.log("Unique keywords extracted:", uniqueKeywords.length);
 
-    // 2. 번역 사전 생성
+    // 3. 번역 사전 생성
     console.log("\nGenerating translation dictionary...");
     const { dictionary, failedTranslations } = await generateDictionary(
-      uniqueKeywords
+      uniqueKeywords,
+      cache
     );
 
-    // 3. 번역 결과 검증
+    // 4. 번역 결과 검증
     console.log("\nValidating translations...");
-    const validationResult = validateTranslations(dictionary, uniqueKeywords);
+    validateTranslations(dictionary, uniqueKeywords, cache);
 
-    // 4. 사전 파일 저장 (성공한 번역만)
+    // 5. 캐시 저장
+    await saveCache(cache);
+
+    // 6. 최종 사전 파일 저장
     console.log("\nSaving successful translations...");
     await fs.writeFile(
       "./translation-dictionary.json",
@@ -161,7 +261,7 @@ const main = async () => {
       "utf-8"
     );
 
-    // 5. 실패한 번역 목록 저장 (선택적)
+    // 7. 실패 목록 저장
     if (failedTranslations.length > 0) {
       const failureReport = {
         timestamp: new Date().toISOString(),
@@ -186,5 +286,4 @@ const main = async () => {
   }
 };
 
-// 실행
 main();

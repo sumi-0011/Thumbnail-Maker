@@ -1,0 +1,46 @@
+{
+  "animals&nature": {
+    "ant": {
+      "cldr": "ant",
+      "glyph": "🐜",
+      "group": "animals&nature",
+      "keywords": ["ant", "insect"],
+      "unicode": "1f41c",
+      "image": "/animals&nature/ant/3D/ant_3d.png"
+    },
+    "baby_chick": {
+      "cldr": "baby_chick",
+      "glyph": "🐤",
+      "group": "animals&nature",
+      "keywords": ["baby", "bird", "chick"],
+      "unicode": "1f424",
+      "image": "/animals&nature/baby_chick/3D/baby_chick_3d.png"
+    },
+    "badger": {
+      "cldr": "badger",
+      "glyph": "🦡",
+      "group": "animals&nature",
+      "keywords": ["badger", "honey badger", "pester"],
+      "unicode": "1f9a1",
+      "image": "/animals&nature/badger/3D/badger_3d.png"
+    },
+    "bat": {
+      "cldr": "bat",
+      "glyph": "🦇",
+      "group": "animals&nature",
+      "keywords": ["bat", "vampire"],
+      "unicode": "1f987",
+      "image": "/animals&nature/bat/3D/bat_3d.png"
+    }
+  },
+  "flags": {
+    "black_flag": {
+      "cldr": "black_flag",
+      "glyph": "🏴",
+      "group": "flags",
+      "keywords": ["black flag", "waving"],
+      "unicode": "1f3f4",
+      "image": "/flags/black_flag/3D/black_flag_3d.png"
+    }
+  }
+}
