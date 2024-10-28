@@ -1,12 +1,22 @@
-const fs = require("fs").promises;
-const axios = require("axios");
-require("dotenv").config();
+import { promises as fs } from "fs";
+import axios from "axios";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+// 현재 파일의 디렉토리 경로 구하기
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+dotenv.config();
 
 const DEEPL_API_KEY = process.env.DEEPL_API_KEY;
 const DEEPL_API_URL = "https://api-free.deepl.com/v2/translate";
-const CACHE_FILE = "./translation-cache.json";
-const FAILED_FILE = "./failed-translations.json";
-const INPUT_FILE = "./enriched-emoji.json";
+
+const CACHE_FILE = join(__dirname, "translation-cache.json");
+const FAILED_FILE = join(__dirname, "failed-translations.json");
+const INPUT_FILE = join(__dirname, "enriched-emoji.json");
+const OUTPUT_FILE = join(__dirname, "translation-dictionary.json");
 
 // 캐시 로드 함수
 const loadCache = async () => {
@@ -48,7 +58,7 @@ const saveCache = async (cache) => {
 // 고유 키워드 추출 함수
 const extractUniqueKeywords = async (inputPath) => {
   try {
-    const data = await fs.readFile(inputPath, "utf-8");
+    const data = await fs.readFile(INPUT_FILE, "utf-8");
     const emojiDb = JSON.parse(data);
     const uniqueKeywords = new Set();
 
@@ -256,7 +266,7 @@ const main = async () => {
     // 6. 최종 사전 파일 저장
     console.log("\nSaving successful translations...");
     await fs.writeFile(
-      "./translation-dictionary.json",
+      OUTPUT_FILE,
       JSON.stringify(dictionary, null, 2),
       "utf-8"
     );
@@ -271,7 +281,7 @@ const main = async () => {
       };
 
       await fs.writeFile(
-        "./failed-translations.json",
+        FAILED_FILE,
         JSON.stringify(failureReport, null, 2),
         "utf-8"
       );
