@@ -15,6 +15,7 @@ const DEEPL_API_URL = "https://api-free.deepl.com/v2/translate";
 
 const CACHE_FILE = join(__dirname, "assets", "translation-cache.json");
 const FAILED_FILE = join(__dirname, "assets", "failed-translations.json");
+const DIRECT_FILE = join(__dirname, "assets", "direct-translations.json");
 const INPUT_FILE = join(__dirname, "output", "enriched-emoji.json");
 const OUTPUT_FILE = join(__dirname, "output", "translation-dictionary.json");
 
@@ -43,6 +44,19 @@ const loadFailedTranslations = async () => {
   } catch (error) {
     console.log("No previous failure record found");
     return new Set();
+  }
+};
+
+// 직접 매핑한 번역 로드 함수 추가
+const loadDirectTranslations = async () => {
+  try {
+    const data = await fs.readFile(DIRECT_FILE, "utf-8");
+    const direct = JSON.parse(data);
+    console.log(`Loaded ${Object.keys(direct).length} direct translations`);
+    return direct;
+  } catch (error) {
+    console.log("No direct translations found");
+    return {};
   }
 };
 
@@ -114,10 +128,17 @@ const generateDictionary = async (keywords, cache) => {
 
   // 이전 실패 기록 로드
   const previousFailures = await loadFailedTranslations();
+  const directTranslations = await loadDirectTranslations();
 
   // 키워드 분류
   const needTranslation = keywords.filter(
-    (keyword) => !cache[keyword] && !previousFailures.has(keyword)
+    (keyword) =>
+      !cache[keyword] &&
+      !previousFailures.has(keyword) &&
+      !directTranslations[keyword]
+  );
+  const directKeywords = keywords.filter(
+    (keyword) => directTranslations[keyword]
   );
   const cachedKeywords = keywords.filter((keyword) => cache[keyword]);
   const skipKeywords = keywords.filter((keyword) =>
@@ -129,6 +150,7 @@ const generateDictionary = async (keywords, cache) => {
   console.log(`Found in cache: ${cachedKeywords.length}`);
   console.log(`Previously failed (skip): ${skipKeywords.length}`);
   console.log(`Need translation: ${needTranslation.length}`);
+  console.log(`Direct translations: ${directKeywords.length}`);
 
   // 캐시된 번역 처리
   cachedKeywords.forEach((keyword) => {
@@ -146,6 +168,16 @@ const generateDictionary = async (keywords, cache) => {
   skipKeywords.forEach((keyword) => {
     console.log(`[SKIP] → ${keyword} (previously failed)`);
     failedTranslations.add(keyword);
+  });
+
+  // 직접 매핑 처리 추가
+  directKeywords.forEach((keyword) => {
+    const direct = directTranslations[keyword];
+    dictionary[keyword] = {
+      en: keyword,
+      ko: direct,
+    };
+    console.log(`[DIRECT] ✓ ${keyword} -> ${direct}`);
   });
 
   // 새로운 번역 처리
@@ -214,8 +246,13 @@ const validateTranslations = (dictionary, originalKeywords, cache) => {
       cacheEntry.en === dictEntry.en
     );
   }).length;
+  // 직접 매핑 번역 수 계산 추가
+  const fromDirect = Object.keys(dictionary).filter((key) => {
+    const dictEntry = dictionary[key];
+    return directTranslations[key] === dictEntry.ko;
+  }).length;
 
-  const fromNewTranslation = processedCount - fromCache;
+  const fromNewTranslation = processedCount - fromCache - fromDirect;
 
   console.log("\nTranslation Results:");
   console.log("-------------------");
@@ -223,6 +260,7 @@ const validateTranslations = (dictionary, originalKeywords, cache) => {
   console.log(`Successfully translated: ${processedCount}`);
   console.log(`  - From cache: ${fromCache}`);
   console.log(`  - Newly translated: ${fromNewTranslation}`);
+  console.log(`  - From direct mapping: ${fromDirect}`);
   console.log(`Skipped/Failed: ${skippedCount}`);
 
   return {
