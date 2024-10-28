@@ -1,19 +1,70 @@
 const fs = require("fs").promises;
 const axios = require("axios");
 
+// 동의어 캐시
+const synonymsCache = new Map();
+
+// 동의어 캐시 파일 관리
+const CACHE_FILE = "./synonyms-cache.json";
+
+// 캐시 파일 로드
+const loadCache = async () => {
+  try {
+    const data = await fs.readFile(CACHE_FILE, "utf-8");
+    const cache = JSON.parse(data);
+    Object.entries(cache).forEach(([key, value]) => {
+      synonymsCache.set(key, value);
+    });
+    console.log(`Loaded ${synonymsCache.size} cached items`);
+  } catch (error) {
+    console.log("No existing cache file found. Starting with empty cache.");
+  }
+};
+
+// 캐시 파일 저장
+const saveCache = async () => {
+  try {
+    const cache = Object.fromEntries(synonymsCache);
+    await fs.writeFile(CACHE_FILE, JSON.stringify(cache, null, 2), "utf-8");
+    console.log(`Saved ${synonymsCache.size} items to cache`);
+  } catch (error) {
+    console.error("Error saving cache:", error);
+  }
+};
+
 // Datamuse API를 사용한 동의어 검색 함수
 const getSynonyms = async (word) => {
+  // 소문자로 정규화
+  const normalizedWord = word.toLowerCase();
+
+  // 캐시 확인
+  if (synonymsCache.has(normalizedWord)) {
+    console.log(`Cache hit for: ${normalizedWord}`);
+    return synonymsCache.get(normalizedWord);
+  }
+
   try {
+    console.log(`Fetching synonyms for: ${normalizedWord}`);
     const response = await axios.get(
-      `https://api.datamuse.com/words?rel_syn=${word}`
+      `https://api.datamuse.com/words?rel_syn=${normalizedWord}`
     );
-    // 상위 5개 동의어만 선택
-    return response.data
+
+    // 상위 5개 동의어만 선택하고 단일 단어만 필터링
+    const synonyms = response.data
       .slice(0, 5)
       .map((item) => item.word)
-      .filter((syn) => syn.indexOf(" ") === -1); // 단일 단어만 선택
+      .filter((syn) => syn.indexOf(" ") === -1);
+
+    // 캐시에 저장
+    synonymsCache.set(normalizedWord, synonyms);
+
+    return synonyms;
   } catch (error) {
-    console.error(`Error getting synonyms for ${word}:`, error.message);
+    console.error(
+      `Error getting synonyms for ${normalizedWord}:`,
+      error.message
+    );
+    synonymsCache.set(normalizedWord, []); // 빈 배열도 캐시
     return [];
   }
 };
@@ -24,6 +75,9 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // 메인 처리 함수
 const findSynonymsForEmojis = async (inputPath, outputPath) => {
   try {
+    // 캐시 로드
+    await loadCache();
+
     // 원본 데이터 읽기
     const data = await fs.readFile(inputPath, "utf-8");
     const emojiDb = JSON.parse(data);
@@ -38,26 +92,26 @@ const findSynonymsForEmojis = async (inputPath, outputPath) => {
       for (const [emojiName, emoji] of Object.entries(group)) {
         console.log(`Processing emoji: ${emojiName}`);
 
-        // 각 키워드에 대한 동의어 찾기
         const enrichedKeywords = [];
-        const processedWords = new Set(); // 중복 처리 방지
+        const processedWords = new Set();
 
         for (const keyword of emoji.keywords) {
-          // 복합 키워드 처리 (예: "black flag")
           const words = keyword.split(" ");
 
           for (const word of words) {
-            // 이미 처리된 단어는 건너뛰기
-            if (processedWords.has(word.toLowerCase())) continue;
-            processedWords.add(word.toLowerCase());
+            const normalizedWord = word.toLowerCase();
+            if (processedWords.has(normalizedWord)) continue;
+            processedWords.add(normalizedWord);
 
-            const synonyms = await getSynonyms(word);
+            const synonyms = await getSynonyms(normalizedWord);
             if (synonyms.length > 0) {
               enrichedKeywords.push(...synonyms);
             }
 
-            // API 요청 간격 조절
-            await delay(100);
+            // API 호출한 경우에만 딜레이 적용
+            if (!synonymsCache.has(normalizedWord)) {
+              await delay(100);
+            }
           }
         }
 
@@ -70,7 +124,7 @@ const findSynonymsForEmojis = async (inputPath, outputPath) => {
         enrichedDb[groupName][emojiName] = {
           ...emoji,
           keywords: allKeywords,
-          originalKeywords: emoji.keywords, // 원본 키워드도 보관
+          originalKeywords: emoji.keywords,
         };
       }
     }
@@ -82,7 +136,14 @@ const findSynonymsForEmojis = async (inputPath, outputPath) => {
       "utf-8"
     );
 
+    // 캐시 저장
+    await saveCache();
+
     console.log("\nSynonym finding completed successfully!");
+
+    // 캐시 통계 출력
+    console.log(`\nCache statistics:`);
+    console.log(`Total cached items: ${synonymsCache.size}`);
   } catch (error) {
     console.error("Error processing emojis:", error);
     throw error;

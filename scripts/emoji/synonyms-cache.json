@@ -1,0 +1,85 @@
+{
+  "ant": [
+    "anti",
+    "emmet",
+    "pismire",
+    "counteractive"
+  ],
+  "insect": [
+    "worm",
+    "louse"
+  ],
+  "baby": [
+    "new",
+    "child",
+    "spoil",
+    "indulge",
+    "young"
+  ],
+  "bird": [
+    "fowl",
+    "skirt",
+    "boo",
+    "doll",
+    "hoot"
+  ],
+  "chick": [
+    "bird",
+    "skirt",
+    "doll",
+    "dame",
+    "wench"
+  ],
+  "badger": [
+    "bug",
+    "tease",
+    "harass",
+    "pester",
+    "beleaguer"
+  ],
+  "honey": [
+    "love",
+    "dear",
+    "beloved",
+    "colored",
+    "chromatic"
+  ],
+  "pester": [
+    "bug",
+    "badger",
+    "tease",
+    "harass",
+    "beleaguer"
+  ],
+  "bat": [
+    "flutter",
+    "lumber",
+    "thrash",
+    "lick",
+    "clobber"
+  ],
+  "vampire": [
+    "lamia"
+  ],
+  "black": [
+    "bleak",
+    "dark",
+    "evil",
+    "sinister",
+    "covert"
+  ],
+  "flag": [
+    "pin",
+    "swag",
+    "iris",
+    "sag",
+    "ensign"
+  ],
+  "waving": [
+    "wave",
+    "moving",
+    "flying",
+    "flaring",
+    "fluttering"
+  ]
+}
