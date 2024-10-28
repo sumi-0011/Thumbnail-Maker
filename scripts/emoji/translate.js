@@ -13,10 +13,10 @@ dotenv.config();
 const DEEPL_API_KEY = process.env.DEEPL_API_KEY;
 const DEEPL_API_URL = "https://api-free.deepl.com/v2/translate";
 
-const CACHE_FILE = join(__dirname, "translation-cache.json");
-const FAILED_FILE = join(__dirname, "failed-translations.json");
-const INPUT_FILE = join(__dirname, "enriched-emoji.json");
-const OUTPUT_FILE = join(__dirname, "translation-dictionary.json");
+const CACHE_FILE = join(__dirname, "assets", "translation-cache.json");
+const FAILED_FILE = join(__dirname, "assets", "failed-translations.json");
+const INPUT_FILE = join(__dirname, "output", "enriched-emoji.json");
+const OUTPUT_FILE = join(__dirname, "output", "translation-dictionary.json");
 
 // 캐시 로드 함수
 const loadCache = async () => {

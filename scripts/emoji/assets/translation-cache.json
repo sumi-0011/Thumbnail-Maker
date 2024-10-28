@@ -7,6 +7,10 @@
     "en": "insect",
     "ko": "곤충"
   },
+  "anti": {
+    "en": "anti",
+    "ko": "anti-"
+  },
   "bird": {
     "en": "bird",
     "ko": "새"
@@ -15,29 +19,9 @@
     "en": "chick",
     "ko": "병아리"
   },
-  "badger": {
-    "en": "badger",
-    "ko": "오소리"
-  },
-  "honey badger": {
-    "en": "honey badger",
-    "ko": "꿀 오소리"
-  },
-  "bat": {
-    "en": "bat",
-    "ko": "박쥐"
-  },
-  "vampire": {
-    "en": "vampire",
-    "ko": "뱀파이어"
-  },
-  "black flag": {
-    "en": "black flag",
-    "ko": "검은 깃발"
-  },
-  "waving": {
-    "en": "waving",
-    "ko": "흔들기"
+  "spoil": {
+    "en": "spoil",
+    "ko": "망치다"
   },
   "indulge": {
     "en": "indulge",
@@ -58,6 +42,14 @@
   "doll": {
     "en": "doll",
     "ko": "인형"
+  },
+  "badger": {
+    "en": "badger",
+    "ko": "오소리"
+  },
+  "honey badger": {
+    "en": "honey badger",
+    "ko": "꿀 오소리"
   },
   "beleaguer": {
     "en": "beleaguer",
@@ -83,6 +75,14 @@
     "en": "chromatic",
     "ko": "색채"
   },
+  "bat": {
+    "en": "bat",
+    "ko": "박쥐"
+  },
+  "vampire": {
+    "en": "vampire",
+    "ko": "뱀파이어"
+  },
   "flutter": {
     "en": "flutter",
     "ko": "설레임"
@@ -91,17 +91,29 @@
     "en": "lumber",
     "ko": "목재"
   },
-  "thrash": {
-    "en": "thrash",
-    "ko": "스래쉬"
-  },
   "lick": {
     "en": "lick",
     "ko": "핥다"
   },
-  "clobber": {
-    "en": "clobber",
-    "ko": "클로버"
+  "lamia": {
+    "en": "lamia",
+    "ko": "라미아"
+  },
+  "black flag": {
+    "en": "black flag",
+    "ko": "검은 깃발"
+  },
+  "waving": {
+    "en": "waving",
+    "ko": "흔들다"
+  },
+  "covert": {
+    "en": "covert",
+    "ko": "은밀한"
+  },
+  "pin": {
+    "en": "pin",
+    "ko": "핀"
   },
   "swag": {
     "en": "swag",

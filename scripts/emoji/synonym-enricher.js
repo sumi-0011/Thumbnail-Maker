@@ -1,11 +1,20 @@
-const fs = require("fs").promises;
-const axios = require("axios");
+import { promises as fs } from "fs";
+import axios from "axios";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+// 현재 파일의 디렉토리 경로 구하기
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // 동의어 캐시
 const synonymsCache = new Map();
 
 // 동의어 캐시 파일 관리
-const CACHE_FILE = "./synonyms-cache.json";
+const CACHE_FILE = join(__dirname, "assets", "synonyms-cache.json");
+const INPUT_FILE = join(__dirname, "input", "input-emoji.json");
+const OUTPUT_FILE = join(__dirname, "output", "enriched-emoji.json");
 
 // 캐시 파일 로드
 const loadCache = async () => {
@@ -153,7 +162,7 @@ const findSynonymsForEmojis = async (inputPath, outputPath) => {
 // 실행
 const main = async () => {
   try {
-    await findSynonymsForEmojis("./input-emoji.json", "./enriched-emoji.json");
+    await findSynonymsForEmojis(INPUT_FILE, OUTPUT_FILE);
   } catch (error) {
     console.error("Script failed:", error);
     process.exit(1);
