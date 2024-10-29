@@ -55,10 +55,6 @@
     "en": "beleaguer",
     "ko": "포위 공격자"
   },
-  "love": {
-    "en": "love",
-    "ko": "사랑"
-  },
   "dear": {
     "en": "dear",
     "ko": "사랑하는"
@@ -75,25 +71,9 @@
     "en": "chromatic",
     "ko": "색채"
   },
-  "bat": {
-    "en": "bat",
-    "ko": "박쥐"
-  },
   "vampire": {
     "en": "vampire",
     "ko": "뱀파이어"
-  },
-  "flutter": {
-    "en": "flutter",
-    "ko": "설레임"
-  },
-  "lumber": {
-    "en": "lumber",
-    "ko": "목재"
-  },
-  "lick": {
-    "en": "lick",
-    "ko": "핥다"
   },
   "lamia": {
     "en": "lamia",
@@ -105,11 +85,7 @@
   },
   "waving": {
     "en": "waving",
-    "ko": "흔들다"
-  },
-  "covert": {
-    "en": "covert",
-    "ko": "은밀한"
+    "ko": "흔들기"
   },
   "pin": {
     "en": "pin",
@@ -123,10 +99,6 @@
     "en": "flying",
     "ko": "비행"
   },
-  "flaring": {
-    "en": "flaring",
-    "ko": "플레어"
-  },
   "fluttering": {
     "en": "fluttering",
     "ko": "펄럭이는"
@@ -134,5 +106,9 @@
   "pester": {
     "en": "pester",
     "ko": "괴롭히다"
+  },
+  "bat": {
+    "en": "bat",
+    "ko": "박쥐"
   }
 }

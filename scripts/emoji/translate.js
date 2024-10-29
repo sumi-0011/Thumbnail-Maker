@@ -4,6 +4,15 @@ import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
+import { test, loadJson, saveJson } from "../common/jsonFile.js";
+import {
+  getTranslateKeywordInfo,
+  getDirectTranslations,
+  getDirectTranslationCount,
+  getCache,
+  getCacheTranslationCount,
+} from "./translateAsset.js";
+
 // 현재 파일의 디렉토리 경로 구하기
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -22,8 +31,7 @@ const OUTPUT_FILE = join(__dirname, "output", "translation-dictionary.json");
 // 캐시 로드 함수
 const loadCache = async () => {
   try {
-    const data = await fs.readFile(CACHE_FILE, "utf-8");
-    const cache = JSON.parse(data);
+    const cache = await loadJson(CACHE_FILE);
     console.log(`Loaded ${Object.keys(cache).length} cached translations`);
     return cache;
   } catch (error) {
@@ -32,26 +40,10 @@ const loadCache = async () => {
   }
 };
 
-// 실패 기록 로드 함수
-const loadFailedTranslations = async () => {
-  try {
-    const data = await fs.readFile(FAILED_FILE, "utf-8");
-    const failed = JSON.parse(data);
-    console.log(
-      `Loaded ${failed.failedKeywords.length} previously failed translations`
-    );
-    return new Set(failed.failedKeywords);
-  } catch (error) {
-    console.log("No previous failure record found");
-    return new Set();
-  }
-};
-
 // 직접 매핑한 번역 로드 함수 추가
 const loadDirectTranslations = async () => {
   try {
-    const data = await fs.readFile(DIRECT_FILE, "utf-8");
-    const direct = JSON.parse(data);
+    const direct = await loadJson(DIRECT_FILE);
     console.log(`Loaded ${Object.keys(direct).length} direct translations`);
     return direct;
   } catch (error) {
@@ -61,8 +53,9 @@ const loadDirectTranslations = async () => {
 };
 
 const saveCache = async (cache) => {
+  console.log("save cache: ", cache);
   try {
-    await fs.writeFile(CACHE_FILE, JSON.stringify(cache, null, 2));
+    await saveJson(CACHE_FILE, cache);
     console.log(`Saved ${Object.keys(cache).length} translations to cache`);
   } catch (error) {
     console.error("Error saving cache:", error);
@@ -121,29 +114,18 @@ const translateBatch = async (texts) => {
 };
 
 // 번역 사전 생성 함수
-const generateDictionary = async (keywords, cache) => {
+const generateDictionary = async (keywords) => {
+  const cache = await getCache();
   const dictionary = {};
   const batchSize = 50;
   const failedTranslations = new Set();
 
-  // 이전 실패 기록 로드
-  const previousFailures = await loadFailedTranslations();
-  const directTranslations = await loadDirectTranslations();
+  const { directKeywords, cachedKeywords, skipKeywords, needTranslation } =
+    await getTranslateKeywordInfo(keywords);
 
-  // 키워드 분류
-  const needTranslation = keywords.filter(
-    (keyword) =>
-      !cache[keyword] &&
-      !previousFailures.has(keyword) &&
-      !directTranslations[keyword]
-  );
-  const directKeywords = keywords.filter(
-    (keyword) => directTranslations[keyword]
-  );
-  const cachedKeywords = keywords.filter((keyword) => cache[keyword]);
-  const skipKeywords = keywords.filter((keyword) =>
-    previousFailures.has(keyword)
-  );
+  // 이전 실패 기록 로드
+  //   const previousFailures = await loadFailedTranslations();
+  const directTranslations = await getDirectTranslations();
 
   console.log(`\nTranslation status:`);
   console.log(`Total keywords: ${keywords.length}`);
@@ -226,40 +208,21 @@ const generateDictionary = async (keywords, cache) => {
   return {
     dictionary,
     failedTranslations: Array.from(failedTranslations),
+    newCache: cache,
   };
 };
 
 // 결과 검증 함수 수정
-const validateTranslations = (
-  dictionary,
-  originalKeywords,
-  cache,
-  directTranslations
-) => {
+const validateTranslations = async (dictionary, originalKeywords) => {
+  const cache = await getCache();
   const processedCount = Object.keys(dictionary).length;
   const skippedCount = originalKeywords.length - processedCount;
 
   // 캐시와 새로운 번역 구분 (안전하게 검사)
-  const fromCache = Object.keys(dictionary).filter((key) => {
-    const cacheEntry = cache?.[key];
-    const dictEntry = dictionary?.[key];
-    // 캐시와 사전 모두에 존재하고, 번역 결과가 동일한지 확인
-    return (
-      cacheEntry &&
-      dictEntry &&
-      cacheEntry.ko === dictEntry.ko &&
-      cacheEntry.en === dictEntry.en
-    );
-  }).length;
-  // 직접 매핑 번역 수 계산 추가
-  const fromDirect = Object.keys(dictionary).filter((key) => {
-    if (key in directTranslations) {
-      const dictEntry = dictionary[key];
-      return directTranslations[key] === dictEntry.ko;
-    }
-    return false;
-  }).length;
+  const fromCache = await getCacheTranslationCount(dictionary);
 
+  // 직접 매핑 번역 수 계산 추가
+  const fromDirect = await getDirectTranslationCount(dictionary);
   const fromNewTranslation = processedCount - fromCache - fromDirect;
 
   console.log("\nTranslation Results:");
@@ -289,7 +252,6 @@ const main = async () => {
   try {
     // 1. 캐시 로드
     const cache = await loadCache();
-    const directTranslations = await loadDirectTranslations();
 
     // 2. 고유 키워드 추출
     console.log("Extracting unique keywords...");
@@ -298,17 +260,15 @@ const main = async () => {
 
     // 3. 번역 사전 생성
     console.log("\nGenerating translation dictionary...");
-    const { dictionary, failedTranslations } = await generateDictionary(
-      uniqueKeywords,
-      cache
-    );
+    const { dictionary, failedTranslations, newCache } =
+      await generateDictionary(uniqueKeywords);
 
     // 4. 번역 결과 검증
     console.log("\nValidating translations...");
-    validateTranslations(dictionary, uniqueKeywords, cache, directTranslations);
+    validateTranslations(dictionary, uniqueKeywords);
 
     // 5. 캐시 저장
-    await saveCache(cache);
+    await saveCache(newCache);
 
     // 6. 최종 사전 파일 저장
     console.log("\nSaving successful translations...");
