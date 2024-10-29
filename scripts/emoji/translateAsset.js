@@ -1,10 +1,11 @@
 import { promises as fs } from "fs";
+import chalk from "chalk";
 import axios from "axios";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
-import { test, loadJson, saveJson } from "../common/jsonFile.js";
+import { loadJson, saveJson } from "../common/jsonFile.js";
 
 // 현재 파일의 디렉토리 경로 구하기
 const __filename = fileURLToPath(import.meta.url);
@@ -66,16 +67,6 @@ const loadDirectTranslations = async () => {
   }
 };
 
-const saveCache = async (newCache) => {
-  try {
-    await saveJson(CACHE_FILE, newCache);
-    cache = newCache;
-    console.log(`Saved ${Object.keys(newCache).length} translations to cache`);
-  } catch (error) {
-    console.error("Error saving cache:", error);
-  }
-};
-
 const loadAllAssets = async () => {
   cache = await loadCache();
   failed = await loadFailedTranslations();
@@ -86,7 +77,6 @@ export const getTranslateKeywordInfo = async (keywords) => {
   await loadAllAssets();
 
   const directKeywords = keywords.filter((keyword) => direct[keyword]);
-  console.log("directKeywords: ", directKeywords);
   const cachedKeywords = keywords.filter((keyword) => cache[keyword]);
   const skipKeywords = keywords.filter((keyword) => failed.has(keyword));
 
@@ -136,4 +126,23 @@ export const getCacheTranslationCount = async (dictionary) => {
       cacheEntry.en === dictEntry.en
     );
   }).length;
+};
+
+export const saveCache = async (cache) => {
+  try {
+    await saveJson(CACHE_FILE, cache);
+    console.log(
+      chalk.green(`Saved ${Object.keys(cache).length} translations to cache`)
+    );
+  } catch (error) {
+    console.error(chalk.red("Error saving cache:"), error);
+  }
+};
+
+export const saveFailedFile = async (failureReport) => {
+  await fs.writeFile(
+    FAILED_FILE,
+    JSON.stringify(failureReport, null, 2),
+    "utf-8"
+  );
 };

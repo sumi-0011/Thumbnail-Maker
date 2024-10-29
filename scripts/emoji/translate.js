@@ -3,14 +3,16 @@ import axios from "axios";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import chalk from "chalk";
 
-import { test, loadJson, saveJson } from "../common/jsonFile.js";
 import {
   getTranslateKeywordInfo,
   getDirectTranslations,
   getDirectTranslationCount,
   getCache,
   getCacheTranslationCount,
+  saveCache,
+  saveFailedFile,
 } from "./translateAsset.js";
 
 // 현재 파일의 디렉토리 경로 구하기
@@ -22,45 +24,8 @@ dotenv.config();
 const DEEPL_API_KEY = process.env.DEEPL_API_KEY;
 const DEEPL_API_URL = "https://api-free.deepl.com/v2/translate";
 
-const CACHE_FILE = join(__dirname, "assets", "translation-cache.json");
-const FAILED_FILE = join(__dirname, "assets", "failed-translations.json");
-const DIRECT_FILE = join(__dirname, "assets", "direct-translations.json");
 const INPUT_FILE = join(__dirname, "output", "enriched-emoji.json");
 const OUTPUT_FILE = join(__dirname, "output", "translation-dictionary.json");
-
-// 캐시 로드 함수
-const loadCache = async () => {
-  try {
-    const cache = await loadJson(CACHE_FILE);
-    console.log(`Loaded ${Object.keys(cache).length} cached translations`);
-    return cache;
-  } catch (error) {
-    console.log("No existing cache found, starting with empty cache");
-    return {};
-  }
-};
-
-// 직접 매핑한 번역 로드 함수 추가
-const loadDirectTranslations = async () => {
-  try {
-    const direct = await loadJson(DIRECT_FILE);
-    console.log(`Loaded ${Object.keys(direct).length} direct translations`);
-    return direct;
-  } catch (error) {
-    console.log("No direct translations found");
-    return {};
-  }
-};
-
-const saveCache = async (cache) => {
-  console.log("save cache: ", cache);
-  try {
-    await saveJson(CACHE_FILE, cache);
-    console.log(`Saved ${Object.keys(cache).length} translations to cache`);
-  } catch (error) {
-    console.error("Error saving cache:", error);
-  }
-};
 
 // 고유 키워드 추출 함수
 const extractUniqueKeywords = async (inputPath) => {
@@ -79,7 +44,7 @@ const extractUniqueKeywords = async (inputPath) => {
 
     return Array.from(uniqueKeywords);
   } catch (error) {
-    console.error("Error extracting keywords:", error);
+    console.error(chalk.red("Error extracting keywords:"), error);
     throw error;
   }
 };
@@ -108,7 +73,7 @@ const translateBatch = async (texts) => {
       translated: translation.trim(),
     }));
   } catch (error) {
-    console.error("Translation error:", error.message);
+    console.error(chalk.red("Translation error:"), error.message);
     throw error;
   }
 };
@@ -123,32 +88,30 @@ const generateDictionary = async (keywords) => {
   const { directKeywords, cachedKeywords, skipKeywords, needTranslation } =
     await getTranslateKeywordInfo(keywords);
 
-  // 이전 실패 기록 로드
-  //   const previousFailures = await loadFailedTranslations();
   const directTranslations = await getDirectTranslations();
 
-  console.log(`\nTranslation status:`);
-  console.log(`Total keywords: ${keywords.length}`);
-  console.log(`Found in cache: ${cachedKeywords.length}`);
-  console.log(`Previously failed (skip): ${skipKeywords.length}`);
-  console.log(`Need translation: ${needTranslation.length}`);
-  console.log(`Direct translations: ${directKeywords.length}`);
+  console.log(chalk.cyan("\nTranslation status:"));
+  console.log(chalk.white(`Total keywords: ${keywords.length}`));
+  console.log(chalk.blue(`Found in cache: ${cachedKeywords.length}`));
+  console.log(chalk.yellow(`Previously failed (skip): ${skipKeywords.length}`));
+  console.log(chalk.magenta(`Need translation: ${needTranslation.length}`));
+  console.log(chalk.green(`Direct translations: ${directKeywords.length}`));
 
   // 캐시된 번역 처리
   cachedKeywords.forEach((keyword) => {
     const cached = cache[keyword];
     if (cached && cached.ko && cached.ko !== keyword) {
       dictionary[keyword] = cached;
-      console.log(`[CACHE] ✓ ${keyword} -> ${cached.ko}`);
+      console.log(chalk.blue(`[CACHE] ✓ ${keyword} -> ${cached.ko}`));
     } else {
       failedTranslations.add(keyword);
-      console.log(`[CACHE] ✗ Invalid translation for: ${keyword}`);
+      console.log(chalk.red(`[CACHE] ✗ Invalid translation for: ${keyword}`));
     }
   });
 
   // 이전 실패 건 처리
   skipKeywords.forEach((keyword) => {
-    console.log(`[SKIP] → ${keyword} (previously failed)`);
+    console.log(chalk.yellow(`[SKIP] → ${keyword} (previously failed)`));
     failedTranslations.add(keyword);
   });
 
@@ -159,7 +122,7 @@ const generateDictionary = async (keywords) => {
       en: keyword,
       ko: direct,
     };
-    console.log(`[DIRECT] ✓ ${keyword} -> ${direct}`);
+    console.log(chalk.green(`[DIRECT] ✓ ${keyword} -> ${direct}`));
   });
 
   // 새로운 번역 처리
@@ -168,7 +131,9 @@ const generateDictionary = async (keywords) => {
     const batchNumber = Math.floor(i / batchSize) + 1;
     const totalBatches = Math.ceil(needTranslation.length / batchSize);
 
-    console.log(`\nProcessing batch ${batchNumber}/${totalBatches}`);
+    console.log(
+      chalk.cyan(`\nProcessing batch ${batchNumber}/${totalBatches}`)
+    );
 
     try {
       const translationResults = await translateBatch(batch);
@@ -187,19 +152,19 @@ const generateDictionary = async (keywords) => {
           };
           dictionary[lowercaseOriginal] = translationEntry;
           cache[lowercaseOriginal] = translationEntry;
-          console.log(`[NEW] ✓ ${original} -> ${translated}`);
+          console.log(chalk.green(`[NEW] ✓ ${original} -> ${translated}`));
         } else {
           failedTranslations.add(original);
-          console.log(`[NEW] ✗ Failed to translate: ${original}`);
+          console.log(chalk.red(`[NEW] ✗ Failed to translate: ${original}`));
         }
       });
 
       await new Promise((resolve) => setTimeout(resolve, 300));
     } catch (error) {
-      console.error(`Error in batch ${batchNumber}:`, error.message);
+      console.error(chalk.red(`Error in batch ${batchNumber}:`), error.message);
       batch.forEach((keyword) => {
         failedTranslations.add(keyword);
-        console.log(`[NEW] ✗ Error translating: ${keyword}`);
+        console.log(chalk.red(`[NEW] ✗ Error translating: ${keyword}`));
       });
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
@@ -225,14 +190,14 @@ const validateTranslations = async (dictionary, originalKeywords) => {
   const fromDirect = await getDirectTranslationCount(dictionary);
   const fromNewTranslation = processedCount - fromCache - fromDirect;
 
-  console.log("\nTranslation Results:");
-  console.log("-------------------");
-  console.log(`Total keywords: ${originalKeywords.length}`);
-  console.log(`Successfully translated: ${processedCount}`);
-  console.log(`  - From cache: ${fromCache}`);
-  console.log(`  - Newly translated: ${fromNewTranslation}`);
-  console.log(`  - From direct mapping: ${fromDirect}`);
-  console.log(`Skipped/Failed: ${skippedCount}`);
+  console.log(chalk.cyan("\nTranslation Results:"));
+  console.log(chalk.cyan("-------------------"));
+  console.log(chalk.white(`Total keywords: ${originalKeywords.length}`));
+  console.log(chalk.white(`Successfully translated: ${processedCount}`));
+  console.log(chalk.white(`  - From cache: ${fromCache}`));
+  console.log(chalk.white(`  - Newly translated: ${fromNewTranslation}`));
+  console.log(chalk.white(`  - From direct mapping: ${fromDirect}`));
+  console.log(chalk.white(`Skipped/Failed: ${skippedCount}`));
 
   return {
     totalCount: originalKeywords.length,
@@ -250,28 +215,28 @@ const main = async () => {
   }
 
   try {
-    // 1. 캐시 로드
-    const cache = await loadCache();
-
-    // 2. 고유 키워드 추출
-    console.log("Extracting unique keywords...");
+    // 1. 고유 키워드 추출
+    console.log(chalk.cyan("Extracting unique keywords..."));
     const uniqueKeywords = await extractUniqueKeywords(INPUT_FILE);
-    console.log("Unique keywords extracted:", uniqueKeywords.length);
+    console.log(
+      chalk.green("Unique keywords extracted:"),
+      uniqueKeywords.length
+    );
 
-    // 3. 번역 사전 생성
-    console.log("\nGenerating translation dictionary...");
+    // 2. 번역 사전 생성
+    console.log(chalk.cyan("\nGenerating translation dictionary..."));
     const { dictionary, failedTranslations, newCache } =
       await generateDictionary(uniqueKeywords);
 
-    // 4. 번역 결과 검증
-    console.log("\nValidating translations...");
+    // 3. 번역 결과 검증
+    console.log(chalk.cyan("\nValidating translations..."));
     validateTranslations(dictionary, uniqueKeywords);
 
-    // 5. 캐시 저장
+    // 4. 캐시 저장
     await saveCache(newCache);
 
     // 6. 최종 사전 파일 저장
-    console.log("\nSaving successful translations...");
+    console.log(chalk.cyan("\nSaving successful translations..."));
     await fs.writeFile(
       OUTPUT_FILE,
       JSON.stringify(dictionary, null, 2),
@@ -287,18 +252,15 @@ const main = async () => {
         failedKeywords: failedTranslations.sort(),
       };
 
-      await fs.writeFile(
-        FAILED_FILE,
-        JSON.stringify(failureReport, null, 2),
-        "utf-8"
+      await saveFailedFile(failureReport);
+      console.log(
+        chalk.yellow("\nFailed translations saved to failed-translations.json")
       );
-
-      console.log("\nFailed translations saved to failed-translations.json");
     }
 
-    console.log("\nDictionary generation completed successfully!");
+    console.log(chalk.green("\nDictionary generation completed successfully!"));
   } catch (error) {
-    console.error("Script failed:", error);
+    console.error(chalk.red("Script failed:"), error);
     process.exit(1);
   }
 };
