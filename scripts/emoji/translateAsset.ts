@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
-import { loadJson, saveJson } from "../common/jsonFile.js";
+import { loadJson, saveJson } from "../common/jsonFile.ts";
 
 interface Cache {
   [key: string]: {
