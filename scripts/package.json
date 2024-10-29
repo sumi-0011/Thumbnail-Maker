@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "translate": "node emoji/translate.js",
-    "synonym": "node emoji/synonym-enricher.js"
+    "translate": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"ts-node/esm\", pathToFileURL(\"./\"));' emoji/translate.ts",
+    "synonym": "node --import 'data:text/javascript,import { register } from \"node:module\"; import { pathToFileURL } from \"node:url\"; register(\"ts-node/esm\", pathToFileURL(\"./\"));' emoji/synonym-enricher.js"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +16,10 @@
     "axios": "^1.6.7",
     "chalk": "^5.3.0",
     "dotenv": "^16.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.8.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
   }
 }

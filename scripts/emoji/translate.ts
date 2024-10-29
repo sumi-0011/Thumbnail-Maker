@@ -1,5 +1,5 @@
 import { promises as fs } from "fs";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
@@ -13,7 +13,7 @@ import {
   getCacheTranslationCount,
   saveCache,
   saveFailedFile,
-} from "./translateAsset.js";
+} from "./translateAsset.ts";
 
 // 현재 파일의 디렉토리 경로 구하기
 const __filename = fileURLToPath(import.meta.url);
@@ -27,16 +27,66 @@ const DEEPL_API_URL = "https://api-free.deepl.com/v2/translate";
 const INPUT_FILE = join(__dirname, "output", "enriched-emoji.json");
 const OUTPUT_FILE = join(__dirname, "output", "translation-dictionary.json");
 
+interface Emoji {
+  keywords: string[];
+}
+
+interface TranslationResponse {
+  translations: {
+    text: string;
+  }[];
+}
+
+interface TranslationResult {
+  original: string;
+  translated: string;
+}
+
+interface TranslationEntry {
+  en: string;
+  ko: string;
+}
+
+interface Dictionary {
+  [key: string]: TranslationEntry;
+}
+
+interface Cache {
+  [key: string]: TranslationEntry;
+}
+
+interface GenerateDictionaryResult {
+  dictionary: Dictionary;
+  failedTranslations: string[];
+  newCache: Cache;
+}
+
+interface ValidationResult {
+  totalCount: number;
+  successCount: number;
+  fromCache: number;
+  fromNewTranslation: number;
+  failedCount: number;
+}
+
+interface FailureReport {
+  timestamp: string;
+  totalKeywords: number;
+  failedCount: number;
+  failedKeywords: string[];
+}
+
 // 고유 키워드 추출 함수
-const extractUniqueKeywords = async (inputPath) => {
+const extractUniqueKeywords = async (inputPath: string): Promise<string[]> => {
   try {
     const data = await fs.readFile(INPUT_FILE, "utf-8");
-    const emojiDb = JSON.parse(data);
-    const uniqueKeywords = new Set();
+    const emojiDb: { [key: string]: { [key: string]: Emoji } } =
+      JSON.parse(data);
+    const uniqueKeywords = new Set<string>();
 
     for (const group of Object.values(emojiDb)) {
       for (const emoji of Object.values(group)) {
-        emoji.keywords.forEach((keyword) =>
+        emoji.keywords.forEach((keyword: string) =>
           uniqueKeywords.add(keyword.toLowerCase())
         );
       }
@@ -50,9 +100,11 @@ const extractUniqueKeywords = async (inputPath) => {
 };
 
 // 번역 함수
-const translateBatch = async (texts) => {
+const translateBatch = async (
+  texts: string[]
+): Promise<TranslationResult[]> => {
   try {
-    const response = await axios.post(
+    const response: AxiosResponse<TranslationResponse> = await axios.post(
       DEEPL_API_URL,
       new URLSearchParams({
         text: texts.join("\n"),
@@ -68,22 +120,26 @@ const translateBatch = async (texts) => {
     );
 
     const translations = response.data.translations[0].text.split("\n");
-    return translations.map((translation, index) => ({
+    return translations.map((translation: string, index: number) => ({
       original: texts[index],
       translated: translation.trim(),
     }));
   } catch (error) {
-    console.error(chalk.red("Translation error:"), error.message);
+    if (error instanceof Error) {
+      console.error(chalk.red("Translation error:"), error.message);
+    }
     throw error;
   }
 };
 
 // 번역 사전 생성 함수
-const generateDictionary = async (keywords) => {
+const generateDictionary = async (
+  keywords: string[]
+): Promise<GenerateDictionaryResult> => {
   const cache = await getCache();
-  const dictionary = {};
+  const dictionary: Dictionary = {};
   const batchSize = 50;
-  const failedTranslations = new Set();
+  const failedTranslations = new Set<string>();
 
   const { directKeywords, cachedKeywords, skipKeywords, needTranslation } =
     await getTranslateKeywordInfo(keywords);
@@ -98,7 +154,7 @@ const generateDictionary = async (keywords) => {
   console.log(chalk.green(`Direct translations: ${directKeywords.length}`));
 
   // 캐시된 번역 처리
-  cachedKeywords.forEach((keyword) => {
+  cachedKeywords.forEach((keyword: string) => {
     const cached = cache[keyword];
     if (cached && cached.ko && cached.ko !== keyword) {
       dictionary[keyword] = cached;
@@ -110,13 +166,13 @@ const generateDictionary = async (keywords) => {
   });
 
   // 이전 실패 건 처리
-  skipKeywords.forEach((keyword) => {
+  skipKeywords.forEach((keyword: string) => {
     console.log(chalk.yellow(`[SKIP] → ${keyword} (previously failed)`));
     failedTranslations.add(keyword);
   });
 
   // 직접 매핑 처리 추가
-  directKeywords.forEach((keyword) => {
+  directKeywords.forEach((keyword: string) => {
     const direct = directTranslations[keyword];
     dictionary[keyword] = {
       en: keyword,
@@ -138,31 +194,38 @@ const generateDictionary = async (keywords) => {
     try {
       const translationResults = await translateBatch(batch);
 
-      translationResults.forEach(({ original, translated }) => {
-        const lowercaseOriginal = original.toLowerCase();
+      translationResults.forEach(
+        ({ original, translated }: TranslationResult) => {
+          const lowercaseOriginal = original.toLowerCase();
 
-        if (
-          translated &&
-          translated.toLowerCase() !== lowercaseOriginal &&
-          translated.trim() !== ""
-        ) {
-          const translationEntry = {
-            en: original,
-            ko: translated,
-          };
-          dictionary[lowercaseOriginal] = translationEntry;
-          cache[lowercaseOriginal] = translationEntry;
-          console.log(chalk.green(`[NEW] ✓ ${original} -> ${translated}`));
-        } else {
-          failedTranslations.add(original);
-          console.log(chalk.red(`[NEW] ✗ Failed to translate: ${original}`));
+          if (
+            translated &&
+            translated.toLowerCase() !== lowercaseOriginal &&
+            translated.trim() !== ""
+          ) {
+            const translationEntry: TranslationEntry = {
+              en: original,
+              ko: translated,
+            };
+            dictionary[lowercaseOriginal] = translationEntry;
+            cache[lowercaseOriginal] = translationEntry;
+            console.log(chalk.green(`[NEW] ✓ ${original} -> ${translated}`));
+          } else {
+            failedTranslations.add(original);
+            console.log(chalk.red(`[NEW] ✗ Failed to translate: ${original}`));
+          }
         }
-      });
+      );
 
       await new Promise((resolve) => setTimeout(resolve, 300));
     } catch (error) {
-      console.error(chalk.red(`Error in batch ${batchNumber}:`), error.message);
-      batch.forEach((keyword) => {
+      if (error instanceof Error) {
+        console.error(
+          chalk.red(`Error in batch ${batchNumber}:`),
+          error.message
+        );
+      }
+      batch.forEach((keyword: string) => {
         failedTranslations.add(keyword);
         console.log(chalk.red(`[NEW] ✗ Error translating: ${keyword}`));
       });
@@ -178,7 +241,10 @@ const generateDictionary = async (keywords) => {
 };
 
 // 결과 검증 함수 수정
-const validateTranslations = async (dictionary, originalKeywords) => {
+const validateTranslations = async (
+  dictionary: Dictionary,
+  originalKeywords: string[]
+): Promise<ValidationResult> => {
   const cache = await getCache();
   const processedCount = Object.keys(dictionary).length;
   const skippedCount = originalKeywords.length - processedCount;
@@ -209,7 +275,7 @@ const validateTranslations = async (dictionary, originalKeywords) => {
 };
 
 // 메인 실행 함수
-const main = async () => {
+const main = async (): Promise<void> => {
   if (!DEEPL_API_KEY) {
     throw new Error("DeepL API key not found in environment variables");
   }
@@ -245,7 +311,7 @@ const main = async () => {
 
     // 7. 실패 목록 저장
     if (failedTranslations.length > 0) {
-      const failureReport = {
+      const failureReport: FailureReport = {
         timestamp: new Date().toISOString(),
         totalKeywords: uniqueKeywords.length,
         failedCount: failedTranslations.length,
@@ -260,7 +326,9 @@ const main = async () => {
 
     console.log(chalk.green("\nDictionary generation completed successfully!"));
   } catch (error) {
-    console.error(chalk.red("Script failed:"), error);
+    if (error instanceof Error) {
+      console.error(chalk.red("Script failed:"), error);
+    }
     process.exit(1);
   }
 };
