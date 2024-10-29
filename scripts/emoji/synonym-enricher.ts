@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // 동의어 캐시
-const synonymsCache = new Map();
+const synonymsCache: Map<string, string[]> = new Map();
 
 // 동의어 캐시 파일 관리
 const CACHE_FILE = join(__dirname, "assets", "synonyms-cache.json");
@@ -17,12 +17,12 @@ const INPUT_FILE = join(__dirname, "input", "input-emoji.json");
 const OUTPUT_FILE = join(__dirname, "output", "enriched-emoji.json");
 
 // 캐시 파일 로드
-const loadCache = async () => {
+const loadCache = async (): Promise<void> => {
   try {
     const data = await fs.readFile(CACHE_FILE, "utf-8");
     const cache = JSON.parse(data);
     Object.entries(cache).forEach(([key, value]) => {
-      synonymsCache.set(key, value);
+      synonymsCache.set(key, value as string[]);
     });
     console.log(`Loaded ${synonymsCache.size} cached items`);
   } catch (error) {
@@ -31,7 +31,7 @@ const loadCache = async () => {
 };
 
 // 캐시 파일 저장
-const saveCache = async () => {
+const saveCache = async (): Promise<void> => {
   try {
     const cache = Object.fromEntries(synonymsCache);
     await fs.writeFile(CACHE_FILE, JSON.stringify(cache, null, 2), "utf-8");
@@ -42,14 +42,14 @@ const saveCache = async () => {
 };
 
 // Datamuse API를 사용한 동의어 검색 함수
-const getSynonyms = async (word) => {
+const getSynonyms = async (word: string): Promise<string[]> => {
   // 소문자로 정규화
   const normalizedWord = word.toLowerCase();
 
   // 캐시 확인
   if (synonymsCache.has(normalizedWord)) {
     console.log(`Cache hit for: ${normalizedWord}`);
-    return synonymsCache.get(normalizedWord);
+    return synonymsCache.get(normalizedWord) as string[];
   }
 
   try {
@@ -61,17 +61,17 @@ const getSynonyms = async (word) => {
     // 상위 5개 동의어만 선택하고 단일 단어만 필터링
     const synonyms = response.data
       .slice(0, 5)
-      .map((item) => item.word)
-      .filter((syn) => syn.indexOf(" ") === -1);
+      .map((item: { word: string }) => item.word)
+      .filter((syn: string) => syn.indexOf(" ") === -1);
 
     // 캐시에 저장
     synonymsCache.set(normalizedWord, synonyms);
 
     return synonyms;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(
       `Error getting synonyms for ${normalizedWord}:`,
-      error.message
+      (error as Error).message
     );
     synonymsCache.set(normalizedWord, []); // 빈 배열도 캐시
     return [];
@@ -79,10 +79,14 @@ const getSynonyms = async (word) => {
 };
 
 // 딜레이 함수
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const delay = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 // 메인 처리 함수
-const findSynonymsForEmojis = async (inputPath, outputPath) => {
+const findSynonymsForEmojis = async (
+  inputPath: string,
+  outputPath: string
+): Promise<void> => {
   try {
     // 캐시 로드
     await loadCache();
@@ -90,19 +94,20 @@ const findSynonymsForEmojis = async (inputPath, outputPath) => {
     // 원본 데이터 읽기
     const data = await fs.readFile(inputPath, "utf-8");
     const emojiDb = JSON.parse(data);
-    const enrichedDb = {};
+    const enrichedDb: { [key: string]: any } = {};
 
     // 각 그룹 처리
     for (const [groupName, group] of Object.entries(emojiDb)) {
       console.log(`\nProcessing group: ${groupName}`);
       enrichedDb[groupName] = {};
-
       // 각 이모지 처리
-      for (const [emojiName, emoji] of Object.entries(group)) {
+      for (const [emojiName, emoji] of Object.entries(
+        group as { [key: string]: any }
+      )) {
         console.log(`Processing emoji: ${emojiName}`);
 
-        const enrichedKeywords = [];
-        const processedWords = new Set();
+        const enrichedKeywords: string[] = [];
+        const processedWords: Set<string> = new Set();
 
         for (const keyword of emoji.keywords) {
           const words = keyword.split(" ");
@@ -153,17 +158,17 @@ const findSynonymsForEmojis = async (inputPath, outputPath) => {
     // 캐시 통계 출력
     console.log(`\nCache statistics:`);
     console.log(`Total cached items: ${synonymsCache.size}`);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error processing emojis:", error);
     throw error;
   }
 };
 
 // 실행
-const main = async () => {
+const main = async (): Promise<void> => {
   try {
     await findSynonymsForEmojis(INPUT_FILE, OUTPUT_FILE);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Script failed:", error);
     process.exit(1);
   }
