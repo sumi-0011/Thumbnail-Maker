@@ -230,7 +230,12 @@ const generateDictionary = async (keywords, cache) => {
 };
 
 // 결과 검증 함수 수정
-const validateTranslations = (dictionary, originalKeywords, cache) => {
+const validateTranslations = (
+  dictionary,
+  originalKeywords,
+  cache,
+  directTranslations
+) => {
   const processedCount = Object.keys(dictionary).length;
   const skippedCount = originalKeywords.length - processedCount;
 
@@ -248,8 +253,11 @@ const validateTranslations = (dictionary, originalKeywords, cache) => {
   }).length;
   // 직접 매핑 번역 수 계산 추가
   const fromDirect = Object.keys(dictionary).filter((key) => {
-    const dictEntry = dictionary[key];
-    return directTranslations[key] === dictEntry.ko;
+    if (key in directTranslations) {
+      const dictEntry = dictionary[key];
+      return directTranslations[key] === dictEntry.ko;
+    }
+    return false;
   }).length;
 
   const fromNewTranslation = processedCount - fromCache - fromDirect;
@@ -281,6 +289,7 @@ const main = async () => {
   try {
     // 1. 캐시 로드
     const cache = await loadCache();
+    const directTranslations = await loadDirectTranslations();
 
     // 2. 고유 키워드 추출
     console.log("Extracting unique keywords...");
@@ -296,7 +305,7 @@ const main = async () => {
 
     // 4. 번역 결과 검증
     console.log("\nValidating translations...");
-    validateTranslations(dictionary, uniqueKeywords, cache);
+    validateTranslations(dictionary, uniqueKeywords, cache, directTranslations);
 
     // 5. 캐시 저장
     await saveCache(cache);
