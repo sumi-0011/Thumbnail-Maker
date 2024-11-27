@@ -1,9 +1,5 @@
 import { promises as fs } from "fs";
 
-export const test = (): void => {
-  console.log("test");
-};
-
 export const loadJson = async (
   filePath: string,
   { throwError = false } = {}

@@ -99,8 +99,6 @@ function SaveTemplateSheet({
   ): Promise<string | null> => {
     try {
       // 임시 이미지 객체
-
-      // console.log("thumbnail: ", thumbnail.arrayBuffer());
       const { data, error } = await supabase.storage
         .from("templates")
         .upload(`user/${id}`, thumbnail, {
