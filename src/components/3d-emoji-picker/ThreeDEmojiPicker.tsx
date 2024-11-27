@@ -36,7 +36,7 @@ export const ThreeDEmojiPicker = ({ onEmojiSelect }: Props) => {
     <div className="h-[360px] min-h-fit max-w-[360px] rounded-lg border bg-[#1D2027] shadow-md">
       <div className="p-1">
         <Input
-          placeholder="Search emojis"
+          placeholder="Search for emojis in English"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
