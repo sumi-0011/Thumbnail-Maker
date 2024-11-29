@@ -1,8 +1,8 @@
-import { promises as fs } from "fs";
+import { promises as fs } from "node:fs";
 import axios, { AxiosResponse } from "axios";
 import dotenv from "dotenv";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 import chalk from "chalk";
 
 import {
@@ -79,7 +79,7 @@ interface FailureReport {
 // 고유 키워드 추출 함수
 const extractUniqueKeywords = async (inputPath: string): Promise<string[]> => {
   try {
-    const data = await fs.readFile(INPUT_FILE, "utf-8");
+    const data = await fs.readFile(inputPath, "utf-8");
     const emojiDb: { [key: string]: { [key: string]: Emoji } } =
       JSON.parse(data);
     const uniqueKeywords = new Set<string>();
@@ -156,7 +156,7 @@ const generateDictionary = async (
   // 캐시된 번역 처리
   cachedKeywords.forEach((keyword: string) => {
     const cached = cache[keyword];
-    if (cached && cached.ko && cached.ko !== keyword) {
+    if (cached?.ko && cached.ko !== keyword) {
       dictionary[keyword] = cached;
       console.log(chalk.blue(`[CACHE] ✓ ${keyword} -> ${cached.ko}`));
     } else {
@@ -296,7 +296,7 @@ const main = async (): Promise<void> => {
 
     // 3. 번역 결과 검증
     console.log(chalk.cyan("\nValidating translations..."));
-    validateTranslations(dictionary, uniqueKeywords);
+    await validateTranslations(dictionary, uniqueKeywords);
 
     // 4. 캐시 저장
     await saveCache(newCache);
