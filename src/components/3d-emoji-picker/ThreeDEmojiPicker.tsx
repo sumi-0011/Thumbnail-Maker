@@ -4,9 +4,11 @@ import ThreeDEmojiMap from "src/assets/emojis/3d-emoji-map.json";
 import { cn } from "src/lib/utils";
 import { EmojiType } from "./index.types";
 import {
-  THREE_D_EMOJI_CATEGORIES,
   THREE_D_EMOJI_CATEGORY_EMOJI_MAP,
+  ThreeDEmojiCategory,
 } from "./index.constants";
+import { Input } from "../ui/input";
+import { useEmoji } from "./useEmoji";
 
 interface Props {
   onEmojiSelect: (emoji: EmojiType) => void;
@@ -17,51 +19,56 @@ const getImage = (emoji: EmojiType) => {
 };
 
 export const ThreeDEmojiPicker = ({ onEmojiSelect }: Props) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] =
+    useState<ThreeDEmojiCategory>("animals&nature");
+
+  const { categories, searchResults } = useEmoji({
+    searchTerm,
+    category: selectedCategory,
+  });
+
   const handleEmojiClick = (emoji: EmojiType) => {
     onEmojiSelect(emoji);
   };
 
   return (
-    <div className="h-[360px] max-w-[360px] rounded-lg border bg-[#1D2027] shadow-md">
-      <Tabs defaultValue="animals&nature">
+    <div className="h-[360px] min-h-fit max-w-[360px] rounded-lg border bg-[#1D2027] shadow-md">
+      <div className="p-1">
+        <Input
+          placeholder="Search for emojis in English"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+      <Tabs
+        value={selectedCategory}
+        onValueChange={(value) =>
+          setSelectedCategory(value as ThreeDEmojiCategory)
+        }
+      >
         <TabsList className="flex gap-1 py-1 ">
-          {THREE_D_EMOJI_CATEGORIES.map((category) => (
+          {categories.map((category) => (
             <TabsTrigger
               key={category}
               className="h-9 w-9 flex-1 px-1 py-0 text-[24px]"
               value={category}
             >
-              {
-                THREE_D_EMOJI_CATEGORY_EMOJI_MAP[
-                  category as keyof typeof THREE_D_EMOJI_CATEGORY_EMOJI_MAP
-                ]
-              }
+              {THREE_D_EMOJI_CATEGORY_EMOJI_MAP[category]}
             </TabsTrigger>
           ))}
         </TabsList>
-        {THREE_D_EMOJI_CATEGORIES.map((category) => {
-          const emojis =
-            ThreeDEmojiMap[category as keyof typeof ThreeDEmojiMap];
-          return (
-            <TabsContent
-              key={category}
-              value={category}
-              className="max-h-[300px] overflow-y-auto p-1"
+        <div className="flex max-h-[300px] flex-wrap gap-1 overflow-y-auto p-1">
+          {searchResults.map((emoji) => (
+            <div
+              key={emoji.cldr}
+              onClick={() => handleEmojiClick(emoji)}
+              className={emoji.cldr}
             >
-              <div className="flex flex-wrap justify-center gap-1">
-                {Object.values(emojis).map((emoji) => (
-                  <div
-                    key={emoji.cldr}
-                    onClick={() => handleEmojiClick(emoji)}
-                    className={emoji.cldr}
-                  >
-                    <EmojiItem emoji={emoji} />
-                  </div>
-                ))}
-              </div>
-            </TabsContent>
-          );
-        })}
+              <EmojiItem emoji={emoji} />
+            </div>
+          ))}
+        </div>
       </Tabs>
     </div>
   );

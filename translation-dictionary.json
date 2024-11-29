@@ -1,0 +1,134 @@
+{
+  "ant": {
+    "en": "ant",
+    "ko": "개미"
+  },
+  "insect": {
+    "en": "insect",
+    "ko": "곤충"
+  },
+  "baby": {
+    "en": "baby",
+    "ko": "baby"
+  },
+  "bird": {
+    "en": "bird",
+    "ko": "새"
+  },
+  "chick": {
+    "en": "chick",
+    "ko": "병아리"
+  },
+  "badger": {
+    "en": "badger",
+    "ko": "오소리"
+  },
+  "honey badger": {
+    "en": "honey badger",
+    "ko": "꿀 오소리"
+  },
+  "pester": {
+    "en": "pester",
+    "ko": "pester"
+  },
+  "bat": {
+    "en": "bat",
+    "ko": "박쥐"
+  },
+  "vampire": {
+    "en": "vampire",
+    "ko": "뱀파이어"
+  },
+  "bear": {
+    "en": "bear",
+    "ko": "곰"
+  },
+  "face": {
+    "en": "face",
+    "ko": "얼굴"
+  },
+  "beaver": {
+    "en": "beaver",
+    "ko": "비버"
+  },
+  "dam": {
+    "en": "dam",
+    "ko": "댐"
+  },
+  "beetle": {
+    "en": "beetle",
+    "ko": "딱정벌레"
+  },
+  "bug": {
+    "en": "bug",
+    "ko": "bug"
+  },
+  "bison": {
+    "en": "bison",
+    "ko": "들소"
+  },
+  "buffalo": {
+    "en": "buffalo",
+    "ko": "버팔로"
+  },
+  "herd": {
+    "en": "herd",
+    "ko": "herd"
+  },
+  "wisent": {
+    "en": "wisent",
+    "ko": "wisent"
+  },
+  "black": {
+    "en": "black",
+    "ko": "검은"
+  },
+  "crow": {
+    "en": "crow",
+    "ko": "까마귀"
+  },
+  "raven": {
+    "en": "raven",
+    "ko": "까마귀"
+  },
+  "rook": {
+    "en": "rook",
+    "ko": "rook"
+  },
+  "cat": {
+    "en": "cat",
+    "ko": "cat"
+  },
+  "unlucky": {
+    "en": "unlucky",
+    "ko": "불행한"
+  },
+  "blossom": {
+    "en": "blossom",
+    "ko": "꽃"
+  },
+  "flower": {
+    "en": "flower",
+    "ko": "꽃"
+  },
+  "blowfish": {
+    "en": "blowfish",
+    "ko": "복어"
+  },
+  "fish": {
+    "en": "fish",
+    "ko": "물고기"
+  },
+  "boar": {
+    "en": "boar",
+    "ko": "멧돼지"
+  },
+  "pig": {
+    "en": "pig",
+    "ko": "돼지"
+  },
+  "bouquet": {
+    "en": "bouquet",
+    "ko": "꽃다발"
+  }
+}

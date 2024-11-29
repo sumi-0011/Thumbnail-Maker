@@ -24,8 +24,10 @@
     "rootDir": ".",
     "jsx": "react-jsx",
     "paths": {
-      "src/*": ["./src/*"]
-    }
+      "src/*": ["./src/*"],
+      "scripts/*": ["scripts/*"]
+    },
+    "typeRoots": ["./types"]
   },
-  "include": ["./src", "vite-env.d.ts"]
+  "include": ["./src", "vite-env.d.ts", "./types"]
 }

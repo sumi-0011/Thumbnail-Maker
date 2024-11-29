@@ -11,7 +11,8 @@
     "lint": "eslint --quiet src --ext .ts,.tsx && stylelint src/**/*.less",
     "lint:fix": "eslint --quiet --fix src --ext .ts,.tsx && stylelint --fix src/**/*.less",
     "i18next-resources-for-ts": "i18next-resources-for-ts toc -i ./src/i18n/locales/en -o ./src/types/resources.ts",
-    "translate": "transmart"
+    "translate": "transmart",
+    "scripts": "node scripts/emoji.js"
   },
   "dependencies": {
     "@loadable/component": "^5.15.3",
@@ -29,15 +30,20 @@
     "@tanstack/react-query": "^4.29.3",
     "@toss/react": "^1.7.0",
     "@transmart/cli": "^0.2.4",
+    "@vitalets/google-translate-api": "^9.2.0",
+    "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "dotenv": "^16.4.5",
     "file-saver": "^2.0.5",
+    "fuse.js": "^7.0.0",
     "html2canvas": "^1.4.1",
     "i18next": "^23.5.1",
     "i18next-browser-languagedetector": "^7.1.0",
     "i18next-resources-to-backend": "^1.1.4",
     "lucide-react": "^0.277.0",
     "next-themes": "^0.3.0",
+    "node-nlp": "^4.27.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-ga4": "^2.1.0",
@@ -47,7 +53,9 @@
     "sonner": "^1.5.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
-    "use-storage-state": "^5.0.0"
+    "thesaurus-com": "^1.2.3",
+    "use-storage-state": "^5.0.0",
+    "wordnet": "^2.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.5.1",
@@ -55,7 +63,7 @@
     "@tanstack/react-query-devtools": "^4.29.1",
     "@types/file-saver": "^2.0.7",
     "@types/loadable__component": "^5.13.4",
-    "@types/node": "^18.15.11",
+    "@types/node": "^22.8.1",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@types/react-helmet": "^6.1.6",

@@ -1,0 +1,124 @@
+{
+  "animals&nature": {
+    "ant": {
+      "cldr": "ant",
+      "glyph": "🐜",
+      "group": "animals&nature",
+      "keywords": ["ant", "insect"],
+      "unicode": "1f41c",
+      "image": "/animals&nature/ant/3D/ant_3d.png"
+    },
+    "baby_chick": {
+      "cldr": "baby_chick",
+      "glyph": "🐤",
+      "group": "animals&nature",
+      "keywords": ["baby", "bird", "chick"],
+      "unicode": "1f424",
+      "image": "/animals&nature/baby_chick/3D/baby_chick_3d.png"
+    },
+    "badger": {
+      "cldr": "badger",
+      "glyph": "🦡",
+      "group": "animals&nature",
+      "keywords": ["badger", "honey badger", "pester"],
+      "unicode": "1f9a1",
+      "image": "/animals&nature/badger/3D/badger_3d.png"
+    },
+    "bat": {
+      "cldr": "bat",
+      "glyph": "🦇",
+      "group": "animals&nature",
+      "keywords": ["bat", "vampire"],
+      "unicode": "1f987",
+      "image": "/animals&nature/bat/3D/bat_3d.png"
+    },
+    "bear": {
+      "cldr": "bear",
+      "glyph": "🐻",
+      "group": "animals&nature",
+      "keywords": ["bear", "face"],
+      "unicode": "1f43b",
+      "image": "/animals&nature/bear/3D/bear_3d.png"
+    },
+    "beaver": {
+      "cldr": "beaver",
+      "glyph": "🦫",
+      "group": "animals&nature",
+      "keywords": ["beaver", "dam"],
+      "unicode": "1f9ab",
+      "image": "/animals&nature/beaver/3D/beaver_3d.png"
+    },
+    "beetle": {
+      "cldr": "beetle",
+      "glyph": "🪲",
+      "group": "animals&nature",
+      "keywords": ["beetle", "bug", "insect"],
+      "unicode": "1fab2",
+      "image": "/animals&nature/beetle/3D/beetle_3d.png"
+    },
+    "bird": {
+      "cldr": "bird",
+      "glyph": "🐦",
+      "group": "animals&nature",
+      "keywords": ["bird"],
+      "unicode": "1f426",
+      "image": "/animals&nature/bird/3D/bird_3d.png"
+    },
+    "bison": {
+      "cldr": "bison",
+      "glyph": "🦬",
+      "group": "animals&nature",
+      "keywords": ["bison", "buffalo", "herd", "wisent"],
+      "unicode": "1f9ac",
+      "image": "/animals&nature/bison/3D/bison_3d.png"
+    },
+    "black_bird": {
+      "cldr": "black_bird",
+      "glyph": "🐦‍⬛",
+      "group": "animals&nature",
+      "keywords": ["bird", "black", "crow", "raven", "rook"],
+      "unicode": "1f426 200d 2b1b",
+      "image": "/animals&nature/black_bird/3D/black_bird_3d.png"
+    },
+    "black_cat": {
+      "cldr": "black_cat",
+      "glyph": "🐈‍⬛",
+      "group": "animals&nature",
+      "keywords": ["black", "cat", "unlucky"],
+      "unicode": "1f408 200d 2b1b",
+      "image": "/animals&nature/black_cat/3D/black_cat_3d.png"
+    },
+    "blossom": {
+      "cldr": "blossom",
+      "glyph": "🌼",
+      "group": "animals&nature",
+      "keywords": ["blossom", "flower"],
+      "unicode": "1f33c",
+      "image": "/animals&nature/blossom/3D/blossom_3d.png"
+    },
+    "blowfish": {
+      "cldr": "blowfish",
+      "glyph": "🐡",
+      "group": "animals&nature",
+      "keywords": ["blowfish", "fish"],
+      "unicode": "1f421",
+      "image": "/animals&nature/blowfish/3D/blowfish_3d.png"
+    },
+    "boar": {
+      "cldr": "boar",
+      "glyph": "🐗",
+      "group": "animals&nature",
+      "keywords": ["boar", "pig"],
+      "unicode": "1f417",
+      "image": "/animals&nature/boar/3D/boar_3d.png"
+    },
+    "bouquet": {
+      "cldr": "bouquet",
+      "glyph": "💐",
+      "group": "animals&nature",
+      "keywords": ["bouquet", "flower"],
+      "unicode": "1f490",
+      "image": "/animals&nature/bouquet/3D/bouquet_3d.png"
+    }
+  }
+}
