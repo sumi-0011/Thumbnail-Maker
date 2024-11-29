@@ -11,8 +11,11 @@ import { TagEmojiSheet } from "./TagEmojiSheet";
 import { SubActionMenu } from "./SubActionMenu";
 import { TagList } from "./TagList";
 import { useSelectedTagAction, useTagAction } from "./Tag.context";
+import { Switch } from "../ui/switch";
+import { useState } from "react";
 
 function ThumbnailMaker() {
+  const [isDragMode, setIsDragMode] = useState(false);
   const { previewRef, onDownload, getImageFile } = usePreview();
   const { tagsContainerRef, checkOverflow, showOverflowToast } =
     useCheckTagOverflow();
@@ -60,6 +63,11 @@ function ThumbnailMaker() {
       </h1>
 
       <AddTagSection onAction={handleAddTag} />
+
+      <div className="flex items-center gap-2">
+        <Switch />
+        <p>Drag Mode</p>
+      </div>
       <CanvasContainer
         previewRef={previewRef}
         tagsContainerRef={tagsContainerRef}
