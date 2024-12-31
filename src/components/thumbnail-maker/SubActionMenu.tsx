@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 
 import { useState } from "react";
 import { SaveTemplateSheet } from "./SubMenu/SaveTemplateSheet";
+import { DownloadTemplateToLocalConfirm } from "./SubMenu/DownloadTemplateToLocalConfirm";
 
 export function SubActionMenu({
   getImageFile,
@@ -20,6 +21,8 @@ export function SubActionMenu({
   getImageFile: () => Promise<Blob | null>;
 }) {
   const [isSaveTemplateSheetOpen, setIsSaveTemplateSheetOpen] = useState(false);
+  const [isDownloadTemplateSheetOpen, setIsDownloadTemplateSheetOpen] =
+    useState(false);
   const { tags } = useTagList();
   const { onResetTags } = useTagAction();
 
@@ -42,7 +45,7 @@ export function SubActionMenu({
               Save Template
             </MenubarItem>
             <MenubarSeparator />
-            <MenubarItem onClick={() => setIsSaveTemplateSheetOpen(true)}>
+            <MenubarItem onClick={() => setIsDownloadTemplateSheetOpen(true)}>
               Download Template to Local
             </MenubarItem>
             <MenubarItem>Import Template</MenubarItem>
@@ -54,8 +57,10 @@ export function SubActionMenu({
         isOpen={isSaveTemplateSheetOpen}
         onClose={() => setIsSaveTemplateSheetOpen(false)}
       />
+      <DownloadTemplateToLocalConfirm
+        isOpen={isDownloadTemplateSheetOpen}
+        onClose={() => setIsDownloadTemplateSheetOpen(false)}
+      />
     </div>
   );
 }
-
-const useTemplateSave = () => {};
