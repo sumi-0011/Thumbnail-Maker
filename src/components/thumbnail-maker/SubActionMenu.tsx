@@ -14,6 +14,8 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { SaveTemplateSheet } from "./SubMenu/SaveTemplateSheet";
 import { DownloadTemplateToLocalConfirm } from "./SubMenu/DownloadTemplateToLocalConfirm";
+import { useImportTemplate } from "./hooks/useImportTemplate";
+import { ImportTemplateConfirm } from "./SubMenu/ImportTemplateConfirm";
 
 export function SubActionMenu({
   getImageFile,
@@ -22,6 +24,8 @@ export function SubActionMenu({
 }) {
   const [isSaveTemplateSheetOpen, setIsSaveTemplateSheetOpen] = useState(false);
   const [isDownloadTemplateSheetOpen, setIsDownloadTemplateSheetOpen] =
+    useState(false);
+  const [isImportTemplateSheetOpen, setIsImportTemplateSheetOpen] =
     useState(false);
   const { tags } = useTagList();
   const { onResetTags } = useTagAction();
@@ -48,7 +52,9 @@ export function SubActionMenu({
             <MenubarItem onClick={() => setIsDownloadTemplateSheetOpen(true)}>
               Download Template to Local
             </MenubarItem>
-            <MenubarItem>Import Template</MenubarItem>
+            <MenubarItem onClick={() => setIsImportTemplateSheetOpen(true)}>
+              Import Template
+            </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
@@ -60,6 +66,10 @@ export function SubActionMenu({
       <DownloadTemplateToLocalConfirm
         isOpen={isDownloadTemplateSheetOpen}
         onClose={() => setIsDownloadTemplateSheetOpen(false)}
+      />
+      <ImportTemplateConfirm
+        isOpen={isImportTemplateSheetOpen}
+        onClose={() => setIsImportTemplateSheetOpen(false)}
       />
     </div>
   );
