@@ -34,7 +34,7 @@ export default function GalleryPage() {
       <Helmet>
         <title>Thumbnail Maker</title>
       </Helmet>
-      <div className="mx-auto h-screen w-full max-w-[1024px] py-[10vh]">
+      <div className="mx-auto h-screen w-full max-w-[1024px] px-6 py-[10vh]">
         <h1 className="text-2xl font-bold">Gallery</h1>
         <p className="mt-2 text-base text-gray-300">
           Create thumbnails easily using templates made by others! 🎨🚀
