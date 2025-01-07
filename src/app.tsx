@@ -8,6 +8,7 @@ import ReactGA from "react-ga4";
 import Home from "./pages/home";
 import GalleryPage from "./pages/gallery";
 import ErrorPage from "./components/error-page";
+import { Layout } from "./components/layout";
 
 export default function App() {
   const queryClient = useMemo(() => new QueryClient({}), []);
@@ -25,13 +26,25 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Router>
-          <div className="h-min-screen mx-auto flex h-[900px] min-h-screen w-fit w-full items-center justify-center bg-[#1D2027] p-6">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/gallery" element={<GalleryPage />} />
-              <Route path="*" element={<ErrorPage />} />
-            </Routes>
-          </div>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Layout>
+                  <Home />
+                </Layout>
+              }
+            />
+            <Route
+              path="/gallery"
+              element={
+                <Layout>
+                  <GalleryPage />
+                </Layout>
+              }
+            />
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
         </Router>
         <Toaster
           toastOptions={{
