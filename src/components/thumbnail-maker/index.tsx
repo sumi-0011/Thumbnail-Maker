@@ -14,6 +14,7 @@ import { useSelectedTagAction, useTagAction } from "./Tag.context";
 import { Switch } from "../ui/switch";
 import { useState } from "react";
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
+import { DragModeCanvas } from "./DragModeCanvas";
 
 function ThumbnailMaker() {
   const [isDragMode, setIsDragMode] = useState(false);
@@ -65,16 +66,25 @@ function ThumbnailMaker() {
 
       <AddTagSection onAction={handleAddTag} />
 
-      <div className="flex items-center gap-2">
-        <Switch />
-        <p>Drag Mode</p>
+      <div className="flex items-center justify-end gap-2">
+        <Switch checked={isDragMode} onCheckedChange={setIsDragMode} />
+        <p>{isDragMode ? "Drag Mode" : "Default Mode"}</p>
       </div>
-      <CanvasContainer
-        previewRef={previewRef}
-        tagsContainerRef={tagsContainerRef}
-      >
-        <TagList setOpenTagSheet={onSelectTag} />
-      </CanvasContainer>
+      {isDragMode ? (
+        <DragModeCanvas
+          previewRef={previewRef}
+          tagsContainerRef={tagsContainerRef}
+        >
+          a
+        </DragModeCanvas>
+      ) : (
+        <CanvasContainer
+          previewRef={previewRef}
+          tagsContainerRef={tagsContainerRef}
+        >
+          <TagList setOpenTagSheet={onSelectTag} />
+        </CanvasContainer>
+      )}
       <TagChangeSheet
         onStyleChange={handleChangeTag}
         onRemove={handleRemoveTag}
