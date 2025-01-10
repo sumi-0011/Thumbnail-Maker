@@ -1,4 +1,4 @@
-import { Image } from "lucide-react";
+import { Image, InfoIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { AddTagSection } from "./AddTagSection";
 import { CanvasContainer } from "./CanvasContainer";
@@ -13,6 +13,7 @@ import { TagList } from "./TagList";
 import { useSelectedTagAction, useTagAction } from "./Tag.context";
 import { Switch } from "../ui/switch";
 import { useState } from "react";
+import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
 
 function ThumbnailMaker() {
   const [isDragMode, setIsDragMode] = useState(false);
@@ -91,6 +92,23 @@ function ThumbnailMaker() {
           </Button>
         </div>
       </div>
+      <Alert variant="outline" className="mt-8">
+        <InfoIcon className="mt-0 h-4 w-4" />
+        <div>
+          <AlertTitle>
+            Thank you everyone for using Thumbnail Maker 😄
+          </AlertTitle>
+          <AlertDescription>
+            - Please provide sources when using thumbnails on your blog
+            <br />- Your valuable input helps us create a better service for
+            everyone [
+            <a href="https://github.com/sumi-0011/Thumbnail-Maker/issues/new">
+              feedback form
+            </a>
+            ]
+          </AlertDescription>
+        </div>
+      </Alert>
     </div>
   );
 }

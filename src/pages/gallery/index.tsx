@@ -14,16 +14,17 @@ import {
 import { supabase } from "src/lib/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { Skeleton } from "src/components/ui/skeleton";
+import { useSetTemplate } from "src/components/thumbnail-maker/hooks/useSetTemplate";
 
 export default function GalleryPage() {
   const { templates, isLoading } = useTemplates();
   console.log("templates: ", templates);
   const navigate = useNavigate();
 
-  const { onUseTemplate } = useUseTemplate();
+  const { onUseTemplate } = useSetTemplate();
 
   const onItemClick = (template: Template) => {
-    onUseTemplate(template);
+    onUseTemplate(template.data);
 
     navigate(`/?templateId=${template.id}`);
   };
