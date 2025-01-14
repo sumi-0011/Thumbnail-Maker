@@ -1,6 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { PropsWithChildren } from "react";
+import { cn } from "src/lib/utils";
 
 interface SortableTagItemProps {
   tag: {
@@ -22,19 +22,21 @@ export const SortableTagItem = ({
     isDragging,
   } = useSortable({ id: tag.id });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
-
   return (
     <div
       ref={setNodeRef}
-      style={style}
       {...attributes}
       {...listeners}
-      className="cursor-move"
+      style={{
+        width: "auto",
+        height: "auto",
+        transform: transform
+          ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+          : undefined,
+        transition,
+        zIndex: isDragging ? 1 : undefined,
+      }}
+      className={cn("touch-none", isDragging && "opacity-50")}
     >
       {children}
     </div>
