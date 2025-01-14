@@ -5,7 +5,6 @@ import { cn } from "src/lib/utils";
 interface SortableTagItemProps {
   tag: {
     id: string | number;
-    // 기타 태그 관련 속성들...
   };
 }
 

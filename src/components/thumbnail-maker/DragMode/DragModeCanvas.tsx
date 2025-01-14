@@ -13,13 +13,12 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useState } from "react";
 import { cn } from "src/lib/utils";
-import { canvasSize } from "./assets/constants";
-import { useCurrentPaletteStyle } from "./Palette.context";
+import { canvasSize } from "../assets/constants";
+import { useCurrentPaletteStyle } from "../Palette.context";
 import { SortableTagItem } from "./SortableTagItem";
-import { useTagAction, useTagList } from "./Tag.context";
-import { TagItem } from "./TagItem";
+import { useTagAction, useTagList } from "../Tag.context";
+import { TagItem } from "../TagItem";
 
 interface Props {
   previewRef: React.RefObject<HTMLDivElement>;
@@ -28,9 +27,8 @@ interface Props {
 
 export function DragModeCanvas({ previewRef, tagsContainerRef }: Props) {
   const paletteStyle = useCurrentPaletteStyle();
-  // const [tags, setTags] = useState([]);
+
   const { tags } = useTagList();
-  console.log("tags: ", tags);
   const { onUpdateTagOrder } = useTagAction();
 
   const sensors = useSensors(
@@ -49,11 +47,7 @@ export function DragModeCanvas({ previewRef, tagsContainerRef }: Props) {
 
       if (oldIndex !== -1 && newIndex !== -1) {
         const newTags = arrayMove(tags, oldIndex, newIndex);
-        console.log("newTags: ", newTags);
-        console.log(
-          "newTags: ",
-          newTags.map((tag) => tag.tagVariant).join(", ")
-        );
+
         onUpdateTagOrder(newTags);
       }
     }
@@ -87,8 +81,7 @@ export function DragModeCanvas({ previewRef, tagsContainerRef }: Props) {
             >
               {tags.map((tag) => (
                 <SortableTagItem key={tag.id} tag={tag}>
-                  {/* <div></div> */}
-                  <TagItem key={tag.id} tag={tag} />
+                  <TagItem tag={tag} />
                 </SortableTagItem>
               ))}
             </SortableContext>

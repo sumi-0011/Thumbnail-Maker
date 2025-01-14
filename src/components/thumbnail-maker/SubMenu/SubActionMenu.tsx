@@ -1,6 +1,6 @@
-import { CircleEllipsis, Frown, InfoIcon, Menu, Terminal } from "lucide-react";
-import { Button } from "../ui/button";
-import { useTagAction, useTagList } from "./Tag.context";
+import { Menu } from "lucide-react";
+import { Button } from "../../ui/button";
+import { useTagAction, useTagList } from "../Tag.context";
 import {
   Menubar,
   MenubarContent,
@@ -8,14 +8,13 @@ import {
   MenubarMenu,
   MenubarSeparator,
   MenubarTrigger,
-} from "../ui/menubar";
+} from "../../ui/menubar";
 import { Link } from "react-router-dom";
 
 import { useState } from "react";
-import { SaveTemplateSheet } from "./SubMenu/SaveTemplateSheet";
-import { DownloadTemplateToLocalConfirm } from "./SubMenu/DownloadTemplateToLocalConfirm";
-import { useImportTemplate } from "./hooks/useImportTemplate";
-import { ImportTemplateConfirm } from "./SubMenu/ImportTemplateConfirm";
+import { SaveTemplateSheet } from "./SaveTemplateSheet";
+import { DownloadTemplateToLocalConfirm } from "./DownloadTemplateToLocalConfirm";
+import { ImportTemplateConfirm } from "./ImportTemplateConfirm";
 
 export function SubActionMenu({
   getImageFile,
@@ -27,7 +26,6 @@ export function SubActionMenu({
     useState(false);
   const [isImportTemplateSheetOpen, setIsImportTemplateSheetOpen] =
     useState(false);
-  const { tags } = useTagList();
   const { onResetTags } = useTagAction();
 
   return (

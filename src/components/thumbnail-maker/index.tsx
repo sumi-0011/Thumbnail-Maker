@@ -8,13 +8,13 @@ import { TagChangeSheet } from "./TagChangeSheet";
 import { PalettePicker } from "./PalettePicker";
 import { Tag } from "./assets/palette.types";
 import { TagEmojiSheet } from "./TagEmojiSheet";
-import { SubActionMenu } from "./SubActionMenu";
+import { SubActionMenu } from "./SubMenu/SubActionMenu";
 import { TagList } from "./TagList";
 import { useSelectedTagAction, useTagAction } from "./Tag.context";
 import { Switch } from "../ui/switch";
 import { useState } from "react";
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
-import { DragModeCanvas } from "./DragModeCanvas";
+import { DragModeCanvas } from "./DragMode/DragModeCanvas";
 
 function ThumbnailMaker() {
   const [isDragMode, setIsDragMode] = useState(false);
