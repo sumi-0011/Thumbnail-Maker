@@ -74,9 +74,7 @@ function ThumbnailMaker() {
         <DragModeCanvas
           previewRef={previewRef}
           tagsContainerRef={tagsContainerRef}
-        >
-          a
-        </DragModeCanvas>
+        />
       ) : (
         <CanvasContainer
           previewRef={previewRef}

@@ -37,6 +37,10 @@ export function useThumbnailTagList() {
     setTags(newTags);
   };
 
+  const onUpdateTagOrder = (newTags: Tag[]) => {
+    setTags(newTags);
+  };
+
   const onResetTags = () => {
     setTags([]);
   };
@@ -48,5 +52,6 @@ export function useThumbnailTagList() {
     onRollbackTags,
     onUpdateTag,
     onResetTags,
+    onUpdateTagOrder,
   };
 }
