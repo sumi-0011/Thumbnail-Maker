@@ -18,7 +18,7 @@ import { DragModeCanvas } from "./DragMode/DragModeCanvas";
 
 function ThumbnailMaker() {
   const [isDragMode, setIsDragMode] = useState(false);
-  const { previewRef, onDownload, getImageFile } = usePreview();
+  const { previewRef, onDownload: downloadImage, getImageFile } = usePreview();
   const { tagsContainerRef, checkOverflow, showOverflowToast } =
     useCheckTagOverflow();
 
@@ -93,12 +93,10 @@ function ThumbnailMaker() {
       />
       <div className="flex items-center justify-between">
         <PalettePicker />
-        <div className="flex items-center gap-2">
-          <SubActionMenu getImageFile={getImageFile} />
-          <Button onClick={onDownload}>
-            <Image size={20} className="mr-2" /> Download Image
-          </Button>
-        </div>
+        <SubActionMenu
+          getImageFile={getImageFile}
+          downloadImage={downloadImage}
+        />
       </div>
       <Alert variant="outline" className="mt-8">
         <InfoIcon className="mt-0 h-4 w-4" />
