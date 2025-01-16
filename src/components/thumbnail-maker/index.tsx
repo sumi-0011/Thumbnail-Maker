@@ -8,13 +8,17 @@ import { TagChangeSheet } from "./TagChangeSheet";
 import { PalettePicker } from "./PalettePicker";
 import { Tag } from "./assets/palette.types";
 import { TagEmojiSheet } from "./TagEmojiSheet";
-import { SubActionMenu } from "./SubActionMenu";
+import { SubActionMenu } from "./SubMenu/SubActionMenu";
 import { TagList } from "./TagList";
 import { useSelectedTagAction, useTagAction } from "./Tag.context";
+import { Switch } from "../ui/switch";
+import { useState } from "react";
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
+import { DragModeCanvas } from "./DragMode/DragModeCanvas";
 
 function ThumbnailMaker() {
-  const { previewRef, onDownload, getImageFile } = usePreview();
+  const [isDragMode, setIsDragMode] = useState(false);
+  const { previewRef, onDownload: downloadImage, getImageFile } = usePreview();
   const { tagsContainerRef, checkOverflow, showOverflowToast } =
     useCheckTagOverflow();
 
@@ -61,12 +65,24 @@ function ThumbnailMaker() {
       </h1>
 
       <AddTagSection onAction={handleAddTag} />
-      <CanvasContainer
-        previewRef={previewRef}
-        tagsContainerRef={tagsContainerRef}
-      >
-        <TagList setOpenTagSheet={onSelectTag} />
-      </CanvasContainer>
+
+      <div className="flex items-center justify-end gap-2">
+        <Switch checked={isDragMode} onCheckedChange={setIsDragMode} />
+        <p>{isDragMode ? "Drag Mode" : "Default Mode"}</p>
+      </div>
+      {isDragMode ? (
+        <DragModeCanvas
+          previewRef={previewRef}
+          tagsContainerRef={tagsContainerRef}
+        />
+      ) : (
+        <CanvasContainer
+          previewRef={previewRef}
+          tagsContainerRef={tagsContainerRef}
+        >
+          <TagList setOpenTagSheet={onSelectTag} />
+        </CanvasContainer>
+      )}
       <TagChangeSheet
         onStyleChange={handleChangeTag}
         onRemove={handleRemoveTag}
@@ -77,12 +93,10 @@ function ThumbnailMaker() {
       />
       <div className="flex items-center justify-between">
         <PalettePicker />
-        <div className="flex items-center gap-2">
-          <SubActionMenu getImageFile={getImageFile} />
-          <Button onClick={onDownload}>
-            <Image size={20} className="mr-2" /> Download Image
-          </Button>
-        </div>
+        <SubActionMenu
+          getImageFile={getImageFile}
+          downloadImage={downloadImage}
+        />
       </div>
       <Alert variant="outline" className="mt-8">
         <InfoIcon className="mt-0 h-4 w-4" />

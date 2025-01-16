@@ -1,6 +1,7 @@
-import { CircleEllipsis, Frown, InfoIcon, Menu, Terminal } from "lucide-react";
-import { Button } from "../ui/button";
-import { useTagAction, useTagList } from "./Tag.context";
+import { Menu } from "lucide-react";
+import { Button } from "../../ui/button";
+import { useTagAction,   } from "../Tag.context";
+import { ImageIcon, LayoutTemplateIcon } from "lucide-react";
 import {
   Menubar,
   MenubarContent,
@@ -8,34 +9,50 @@ import {
   MenubarMenu,
   MenubarSeparator,
   MenubarTrigger,
-} from "../ui/menubar";
+} from "../../ui/menubar";
 import { Link } from "react-router-dom";
 
 import { useState } from "react";
-import { SaveTemplateSheet } from "./SubMenu/SaveTemplateSheet";
-import { DownloadTemplateToLocalConfirm } from "./SubMenu/DownloadTemplateToLocalConfirm";
-import { useImportTemplate } from "./hooks/useImportTemplate";
-import { ImportTemplateConfirm } from "./SubMenu/ImportTemplateConfirm";
+import { SaveTemplateSheet } from "./SaveTemplateSheet";
+import { DownloadTemplateToLocalConfirm } from "./DownloadTemplateToLocalConfirm";
+import { ImportTemplateConfirm } from "./ImportTemplateConfirm";
+import { toast } from "sonner";
 
 export function SubActionMenu({
   getImageFile,
+  downloadImage,
 }: {
   getImageFile: () => Promise<Blob | null>;
+  downloadImage: () => void;
 }) {
   const [isSaveTemplateSheetOpen, setIsSaveTemplateSheetOpen] = useState(false);
   const [isDownloadTemplateSheetOpen, setIsDownloadTemplateSheetOpen] =
     useState(false);
   const [isImportTemplateSheetOpen, setIsImportTemplateSheetOpen] =
     useState(false);
-  const { tags } = useTagList();
   const { onResetTags } = useTagAction();
 
+  const onDownload = () => {
+    downloadImage();
+    toast.message("Downloaded Successfully", {
+      duration: 5000,
+      description:
+        "Share your carefully crafted image with others through the gallery! 🎨",
+      action: {
+        label: "Upload",
+        onClick: () => {
+          setIsSaveTemplateSheetOpen(true);
+        },
+      },
+    });
+  };
+
   return (
-    <div>
+    <div className="flex items-center gap-2">
       <Menubar className="bg-transparent">
         <MenubarMenu>
           <MenubarTrigger asChild>
-            <Button variant="secondary">
+            <Button variant="outline">
               <Menu />
             </Button>
           </MenubarTrigger>
@@ -71,6 +88,14 @@ export function SubActionMenu({
         isOpen={isImportTemplateSheetOpen}
         onClose={() => setIsImportTemplateSheetOpen(false)}
       />
+      <Link to="/gallery">
+        <Button variant="secondary">
+          <LayoutTemplateIcon size={20} />
+        </Button>
+      </Link>
+      <Button onClick={onDownload}>
+        <ImageIcon size={20} className="mr-2" /> Download Image
+      </Button>
     </div>
   );
 }

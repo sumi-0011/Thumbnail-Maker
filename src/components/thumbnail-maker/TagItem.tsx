@@ -9,8 +9,8 @@ import { get3DEmojiImage } from "../3d-emoji-picker";
 
 interface Props {
   tag: Tag;
-  onRemove: () => void;
-  onClick: () => void;
+  onRemove?: () => void;
+  onClick?: () => void;
   className?: string;
 }
 
@@ -22,15 +22,17 @@ export function TagItem({ tag, onRemove, onClick, className }: Props) {
         tag={tag}
         tagStyle={paletteStyle.tagStyle[getTagStyleKey(tag)]}
       />
-      <div
-        className="absolute -right-1 -top-1  hidden h-6 w-6 cursor-default justify-center rounded-full bg-white/80 p-0.5 align-middle group-hover:flex"
-        onClick={(e) => {
-          e.stopPropagation();
-          onRemove();
-        }}
-      >
-        <X size={20} color="#454545" />
-      </div>
+      {onRemove && (
+        <div
+          className="absolute -right-1 -top-1  hidden h-6 w-6 cursor-default justify-center rounded-full bg-white/80 p-0.5 align-middle group-hover:flex"
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove();
+          }}
+        >
+          <X size={20} color="#454545" />
+        </div>
+      )}
     </div>
   );
 }
