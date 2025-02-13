@@ -12,7 +12,8 @@
     "lint:fix": "eslint --quiet --fix src --ext .ts,.tsx && stylelint --fix src/**/*.less",
     "i18next-resources-for-ts": "i18next-resources-for-ts toc -i ./src/i18n/locales/en -o ./src/types/resources.ts",
     "translate": "transmart",
-    "scripts": "node scripts/emoji.js"
+    "scripts": "node scripts/emoji.js",
+    "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -105,5 +106,6 @@
     "vite": "^4.2.0",
     "vite-plugin-external": "^1.2.8",
     "vite-plugin-svgr": "^2.4.0"
-  }
+  },
+  "packageManager": "pnpm@9.15.4"
 }
