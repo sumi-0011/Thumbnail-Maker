@@ -13,6 +13,8 @@ interface TagActionContextType {
   onResetTags: () => void;
   onRollbackTags: () => void;
   onUpdateTagOrder: (newTags: Tag[]) => void;
+
+  onRandomShuffle: () => void;
 }
 
 const TagListContext = createContext<TagListContextType | undefined>({
@@ -25,6 +27,7 @@ const TagActionContext = createContext<TagActionContextType | undefined>({
   onResetTags: () => {},
   onRollbackTags: () => {},
   onUpdateTagOrder: () => {},
+  onRandomShuffle: () => {},
 });
 
 interface SelectTagContextType {
@@ -55,6 +58,7 @@ export const TagProvider = ({ children }: PropsWithChildren) => {
     onResetTags,
     onRollbackTags,
     onUpdateTagOrder,
+    onRandomShuffle,
   } = useThumbnailTagList();
 
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
@@ -77,6 +81,7 @@ export const TagProvider = ({ children }: PropsWithChildren) => {
           onResetTags,
           onRollbackTags,
           onUpdateTagOrder,
+          onRandomShuffle,
         }}
       >
         <SelectedTagContext.Provider value={{ selectedTag }}>

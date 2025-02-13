@@ -1,4 +1,4 @@
-import { Image, InfoIcon } from "lucide-react";
+import { Image, InfoIcon, Shuffle } from "lucide-react";
 import { Button } from "../ui/button";
 import { AddTagSection } from "./AddTagSection";
 import { CanvasContainer } from "./CanvasContainer";
@@ -15,6 +15,7 @@ import { Switch } from "../ui/switch";
 import { useState } from "react";
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
 import { DragModeCanvas } from "./DragMode/DragModeCanvas";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 function ThumbnailMaker() {
   const [isDragMode, setIsDragMode] = useState(false);
@@ -22,7 +23,13 @@ function ThumbnailMaker() {
   const { tagsContainerRef, checkOverflow, showOverflowToast } =
     useCheckTagOverflow();
 
-  const { onAddTag, onRemoveTag, onRollbackTags, onUpdateTag } = useTagAction();
+  const {
+    onAddTag,
+    onRemoveTag,
+    onRollbackTags,
+    onUpdateTag,
+    onRandomShuffle,
+  } = useTagAction();
 
   const { onSelectTag, clearSelectedTag } = useSelectedTagAction();
 
@@ -69,6 +76,21 @@ function ThumbnailMaker() {
       <div className="flex items-center justify-end gap-2">
         <Switch checked={isDragMode} onCheckedChange={setIsDragMode} />
         <p>{isDragMode ? "Drag Mode" : "Default Mode"}</p>
+
+        <Tooltip>
+          <TooltipTrigger>
+            <Button variant="outline" onClick={onRandomShuffle} className="p-3">
+              <Shuffle color="#fff" size={20} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent className="max-w-[200px]">
+            <p className="text-sm font-medium">Random Shuffle</p>
+            <p className="text-xs text-muted-foreground">
+              Randomly changes the style of the tag. It's useful if you want to
+              make a thumbnail easily.
+            </p>
+          </TooltipContent>
+        </Tooltip>
       </div>
       {isDragMode ? (
         <DragModeCanvas

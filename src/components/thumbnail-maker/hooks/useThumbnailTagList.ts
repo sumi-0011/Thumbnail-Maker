@@ -2,6 +2,7 @@ import useStorageState from "use-storage-state";
 import { THUMBNAIL_MAKER_STORAGE_KEY } from "../assets/constants";
 import { Tag } from "../assets/palette.types";
 import { useRef } from "react";
+import { getRandomTagStyles } from "../assets/utils";
 
 export function useThumbnailTagList() {
   const [tags, setTags] = useStorageState<Tag[]>(THUMBNAIL_MAKER_STORAGE_KEY, {
@@ -45,6 +46,11 @@ export function useThumbnailTagList() {
     setTags([]);
   };
 
+  const onRandomShuffle = () => {
+    const newTags = getRandomTagStyles(tags);
+    setTags(newTags);
+  };
+
   return {
     tags,
     onAddTag,
@@ -53,5 +59,6 @@ export function useThumbnailTagList() {
     onUpdateTag,
     onResetTags,
     onUpdateTagOrder,
+    onRandomShuffle,
   };
 }
