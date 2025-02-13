@@ -77,14 +77,14 @@ function ThumbnailMaker() {
         <Switch checked={isDragMode} onCheckedChange={setIsDragMode} />
         <p>{isDragMode ? "Drag Mode" : "Default Mode"}</p>
 
-        <Tooltip>
+        <Tooltip defaultOpen>
           <TooltipTrigger>
             <Button variant="outline" onClick={onRandomShuffle} className="p-3">
               <Shuffle color="#fff" size={20} />
             </Button>
           </TooltipTrigger>
           <TooltipContent className="max-w-[200px]">
-            <p className="text-sm font-medium">Random Shuffle</p>
+            <p className="text-sm font-medium">Random Shuffle Open 🎉</p>
             <p className="text-xs text-muted-foreground">
               Randomly changes the style of the tag. It's useful if you want to
               make a thumbnail easily.
