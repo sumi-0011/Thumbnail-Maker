@@ -47,6 +47,7 @@ export function useThumbnailTagList() {
   };
 
   const onRandomShuffle = () => {
+    prevTags.current = tags;
     const newTags = getRandomTagStyles(tags);
     setTags(newTags);
   };

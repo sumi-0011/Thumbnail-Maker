@@ -4,6 +4,11 @@ export const getTagStyleKey = (tag: Tag) => {
   return `${tag.tagVariant}-${tag.tagShape}` as const as PaletteTag;
 };
 
+/**
+ * 태그 스타일 조합을 정의하는 타입
+ * @property tagVariant - 태그의 변형 스타일 (filled, outlined, ghost)
+ * @property tagShape - 태그의 모양 (round, squared)
+ */
 type StyleCombination = {
   tagVariant: TagVariant;
   tagShape: TagShape;
