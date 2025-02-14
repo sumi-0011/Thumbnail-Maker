@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import {
   ChevronDown,
@@ -173,6 +173,13 @@ const LandingPage: React.FC = () => {
     setCurrentPage(index);
   };
 
+  const shouldAnimate = (sectionId: string) => {
+    const targetIndex = navItems.findIndex((item) => item.id === sectionId);
+    const threshold = 1.5;
+
+    return Math.abs(currentPage - targetIndex) <= threshold;
+  };
+
   return (
     <div className="h-screen relative">
       <CustomCursor />
@@ -222,20 +229,56 @@ const LandingPage: React.FC = () => {
       <ReactPageScroller
         pageOnChange={handlePageChange}
         customPageNumber={currentPage}
+        // animationTimer={800}
+        // blockScrollDown={isScrolling}
+        // blockScrollUp={isScrolling}
+        renderAllPagesOnFirstRender={true}
       >
         {/* Hero Section */}
         <div
           name="hero"
           className="h-screen w-full flex items-center justify-center overflow-hidden"
         >
+          {/* 배경 효과 강화 */}
           <GradientBlob
             color={darkTheme.colors.gradient.primary}
-            style="top-20 left-20 w-96 h-96 animate-blob"
+            style="top-20 left-20 w-[500px] h-[500px] animate-blob opacity-30"
           />
           <GradientBlob
             color={darkTheme.colors.gradient.secondary}
-            style="bottom-20 right-20 w-96 h-96 animate-blob-delay"
+            style="bottom-20 right-20 w-[500px] h-[500px] animate-blob-delay opacity-30"
           />
+
+          {/* 배경 파티클 효과 */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {shouldAnimate("hero") &&
+              [...Array(10)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-1 h-1 bg-accent-primary/30 rounded-full"
+                  initial={{
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
+                  }}
+                  animate={{
+                    x: [
+                      Math.random() * window.innerWidth,
+                      Math.random() * window.innerWidth,
+                    ],
+                    y: [
+                      Math.random() * window.innerHeight,
+                      Math.random() * window.innerHeight,
+                    ],
+                  }}
+                  transition={{
+                    duration: 15,
+                    repeat: Infinity,
+                    ease: "linear",
+                    times: [0, 1],
+                  }}
+                />
+              ))}
+          </div>
 
           <div className="relative w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between px-8 gap-12">
             {/* 왼쪽 텍스트 영역 */}
@@ -243,108 +286,217 @@ const LandingPage: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.3 }}
                 className="space-y-8"
               >
-                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-primary/10 text-accent-primary">
-                  <Bot size={16} />
+                <motion.span
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-primary/10 text-accent-primary"
+                  initial={{ scale: 0.9 }}
+                  animate={{ scale: 1 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 200,
+                    damping: 10,
+                  }}
+                >
+                  <Bot size={16} className="animate-pulse" />
                   <span className="text-sm font-medium">
                     개발자를 위한 오픈소스 썸네일 메이커
                   </span>
-                </span>
+                </motion.span>
 
-                <h1 className="text-6xl font-bold leading-tight">
+                <motion.h1
+                  className="text-6xl font-bold leading-tight"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.8 }}
+                >
                   블로그 썸네일,
                   <br />
-                  <span className="text-gradient bg-gradient-to-r from-accent-primary to-accent-secondary">
+                  <motion.span
+                    className="text-gradient bg-gradient-to-r from-accent-primary to-accent-secondary inline-block"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4, duration: 0.8 }}
+                  >
                     이제 코딩하듯 빠르게
-                  </span>
-                </h1>
+                  </motion.span>
+                </motion.h1>
 
-                <p className="text-xl text-text-secondary leading-relaxed">
-                  디자인에 시간 쓰지 마세요! 🎨
+                <motion.p
+                  className="text-xl text-text-secondary leading-relaxed"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6, duration: 0.8 }}
+                >
+                  디자인에 시간 쓰지 마세요!
+                  <motion.span
+                    className="inline-block"
+                    animate={{
+                      rotate: [0, -10, 10, -10, 0],
+                      scale: [1, 1.2, 1.2, 1.2, 1],
+                    }}
+                    transition={{
+                      duration: 1,
+                      delay: 1,
+                      repeat: Infinity,
+                      repeatDelay: 3,
+                    }}
+                  >
+                    🎨
+                  </motion.span>
                   <br />
                   3D 이모지로 깔끔한 썸네일을 뚝딱 만들어보세요.
                   <br />
                   <span className="text-accent-primary">100% 무료</span>, 완전
                   오픈소스입니다.
-                </p>
+                </motion.p>
 
-                <div className="flex items-center gap-6">
+                <motion.div
+                  className="flex items-center gap-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8, duration: 0.8 }}
+                >
                   <Card3D glowOnHover>
-                    <a
+                    <motion.a
                       href="https://github.com/sumi-0011/Thumbnail-Maker"
                       target="_blank"
-                      className="relative group px-8 py-4 bg-accent-primary rounded-lg text-xl font-semibold"
+                      className="relative group px-8 py-4 bg-accent-primary rounded-lg text-xl font-semibold overflow-hidden"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                     >
+                      <div
+                        className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 
+                                    translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"
+                      />
                       <span className="relative flex items-center gap-2">
                         GitHub에서 보기
                         <BrainCircuit className="inline-block" size={20} />
                       </span>
-                    </a>
+                    </motion.a>
                   </Card3D>
-                </div>
+                </motion.div>
 
-                <div className="flex items-center gap-4 text-sm text-text-secondary">
-                  <span>⭐ MIT 라이선스</span>
-                  <span>🛠️ React + TypeScript</span>
-                  <span>💻 누구나 기여 가능</span>
-                </div>
+                <motion.div
+                  className="flex items-center gap-4 text-sm text-text-secondary"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1, duration: 0.8 }}
+                >
+                  {[
+                    "⭐ MIT 라이선스",
+                    "🛠️ React + TypeScript",
+                    "💻 누구나 기여 가능",
+                  ].map((text, i) => (
+                    <motion.span
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.2 + i * 0.1, duration: 0.5 }}
+                      className="hover:text-accent-primary transition-colors cursor-default"
+                    >
+                      {text}
+                    </motion.span>
+                  ))}
+                </motion.div>
               </motion.div>
             </div>
 
             {/* 오른쪽 프리뷰 영역 */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+              animate={{ opacity: 1, scale: 1, rotate: 3 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
               className="flex-1 relative"
             >
-              <Card3D className="transform rotate-3">
-                <div className="relative bg-background-secondary rounded-2xl p-6">
+              <Card3D className="transform hover:rotate-6 transition-transform duration-300">
+                <motion.div
+                  className="relative bg-background-secondary rounded-2xl p-6"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                >
                   <div className="flex flex-col gap-4">
                     <div className="flex gap-4 items-center">
-                      <div className="w-12 h-12 rounded-lg bg-accent-primary/20 flex items-center justify-center">
+                      <motion.div
+                        className="w-12 h-12 rounded-lg bg-accent-primary/20 flex items-center justify-center"
+                        animate={{ rotate: [0, 360] }}
+                        transition={{
+                          duration: 20,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      >
                         ⚛️
-                      </div>
+                      </motion.div>
                       <div className="flex-1">
-                        <div className="h-6 w-3/4 bg-background-tertiary rounded" />
-                        <div className="h-4 w-1/2 bg-background-tertiary rounded mt-2" />
+                        <motion.div
+                          className="h-6 w-3/4 bg-background-tertiary rounded"
+                          animate={{ opacity: [0.5, 0.8, 0.5] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        />
+                        <motion.div
+                          className="h-4 w-1/2 bg-background-tertiary rounded mt-2"
+                          animate={{ opacity: [0.3, 0.6, 0.3] }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            delay: 0.3,
+                          }}
+                        />
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <span className="px-3 py-1 rounded-full bg-background-tertiary text-sm">
-                        React
-                      </span>
-                      <span className="px-3 py-1 rounded-full bg-background-tertiary text-sm">
-                        Tutorial
-                      </span>
-                      <span className="px-3 py-1 rounded-full bg-background-tertiary text-sm">
-                        Web
-                      </span>
+                      {["React", "Tutorial", "Web"].map((tag, i) => (
+                        <motion.span
+                          key={i}
+                          className="px-3 py-1 rounded-full bg-background-tertiary text-sm"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.8 + i * 0.1 }}
+                        >
+                          {tag}
+                        </motion.span>
+                      ))}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </Card3D>
 
-              <FloatingEmoji
-                emoji="⚛️"
-                style="top-0 right-0"
-                size="lg"
-                interactive
-              />
-              <FloatingEmoji
-                emoji="📘"
-                style="bottom-20 left-0"
-                size="xl"
-                interactive
-              />
-              <FloatingEmoji
-                emoji="💻"
-                style="top-40 left-20"
-                size="md"
-                interactive
-              />
+              {/* 3D 이모지들 */}
+              {[
+                { emoji: "⚛️", style: "top-0 right-0", size: "lg", delay: 1.2 },
+                {
+                  emoji: "📘",
+                  style: "bottom-20 left-0",
+                  size: "xl",
+                  delay: 1.4,
+                },
+                {
+                  emoji: "💻",
+                  style: "top-40 left-20",
+                  size: "md",
+                  delay: 1.6,
+                },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{
+                    delay: item.delay,
+                    type: "spring",
+                    stiffness: 200,
+                  }}
+                >
+                  <FloatingEmoji
+                    emoji={item.emoji}
+                    style={item.style}
+                    size={item.size}
+                    interactive
+                  />
+                </motion.div>
+              ))}
             </motion.div>
           </div>
         </div>
@@ -354,7 +506,12 @@ const LandingPage: React.FC = () => {
           name="features"
           className="min-h-screen w-full py-24 flex items-center justify-center"
         >
-          <div className="relative w-full max-w-7xl mx-auto px-8">
+          <motion.div
+            className="relative w-full max-w-7xl mx-auto px-8"
+            initial={{ opacity: 0, y: 50 }}
+            animate={shouldAnimate("features") ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+          >
             <div className="text-center mb-20">
               <span className="inline-block px-4 py-2 rounded-full bg-accent-primary/10 text-accent-primary text-sm font-medium mb-6">
                 심플한 기능
@@ -426,7 +583,7 @@ const LandingPage: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Example Thumbnails Section */}
@@ -440,7 +597,12 @@ const LandingPage: React.FC = () => {
             opacity={0.05}
           />
 
-          <div className="relative w-full max-w-6xl mx-auto px-4">
+          <motion.div
+            className="relative w-full max-w-6xl mx-auto px-4"
+            initial={{ opacity: 0 }}
+            animate={shouldAnimate("examples") ? { opacity: 1 } : {}}
+            transition={{ duration: 0.3 }}
+          >
             <div className="text-center mb-16">
               <h2 className="text-5xl font-bold mb-6">썸네일 예시</h2>
               <p className="text-xl text-text-secondary">
@@ -455,7 +617,7 @@ const LandingPage: React.FC = () => {
                 </Card3D>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Statistics Section */}
@@ -469,13 +631,18 @@ const LandingPage: React.FC = () => {
             opacity={0.05}
           />
 
-          <div className="relative w-full max-w-6xl mx-auto px-4">
+          <motion.div
+            className="relative w-full max-w-6xl mx-auto px-4"
+            initial={{ opacity: 0, y: 30 }}
+            animate={shouldAnimate("stats") ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.3 }}
+          >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {stats.map((stat, i) => (
                 <Statistic key={i} {...stat} />
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* How It Works Section */}
@@ -488,7 +655,12 @@ const LandingPage: React.FC = () => {
             style="top-1/4 left-0 w-[600px] h-[600px]"
           />
 
-          <div className="relative w-full max-w-6xl mx-auto px-4">
+          <motion.div
+            className="relative w-full max-w-6xl mx-auto px-4"
+            initial={{ opacity: 0 }}
+            animate={shouldAnimate("howto") ? { opacity: 1 } : {}}
+            transition={{ duration: 0.3 }}
+          >
             <div className="text-center mb-16">
               <h2 className="text-5xl font-bold mb-6">이렇게 만들어보세요</h2>
               <p className="text-xl text-text-secondary">
@@ -501,7 +673,7 @@ const LandingPage: React.FC = () => {
                 <TimelineItem key={i} {...step} step={i + 1} />
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Coming Soon Section */}
