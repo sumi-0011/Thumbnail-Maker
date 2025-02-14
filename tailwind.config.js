@@ -79,10 +79,51 @@ module.exports = {
             height: 0,
           },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-20px)" },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        slideUp: {
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        slideLeft: {
+          "0%": { transform: "translateX(-20px)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        slideRight: {
+          "0%": { transform: "translateX(20px)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
+        wave: {
+          "0%": { transform: "rotate(0deg)" },
+          "50%": { transform: "rotate(15deg)" },
+          "100%": { transform: "rotate(0deg)" },
+        },
+        glow: {
+          "0%": {
+            boxShadow: "0 0 5px #7371FC, 0 0 10px #7371FC, 0 0 15px #7371FC",
+          },
+          "100%": {
+            boxShadow: "0 0 10px #7371FC, 0 0 20px #7371FC, 0 0 30px #7371FC",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        float: "float 6s ease-in-out infinite",
+        fadeIn: "fadeIn 0.8s ease-out forwards",
+        slideUp: "slideUp 0.8s ease-out forwards",
+        slideLeft: "slideLeft 0.8s ease-out forwards",
+        slideRight: "slideRight 0.8s ease-out forwards",
+        wave: "wave 2s linear infinite",
+        bounce: "bounce 2s infinite",
+        glow: "glow 2s ease-in-out infinite alternate",
       },
     },
   },
