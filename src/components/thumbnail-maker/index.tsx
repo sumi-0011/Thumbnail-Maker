@@ -16,6 +16,7 @@ import { useState } from "react";
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
 import { DragModeCanvas } from "./DragMode/DragModeCanvas";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { MenuBar } from "./MenuBar";
 
 function ThumbnailMaker() {
   const [isDragMode, setIsDragMode] = useState(false);
@@ -70,28 +71,15 @@ function ThumbnailMaker() {
       <h1 className="mb-7 text-center text-[60px] text-[#C1CCFF]">
         Thumbnail Maker
       </h1>
+      <MenuBar
+        isDragMode={isDragMode}
+        setIsDragMode={setIsDragMode}
+        getImageFile={getImageFile}
+        downloadImage={downloadImage}
+      />
 
       <AddTagSection onAction={handleAddTag} />
 
-      <div className="flex items-center justify-end gap-2">
-        <Switch checked={isDragMode} onCheckedChange={setIsDragMode} />
-        <p>{isDragMode ? "Drag Mode" : "Default Mode"}</p>
-
-        <Tooltip defaultOpen>
-          <TooltipTrigger>
-            <Button variant="outline" onClick={onRandomShuffle} className="p-3">
-              <Shuffle color="#fff" size={20} />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent className="max-w-[200px]">
-            <p className="text-sm font-medium">Random Shuffle Open 🎉</p>
-            <p className="text-xs text-muted-foreground">
-              Randomly changes the style of the tag. It's useful if you want to
-              make a thumbnail easily.
-            </p>
-          </TooltipContent>
-        </Tooltip>
-      </div>
       {isDragMode ? (
         <DragModeCanvas
           previewRef={previewRef}

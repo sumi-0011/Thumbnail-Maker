@@ -9,6 +9,7 @@ import Home from "./pages/home";
 import GalleryPage from "./pages/gallery";
 import ErrorPage from "./components/error-page";
 import { Layout } from "./components/layout";
+import { HotkeysProvider } from "react-hotkeys-hook";
 
 export default function App() {
   const queryClient = useMemo(() => new QueryClient({}), []);
@@ -25,27 +26,29 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <Router>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Layout>
-                  <Home />
-                </Layout>
-              }
-            />
-            <Route
-              path="/gallery"
-              element={
-                <Layout>
-                  <GalleryPage />
-                </Layout>
-              }
-            />
-            <Route path="*" element={<ErrorPage />} />
-          </Routes>
-        </Router>
+        <HotkeysProvider>
+          <Router>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Layout>
+                    <Home />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/gallery"
+                element={
+                  <Layout>
+                    <GalleryPage />
+                  </Layout>
+                }
+              />
+              <Route path="*" element={<ErrorPage />} />
+            </Routes>
+          </Router>
+        </HotkeysProvider>
         <Toaster
           toastOptions={{
             classNames: {

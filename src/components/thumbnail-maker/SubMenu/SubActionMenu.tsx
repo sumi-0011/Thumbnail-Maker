@@ -49,50 +49,6 @@ export function SubActionMenu({
 
   return (
     <div className="flex items-center gap-2">
-      <Menubar className="bg-transparent">
-        <MenubarMenu>
-          <MenubarTrigger asChild>
-            <Button variant="outline">
-              <Menu />
-            </Button>
-          </MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem onClick={onResetTags}>Reset Canvas</MenubarItem>
-            <MenubarSeparator />
-            <Link to="/gallery">
-              <MenubarItem>Go to Gallery</MenubarItem>
-            </Link>
-            <MenubarItem onClick={() => setIsSaveTemplateSheetOpen(true)}>
-              Save Template
-            </MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem onClick={() => setIsDownloadTemplateSheetOpen(true)}>
-              Download Template to Local
-            </MenubarItem>
-            <MenubarItem onClick={() => setIsImportTemplateSheetOpen(true)}>
-              Import Template
-            </MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
-      <SaveTemplateSheet
-        getImageFile={getImageFile}
-        isOpen={isSaveTemplateSheetOpen}
-        onClose={() => setIsSaveTemplateSheetOpen(false)}
-      />
-      <DownloadTemplateToLocalConfirm
-        isOpen={isDownloadTemplateSheetOpen}
-        onClose={() => setIsDownloadTemplateSheetOpen(false)}
-      />
-      <ImportTemplateConfirm
-        isOpen={isImportTemplateSheetOpen}
-        onClose={() => setIsImportTemplateSheetOpen(false)}
-      />
-      <Link to="/gallery">
-        <Button variant="secondary">
-          <LayoutTemplateIcon size={20} />
-        </Button>
-      </Link>
       <Button onClick={onDownload}>
         <ImageIcon size={20} className="mr-2" /> Download Image
       </Button>
