@@ -27,7 +27,7 @@ export default function Home() {
               <Button
                 size="sm"
                 variant="outline"
-                className="block mt-2 ml-auto"
+                className="mt-2 ml-auto flex justify-center items-center w-fit"
                 asChild
               >
                 <a
