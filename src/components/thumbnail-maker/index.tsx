@@ -11,11 +11,9 @@ import { TagEmojiSheet } from "./TagEmojiSheet";
 import { SubActionMenu } from "./SubMenu/SubActionMenu";
 import { TagList } from "./TagList";
 import { useSelectedTagAction, useTagAction } from "./Tag.context";
-import { Switch } from "../ui/switch";
 import { useState } from "react";
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
 import { DragModeCanvas } from "./DragMode/DragModeCanvas";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { MenuBar } from "./MenuBar";
 
 function ThumbnailMaker() {

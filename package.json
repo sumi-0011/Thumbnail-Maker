@@ -59,6 +59,7 @@
     "react-helmet": "^6.1.0",
     "react-hotkeys-hook": "^4.6.1",
     "react-i18next": "^13.2.2",
+    "react-page-scroller": "^3.0.1",
     "react-router-dom": "^6.10.0",
     "sonner": "^1.5.0",
     "tailwind-merge": "^1.14.0",

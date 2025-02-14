@@ -10,6 +10,7 @@ import GalleryPage from "./pages/gallery";
 import ErrorPage from "./components/error-page";
 import { Layout } from "./components/layout";
 import { HotkeysProvider } from "react-hotkeys-hook";
+import LandingPage from "./pages/landing/page";
 
 export default function App() {
   const queryClient = useMemo(() => new QueryClient({}), []);
@@ -43,6 +44,14 @@ export default function App() {
                   <Layout>
                     <GalleryPage />
                   </Layout>
+                }
+              />
+              <Route
+                path="/landing"
+                element={
+                  <div className="bg-black text-black">
+                    <LandingPage />
+                  </div>
                 }
               />
               <Route path="*" element={<ErrorPage />} />
