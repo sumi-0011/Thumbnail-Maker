@@ -12,6 +12,9 @@ export default defineConfig({
     }),
     react(),
   ],
+  define: {
+    global: "window",
+  },
   resolve: {
     alias: {
       src: path.resolve(__dirname, "./src"),
