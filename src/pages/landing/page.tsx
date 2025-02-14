@@ -247,57 +247,48 @@ const LandingPage: React.FC = () => {
                 className="space-y-8"
               >
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-primary/10 text-accent-primary">
-                  <Sparkles size={16} />
+                  <Bot size={16} />
                   <span className="text-sm font-medium">
-                    3D 이모지로 눈길을 사로잡는 썸네일 제작
+                    개발자를 위한 오픈소스 썸네일 메이커
                   </span>
                 </span>
 
-                <h1 className="text-7xl font-bold leading-tight">
-                  <span className="text-gradient bg-gradient-to-r from-accent-primary to-accent-secondary">
-                    3초만에 완성하는
-                  </span>
+                <h1 className="text-6xl font-bold leading-tight">
+                  블로그 썸네일,
                   <br />
-                  블로그 썸네일의 마법
+                  <span className="text-gradient bg-gradient-to-r from-accent-primary to-accent-secondary">
+                    이제 코딩하듯 빠르게
+                  </span>
                 </h1>
 
                 <p className="text-xl text-text-secondary leading-relaxed">
-                  복잡한 디자인 툴은 이제 그만! 🎨
+                  디자인에 시간 쓰지 마세요! 🎨
                   <br />
-                  드래그 한 번으로 프로처럼 썸네일을 만들어보세요.
+                  3D 이모지로 깔끔한 썸네일을 뚝딱 만들어보세요.
                   <br />
-                  <span className="text-accent-primary">50만 개 이상</span>의
-                  썸네일이 이미 탄생했습니다.
+                  <span className="text-accent-primary">100% 무료</span>, 완전
+                  오픈소스입니다.
                 </p>
 
                 <div className="flex items-center gap-6">
                   <Card3D glowOnHover>
-                    <button className="relative group px-8 py-4 bg-accent-primary rounded-lg text-xl font-semibold">
-                      <div
-                        className="absolute inset-0 rounded-lg opacity-25 bg-gradient-to-r from-white/0 via-white/5 to-white/0
-                                   group-hover:opacity-50 transition-opacity duration-500 animate-shimmer"
-                      />
+                    <a
+                      href="https://github.com/sumi-0011/Thumbnail-Maker"
+                      target="_blank"
+                      className="relative group px-8 py-4 bg-accent-primary rounded-lg text-xl font-semibold"
+                    >
                       <span className="relative flex items-center gap-2">
-                        무료로 시작하기
-                        <Wand2
-                          className="inline-block animate-bounce"
-                          size={20}
-                        />
+                        GitHub에서 보기
+                        <BrainCircuit className="inline-block" size={20} />
                       </span>
-                    </button>
+                    </a>
                   </Card3D>
+                </div>
 
-                  <div className="flex items-center gap-4 text-text-secondary">
-                    <div className="flex -space-x-2">
-                      {[...Array(4)].map((_, i) => (
-                        <div
-                          key={i}
-                          className="w-8 h-8 rounded-full bg-background-secondary border-2 border-background-primary"
-                        />
-                      ))}
-                    </div>
-                    <span>1,000+ 사용자가 선택했어요!</span>
-                  </div>
+                <div className="flex items-center gap-4 text-sm text-text-secondary">
+                  <span>⭐ MIT 라이선스</span>
+                  <span>🛠️ React + TypeScript</span>
+                  <span>💻 누구나 기여 가능</span>
                 </div>
               </motion.div>
             </div>
@@ -310,34 +301,46 @@ const LandingPage: React.FC = () => {
               className="flex-1 relative"
             >
               <Card3D className="transform rotate-3">
-                <div className="relative bg-background-secondary rounded-2xl p-6 shadow-xl">
-                  <div className="absolute top-4 left-4 flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                    <div className="w-3 h-3 rounded-full bg-green-500" />
+                <div className="relative bg-background-secondary rounded-2xl p-6">
+                  <div className="flex flex-col gap-4">
+                    <div className="flex gap-4 items-center">
+                      <div className="w-12 h-12 rounded-lg bg-accent-primary/20 flex items-center justify-center">
+                        ⚛️
+                      </div>
+                      <div className="flex-1">
+                        <div className="h-6 w-3/4 bg-background-tertiary rounded" />
+                        <div className="h-4 w-1/2 bg-background-tertiary rounded mt-2" />
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="px-3 py-1 rounded-full bg-background-tertiary text-sm">
+                        React
+                      </span>
+                      <span className="px-3 py-1 rounded-full bg-background-tertiary text-sm">
+                        Tutorial
+                      </span>
+                      <span className="px-3 py-1 rounded-full bg-background-tertiary text-sm">
+                        Web
+                      </span>
+                    </div>
                   </div>
-                  <img
-                    src="/thumbnail-preview.png"
-                    alt="썸네일 미리보기"
-                    className="rounded-lg w-full"
-                  />
                 </div>
               </Card3D>
 
               <FloatingEmoji
-                emoji="✨"
+                emoji="⚛️"
                 style="top-0 right-0"
                 size="lg"
                 interactive
               />
               <FloatingEmoji
-                emoji="🎨"
+                emoji="📘"
                 style="bottom-20 left-0"
                 size="xl"
                 interactive
               />
               <FloatingEmoji
-                emoji="🚀"
+                emoji="💻"
                 style="top-40 left-20"
                 size="md"
                 interactive
@@ -354,19 +357,19 @@ const LandingPage: React.FC = () => {
           <div className="relative w-full max-w-7xl mx-auto px-8">
             <div className="text-center mb-20">
               <span className="inline-block px-4 py-2 rounded-full bg-accent-primary/10 text-accent-primary text-sm font-medium mb-6">
-                주요 기능
+                심플한 기능
               </span>
               <h2 className="text-5xl font-bold mb-6">
-                단 한 번의 클릭으로
+                개발자를 위한
                 <br />
                 <span className="text-gradient bg-gradient-to-r from-accent-primary to-accent-secondary">
-                  썸네일의 품격이 달라집니다
+                  3가지 핵심 기능
                 </span>
               </h2>
               <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-                복잡한 디자인 툴은 잊으세요. Thumbnail Maker가 제공하는
+                디자인 시간은 줄이고, 개발에만 집중하세요.
                 <br />
-                직관적인 기능으로 누구나 프로처럼 만들 수 있습니다.
+                필요한 기능만 담았습니다.
               </p>
             </div>
 
@@ -382,29 +385,46 @@ const LandingPage: React.FC = () => {
                       {feature.title}
                     </h3>
                     <p className="text-text-secondary">{feature.description}</p>
-                    <div
-                      className="absolute inset-0 opacity-10 rounded-2xl"
-                      style={{ background: feature.gradient }}
-                    />
                   </div>
                 </Card3D>
               ))}
             </div>
 
-            {/* 통계 섹션 추가 */}
-            <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8">
-              {stats.map((stat, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="text-center"
-                >
-                  <div className="text-4xl font-bold mb-2">{stat.value}</div>
-                  <div className="text-text-secondary">{stat.label}</div>
-                </motion.div>
-              ))}
+            {/* 기술 스택 & 오픈소스 정보 */}
+            <div className="mt-24 p-8 bg-background-tertiary rounded-2xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-2xl font-semibold mb-4">🛠️ 기술 스택</h3>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 rounded-full bg-background-secondary">
+                      React
+                    </span>
+                    <span className="px-3 py-1 rounded-full bg-background-secondary">
+                      TypeScript
+                    </span>
+                    <span className="px-3 py-1 rounded-full bg-background-secondary">
+                      Framer Motion
+                    </span>
+                    <span className="px-3 py-1 rounded-full bg-background-secondary">
+                      TailwindCSS
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold mb-4">📦 오픈소스</h3>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 rounded-full bg-background-secondary">
+                      MIT License
+                    </span>
+                    <span className="px-3 py-1 rounded-full bg-background-secondary">
+                      누구나 기여 가능
+                    </span>
+                    <span className="px-3 py-1 rounded-full bg-background-secondary">
+                      자유로운 사용
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
