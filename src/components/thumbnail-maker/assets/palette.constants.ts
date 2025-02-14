@@ -1,4 +1,21 @@
-import { PaletteStyle, PaletteVariant } from "./palette.types";
+import {
+  PaletteStyle,
+  PaletteVariant,
+  TagShape,
+  TagVariant,
+} from "./palette.types";
+
+export const TAG_STYLE_COMBINATIONS: {
+  variant: TagVariant;
+  shape: TagShape;
+}[] = [
+  { variant: "filled", shape: "round" },
+  { variant: "filled", shape: "squared" },
+  { variant: "outlined", shape: "round" },
+  { variant: "outlined", shape: "squared" },
+  { variant: "ghost", shape: "round" },
+  { variant: "ghost", shape: "squared" },
+];
 
 export const PALETTE: Record<PaletteVariant, PaletteStyle> = {
   blue_gradient: {
