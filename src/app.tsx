@@ -49,7 +49,7 @@ export default function App() {
               <Route
                 path="/landing"
                 element={
-                  <div className="bg-black text-black">
+                  <div className="bg-black">
                     <LandingPage />
                   </div>
                 }
