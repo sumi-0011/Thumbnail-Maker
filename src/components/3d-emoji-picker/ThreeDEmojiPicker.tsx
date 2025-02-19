@@ -47,7 +47,7 @@ export const ThreeDEmojiPicker = ({ onEmojiSelect }: Props) => {
           setSelectedCategory(value as ThreeDEmojiCategory)
         }
       >
-        <TabsList className="flex gap-1 py-1 ">
+        <TabsList className="flex gap-1 py-1">
           {categories.map((category) => (
             <TabsTrigger
               key={category}
@@ -58,7 +58,7 @@ export const ThreeDEmojiPicker = ({ onEmojiSelect }: Props) => {
             </TabsTrigger>
           ))}
         </TabsList>
-        <div className="flex max-h-[300px] flex-wrap gap-1 overflow-y-auto p-1">
+        <div className="flex max-h-[300px] flex-wrap gap-1 overflow-y-auto p-1 scrollbar">
           {searchResults.map((emoji) => (
             <div
               key={emoji.cldr}
