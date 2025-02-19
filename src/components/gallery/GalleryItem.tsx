@@ -24,7 +24,7 @@ interface GalleryItemProps {
 function GalleryItem({ template, onClick }: GalleryItemProps) {
   return (
     <div
-      className="group relative cursor-pointer overflow-hidden"
+      className="group relative cursor-pointer rounded-md overflow-hidden"
       onClick={() => onClick(template)}
     >
       <div className="overflow-hidden rounded-md">
