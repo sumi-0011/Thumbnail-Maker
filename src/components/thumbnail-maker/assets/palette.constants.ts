@@ -19,8 +19,7 @@ export const TAG_STYLE_COMBINATIONS: {
 
 export const PALETTE: Record<PaletteVariant, PaletteStyle> = {
   blue_gradient: {
-    background:
-      "no-repeat center/100% url(/assets/palette/thumbnail-blue-gradient-bg.webp)",
+    background: "url(/assets/palette/thumbnail-blue-gradient-bg.webp)",
     paletteBackground:
       "linear-gradient(127deg, #8ECDF2 3.2%, #A0C8FC 21.06%, #A4C7FE 30.47%, #96BDFE 38.93%, #84B0FE 47.86%, #2B6FFF 97.22%)",
     tagStyle: {
@@ -48,8 +47,7 @@ export const PALETTE: Record<PaletteVariant, PaletteStyle> = {
     },
   },
   rose_gradient: {
-    background:
-      "no-repeat center/100% url(/assets/palette/thumbnail-rose-gradient-bg.webp)",
+    background: "url(/assets/palette/thumbnail-rose-gradient-bg.webp)",
     paletteBackground:
       "linear-gradient(115deg, #FDD4D5 0%, #EDB8D1 27.5%, #AFB6E4 70.5%, #92B5ED 100%)",
     tagStyle: {

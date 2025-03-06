@@ -16,6 +16,20 @@ import { SaveTemplateSheet } from "./SubMenu/SaveTemplateSheet";
 import { DownloadTemplateToLocalConfirm } from "./SubMenu/DownloadTemplateToLocalConfirm";
 import { ImportTemplateConfirm } from "./SubMenu/ImportTemplateConfirm";
 import { Link } from "react-router-dom";
+import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { useCanvasSize, useCanvasSizeAction } from "./CanvasSize.context";
+import { CanvasSizePreset, canvasSizePresets } from "./assets/constants";
+
+const canvasSizeLabels: Record<CanvasSizePreset, string> = {
+  wide: "Wide (1080 x 565)",
+  square: "Square (1:1)",
+} as const;
 
 export function MenuBar({
   isDragMode,
@@ -32,6 +46,7 @@ export function MenuBar({
     <Menubar>
       <TemplateMenu downloadImage={downloadImage} getImageFile={getImageFile} />
       <CanvasMenu isDragMode={isDragMode} setIsDragMode={setIsDragMode} />
+      <CanvasSizeMenu />
     </Menubar>
   );
 }
@@ -129,5 +144,30 @@ function CanvasMenu({
         </MenubarItem>
       </MenubarContent>
     </MenubarMenu>
+  );
+}
+
+export function CanvasSizeMenu() {
+  const { currentSize } = useCanvasSize();
+  const { onSizeChange } = useCanvasSizeAction();
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm">
+          {canvasSizeLabels[currentSize]}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {Object.keys(canvasSizePresets).map((size) => (
+          <DropdownMenuItem
+            key={size}
+            onClick={() => onSizeChange(size as CanvasSizePreset)}
+          >
+            {canvasSizeLabels[size as CanvasSizePreset]}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

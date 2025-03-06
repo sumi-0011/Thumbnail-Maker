@@ -14,11 +14,11 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { cn } from "src/lib/utils";
-import { canvasSize } from "../assets/constants";
 import { useCurrentPaletteStyle } from "../Palette.context";
 import { SortableTagItem } from "./SortableTagItem";
 import { useTagAction, useTagList } from "../Tag.context";
 import { TagItem } from "../TagItem";
+import { useCanvasSize } from "../CanvasSize.context";
 
 interface Props {
   previewRef: React.RefObject<HTMLDivElement>;
@@ -27,6 +27,7 @@ interface Props {
 
 export function DragModeCanvas({ previewRef, tagsContainerRef }: Props) {
   const paletteStyle = useCurrentPaletteStyle();
+  const { canvasStyle: canvasSize } = useCanvasSize();
 
   const { tags } = useTagList();
   const { onUpdateTagOrder } = useTagAction();
