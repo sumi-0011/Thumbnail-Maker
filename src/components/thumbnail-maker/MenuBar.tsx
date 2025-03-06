@@ -25,6 +25,7 @@ import {
 } from "../ui/dropdown-menu";
 import { useCanvasSize, useCanvasSizeAction } from "./CanvasSize.context";
 import { CanvasSizePreset, canvasSizePresets } from "./assets/constants";
+import { AlignmentMenu } from "./SubMenu/AlignmentMenu";
 
 const canvasSizeLabels: Record<CanvasSizePreset, string> = {
   wide: "Wide (1080 x 565)",
@@ -47,6 +48,7 @@ export function MenuBar({
       <TemplateMenu downloadImage={downloadImage} getImageFile={getImageFile} />
       <CanvasMenu isDragMode={isDragMode} setIsDragMode={setIsDragMode} />
       <CanvasSizeMenu />
+      <AlignmentMenu />
     </Menubar>
   );
 }

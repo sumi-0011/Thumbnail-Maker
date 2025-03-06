@@ -1,6 +1,7 @@
 import { cn } from "src/lib/utils";
 import { useCurrentPaletteStyle } from "./Palette.context";
 import { useCanvasSize } from "./CanvasSize.context";
+import { TAG_ALIGNMENT_VALUES, useTagStyle } from "./Tag.context";
 
 interface Props {
   previewRef: React.RefObject<HTMLDivElement>;
@@ -15,6 +16,7 @@ export function CanvasContainer({
 }: Props) {
   const paletteStyle = useCurrentPaletteStyle();
   const { canvasStyle } = useCanvasSize();
+  const { alignment } = useTagStyle();
 
   const bg = paletteStyle.background.includes("url")
     ? { backgroundImage: paletteStyle.background }
@@ -34,7 +36,7 @@ export function CanvasContainer({
       >
         <div
           ref={tagsContainerRef}
-          style={{ gap: canvasStyle.gap }}
+          style={{ gap: canvasStyle.gap, ...TAG_ALIGNMENT_VALUES[alignment] }}
           className="flex h-full flex-wrap content-start"
         >
           {children}
