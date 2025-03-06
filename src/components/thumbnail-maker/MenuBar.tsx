@@ -48,7 +48,6 @@ export function MenuBar({
       <TemplateMenu downloadImage={downloadImage} getImageFile={getImageFile} />
       <CanvasMenu isDragMode={isDragMode} setIsDragMode={setIsDragMode} />
       <CanvasSizeMenu />
-      <AlignmentMenu />
     </Menubar>
   );
 }
@@ -143,6 +142,9 @@ function CanvasMenu({
         <MenubarItem onClick={onRandomShuffle}>
           <Shuffle color="#fff" size={16} /> Random Shuffle
           <MenubarShortcut>^R</MenubarShortcut>
+        </MenubarItem>
+        <MenubarItem onClick={onRandomShuffle}>
+          <AlignmentMenu />
         </MenubarItem>
       </MenubarContent>
     </MenubarMenu>
