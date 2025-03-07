@@ -17,6 +17,8 @@ import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
 import { DragModeCanvas } from "./DragMode/DragModeCanvas";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { MenuBar } from "./MenuBar";
+import { CanvasSizeProvider } from "./CanvasSize.context";
+import { PaletteProvider } from "./Palette.context";
 
 function ThumbnailMaker() {
   const [isDragMode, setIsDragMode] = useState(false);
@@ -67,65 +69,69 @@ function ThumbnailMaker() {
   };
 
   return (
-    <div className="mx-auto flex max-w-[768px] flex-col gap-4 py-8">
-      <h1 className="mb-7 text-center text-[60px] text-[#C1CCFF]">
-        Thumbnail Maker
-      </h1>
-      <MenuBar
-        isDragMode={isDragMode}
-        setIsDragMode={setIsDragMode}
-        getImageFile={getImageFile}
-        downloadImage={downloadImage}
-      />
+    <PaletteProvider>
+      <CanvasSizeProvider>
+        <div className="mx-auto flex max-w-[768px] flex-col gap-4 py-8">
+          <h1 className="mb-7 text-center text-[60px] text-[#C1CCFF]">
+            Thumbnail Maker
+          </h1>
+          <MenuBar
+            isDragMode={isDragMode}
+            setIsDragMode={setIsDragMode}
+            getImageFile={getImageFile}
+            downloadImage={downloadImage}
+          />
 
-      <AddTagSection onAction={handleAddTag} />
+          <AddTagSection onAction={handleAddTag} />
 
-      {isDragMode ? (
-        <DragModeCanvas
-          previewRef={previewRef}
-          tagsContainerRef={tagsContainerRef}
-        />
-      ) : (
-        <CanvasContainer
-          previewRef={previewRef}
-          tagsContainerRef={tagsContainerRef}
-        >
-          <TagList setOpenTagSheet={onSelectTag} />
-        </CanvasContainer>
-      )}
-      <TagChangeSheet
-        onStyleChange={handleChangeTag}
-        onRemove={handleRemoveTag}
-      />
-      <TagEmojiSheet
-        onStyleChange={handleChangeTag}
-        onRemove={handleRemoveTag}
-      />
-      <div className="flex items-center justify-between">
-        <PalettePicker />
-        <SubActionMenu
-          getImageFile={getImageFile}
-          downloadImage={downloadImage}
-        />
-      </div>
-      <Alert variant="outline" className="mt-8">
-        <InfoIcon className="mt-0 h-4 w-4" />
-        <div>
-          <AlertTitle>
-            Thank you everyone for using Thumbnail Maker 😄
-          </AlertTitle>
-          <AlertDescription>
-            - Please provide sources when using thumbnails on your blog
-            <br />- Your valuable input helps us create a better service for
-            everyone [
-            <a href="https://github.com/sumi-0011/Thumbnail-Maker/issues/new">
-              feedback form
-            </a>
-            ]
-          </AlertDescription>
+          {isDragMode ? (
+            <DragModeCanvas
+              previewRef={previewRef}
+              tagsContainerRef={tagsContainerRef}
+            />
+          ) : (
+            <CanvasContainer
+              previewRef={previewRef}
+              tagsContainerRef={tagsContainerRef}
+            >
+              <TagList setOpenTagSheet={onSelectTag} />
+            </CanvasContainer>
+          )}
+          <TagChangeSheet
+            onStyleChange={handleChangeTag}
+            onRemove={handleRemoveTag}
+          />
+          <TagEmojiSheet
+            onStyleChange={handleChangeTag}
+            onRemove={handleRemoveTag}
+          />
+          <div className="flex items-center justify-between">
+            <PalettePicker />
+            <SubActionMenu
+              getImageFile={getImageFile}
+              downloadImage={downloadImage}
+            />
+          </div>
+          <Alert variant="outline" className="mt-8">
+            <InfoIcon className="mt-0 h-4 w-4" />
+            <div>
+              <AlertTitle>
+                Thank you everyone for using Thumbnail Maker 😄
+              </AlertTitle>
+              <AlertDescription>
+                - Please provide sources when using thumbnails on your blog
+                <br />- Your valuable input helps us create a better service for
+                everyone [
+                <a href="https://github.com/sumi-0011/Thumbnail-Maker/issues/new">
+                  feedback form
+                </a>
+                ]
+              </AlertDescription>
+            </div>
+          </Alert>
         </div>
-      </Alert>
-    </div>
+      </CanvasSizeProvider>
+    </PaletteProvider>
   );
 }
 

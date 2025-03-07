@@ -14,11 +14,16 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { cn } from "src/lib/utils";
-import { canvasSize } from "../assets/constants";
 import { useCurrentPaletteStyle } from "../Palette.context";
 import { SortableTagItem } from "./SortableTagItem";
-import { useTagAction, useTagList } from "../Tag.context";
+import {
+  TAG_ALIGNMENT_VALUES,
+  useTagAction,
+  useTagList,
+  useTagStyle,
+} from "../Tag.context";
 import { TagItem } from "../TagItem";
+import { useCanvasSize } from "../CanvasSize.context";
 
 interface Props {
   previewRef: React.RefObject<HTMLDivElement>;
@@ -27,9 +32,11 @@ interface Props {
 
 export function DragModeCanvas({ previewRef, tagsContainerRef }: Props) {
   const paletteStyle = useCurrentPaletteStyle();
+  const { canvasStyle: canvasSize } = useCanvasSize();
 
   const { tags } = useTagList();
   const { onUpdateTagOrder } = useTagAction();
+  const { alignment } = useTagStyle();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -72,8 +79,11 @@ export function DragModeCanvas({ previewRef, tagsContainerRef }: Props) {
         >
           <div
             ref={tagsContainerRef}
-            style={{ gap: canvasSize.gap }}
-            className="flex h-full flex-wrap content-start"
+            style={{
+              gap: canvasSize.gap,
+              ...TAG_ALIGNMENT_VALUES[alignment],
+            }}
+            className="flex h-full flex-wrap "
           >
             <SortableContext
               items={tags.map((tag) => tag.id)}
