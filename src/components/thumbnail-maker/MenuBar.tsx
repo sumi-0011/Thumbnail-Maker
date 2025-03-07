@@ -143,7 +143,7 @@ function CanvasMenu({
           <Shuffle color="#fff" size={16} /> Random Shuffle
           <MenubarShortcut>^R</MenubarShortcut>
         </MenubarItem>
-        <MenubarItem onClick={onRandomShuffle}>
+        <MenubarItem>
           <AlignmentMenu />
         </MenubarItem>
       </MenubarContent>
