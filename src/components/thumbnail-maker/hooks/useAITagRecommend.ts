@@ -1,11 +1,14 @@
 import { useState, useCallback } from "react";
 import {
-  generateTagsWithGemini,
+  generateSummaries,
+  generateTagsFromSummary,
   TitleRecommendation,
   TagStyle,
+  SummaryItem,
 } from "src/services/ai/geminiService";
 import { extractKeywords } from "src/services/ai/keywordExtractor";
 
+export type AITagRecommendStep = "idle" | "summaries" | "tags";
 export type AITagRecommendStatus =
   | "idle"
   | "loading"
@@ -14,7 +17,12 @@ export type AITagRecommendStatus =
   | "fallback";
 
 export interface AITagRecommendState {
+  step: AITagRecommendStep;
   status: AITagRecommendStatus;
+  // Step 1: 요약 + 키워드
+  summaryItems: SummaryItem[];
+  selectedSummary: string | null;
+  // Step 2: 태그
   titles: TitleRecommendation[];
   error: string | null;
   language: "ko" | "en" | "mixed";
@@ -22,7 +30,7 @@ export interface AITagRecommendState {
 }
 
 const ERROR_MESSAGES: Record<string, { ko: string; en: string }> = {
-  GROQ_API_KEY_NOT_SET: {
+  API_KEY_NOT_SET: {
     ko: "API 키가 설정되지 않았습니다. 키워드 추출로 대체합니다.",
     en: "API key not set. Using keyword extraction instead.",
   },
@@ -48,14 +56,19 @@ const ERROR_MESSAGES: Record<string, { ko: string; en: string }> = {
   },
 };
 
+const initialState: AITagRecommendState = {
+  step: "idle",
+  status: "idle",
+  summaryItems: [],
+  selectedSummary: null,
+  titles: [],
+  error: null,
+  language: "mixed",
+  usedFallback: false,
+};
+
 export function useAITagRecommend() {
-  const [state, setState] = useState<AITagRecommendState>({
-    status: "idle",
-    titles: [],
-    error: null,
-    language: "mixed",
-    usedFallback: false,
-  });
+  const [state, setState] = useState<AITagRecommendState>(initialState);
 
   const getErrorMessage = useCallback(
     (errorCode: string, lang: "ko" | "en" = "ko"): string => {
@@ -65,9 +78,11 @@ export function useAITagRecommend() {
     []
   );
 
-  const generateTags = useCallback(
-    async (content: string, style: TagStyle = "narrative") => {
-      // Validate content
+  /**
+   * Step 1: 블로그 내용에서 요약 생성
+   */
+  const generateSummariesFromContent = useCallback(
+    async (content: string) => {
       if (content.trim().length < 10) {
         setState((prev) => ({
           ...prev,
@@ -79,41 +94,47 @@ export function useAITagRecommend() {
 
       setState((prev) => ({
         ...prev,
+        step: "summaries",
         status: "loading",
         error: null,
       }));
 
       try {
-        const response = await generateTagsWithGemini(content, style);
-        setState({
+        const response = await generateSummaries(content);
+        setState((prev) => ({
+          ...prev,
           status: "success",
-          titles: response.titles,
-          error: null,
+          summaryItems: response.items,
           language: response.language,
-          usedFallback: false,
-        });
+        }));
       } catch (error) {
         const errorCode = error instanceof Error ? error.message : "DEFAULT";
 
-        // If API key not set or rate limited, use fallback
+        // Fallback: 키워드 추출 사용
         if (
-          errorCode === "GROQ_API_KEY_NOT_SET" ||
+          errorCode === "API_KEY_NOT_SET" ||
           errorCode === "RATE_LIMIT_EXCEEDED"
         ) {
           const fallbackResponse = extractKeywords(content);
-          setState({
+          // 키워드를 요약처럼 변환
+          const fallbackItems: SummaryItem[] = fallbackResponse.titles.map(
+            (title) => ({
+              summary: title.tags.map((t) => t.text).join(" "),
+              keywords: title.tags.map((t) => t.text),
+            })
+          );
+          setState((prev) => ({
+            ...prev,
             status: "fallback",
-            titles: fallbackResponse.titles,
+            summaryItems: fallbackItems,
             error: getErrorMessage(errorCode),
-            language: fallbackResponse.language,
             usedFallback: true,
-          });
+          }));
         } else {
           setState((prev) => ({
             ...prev,
             status: "error",
             error: getErrorMessage(errorCode),
-            titles: [],
           }));
         }
       }
@@ -121,19 +142,65 @@ export function useAITagRecommend() {
     [getErrorMessage]
   );
 
-  const reset = useCallback(() => {
-    setState({
-      status: "idle",
+  /**
+   * Step 2: 선택된 요약으로 태그 생성
+   */
+  const generateTagsFromSelectedSummary = useCallback(
+    async (summary: string, style: TagStyle = "question") => {
+      setState((prev) => ({
+        ...prev,
+        step: "tags",
+        status: "loading",
+        selectedSummary: summary,
+        error: null,
+      }));
+
+      try {
+        const response = await generateTagsFromSummary(summary, style);
+        setState((prev) => ({
+          ...prev,
+          status: "success",
+          titles: response.titles,
+          language: response.language,
+        }));
+      } catch (error) {
+        const errorCode = error instanceof Error ? error.message : "DEFAULT";
+        setState((prev) => ({
+          ...prev,
+          status: "error",
+          error: getErrorMessage(errorCode),
+        }));
+      }
+    },
+    [getErrorMessage]
+  );
+
+  /**
+   * 요약 선택 단계로 돌아가기
+   */
+  const backToSummaries = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      step: "summaries",
+      status: "success",
+      selectedSummary: null,
       titles: [],
       error: null,
-      language: "mixed",
-      usedFallback: false,
-    });
+    }));
+  }, []);
+
+  /**
+   * 전체 리셋
+   */
+  const reset = useCallback(() => {
+    setState(initialState);
   }, []);
 
   return {
     ...state,
-    generateTags,
+    generateSummaries: generateSummariesFromContent,
+    generateTagsFromSummary: generateTagsFromSelectedSummary,
+    backToSummaries,
     reset,
     isLoading: state.status === "loading",
   };

@@ -7,6 +7,7 @@ import { Toaster } from "./components/ui/sonner";
 import ReactGA from "react-ga4";
 import Home from "./pages/home";
 import GalleryPage from "./pages/gallery";
+import AIRecommendPage from "./pages/ai-recommend";
 import ErrorPage from "./components/error-page";
 import { Layout } from "./components/layout";
 import { HotkeysProvider } from "react-hotkeys-hook";
@@ -42,6 +43,14 @@ export default function App() {
                 element={
                   <Layout>
                     <GalleryPage />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/ai-recommend"
+                element={
+                  <Layout>
+                    <AIRecommendPage />
                   </Layout>
                 }
               />

@@ -12,7 +12,8 @@ import { SubActionMenu } from "./SubMenu/SubActionMenu";
 import { TagList } from "./TagList";
 import { useSelectedTagAction, useTagAction } from "./Tag.context";
 import { Switch } from "../ui/switch";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
 import { DragModeCanvas } from "./DragMode/DragModeCanvas";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
@@ -20,8 +21,14 @@ import { MenuBar } from "./MenuBar";
 import { CanvasSizeProvider } from "./CanvasSize.context";
 import { PaletteProvider } from "./Palette.context";
 
+interface LocationState {
+  newTags?: Tag[];
+}
+
 function ThumbnailMaker() {
   const [isDragMode, setIsDragMode] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
   const { previewRef, onDownload: downloadImage, getImageFile } = usePreview();
   const { tagsContainerRef, checkOverflow, showOverflowToast } =
     useCheckTagOverflow();
@@ -35,6 +42,18 @@ function ThumbnailMaker() {
   } = useTagAction();
 
   const { onSelectTag, clearSelectedTag } = useSelectedTagAction();
+
+  // Handle tags from AI recommend page
+  useEffect(() => {
+    const state = location.state as LocationState | null;
+    if (state?.newTags && state.newTags.length > 0) {
+      state.newTags.forEach((tag) => {
+        onAddTag(tag);
+      });
+      // Clear the state to prevent re-adding on re-render
+      navigate("/", { replace: true, state: {} });
+    }
+  }, [location.state, onAddTag, navigate]);
 
   const handleAddTag = (newTag: Tag) => {
     onAddTag(newTag);
