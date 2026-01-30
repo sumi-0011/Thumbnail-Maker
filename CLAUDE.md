@@ -104,6 +104,21 @@ Required for full functionality (prefix with `VITE_APP_`):
 - `VITE_APP_SUPABASE_PROJECT_URL` - Supabase URL
 - `VITE_APP_SUPABASE_KEY` - Supabase anon key
 
+## Feature Specifications
+
+핵심 컴포넌트의 상세 기능 명세서는 아래 파일을 참조:
+
+- **Thumbnail Maker**: [`src/components/thumbnail-maker/SPEC.md`](src/components/thumbnail-maker/SPEC.md)
+  - 컴포넌트 계층 구조, 상태 관리 (10개 Context), 커스텀 훅 7종, 데이터 모델
+  - AI 태그 추천 (Groq API 2단계 프로세스), 드래그 앤 드롭, 템플릿 시스템
+  - 팔레트 10종 프리셋, 캔버스 설정, 키보드 단축키, localStorage 키 목록
+
+### 명세서 업데이트 규칙
+
+- 기능 추가/변경 시 해당 SPEC.md도 함께 업데이트할 것
+- 새로운 훅, Context, 데이터 모델 변경은 반드시 명세서에 반영
+- localStorage 키 추가 시 키 목록 섹션 업데이트 필수
+
 ## Conventions
 
 - Components use named exports with PascalCase filenames
