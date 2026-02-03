@@ -17,6 +17,7 @@ import { SaveTemplateSheet } from "./SaveTemplateSheet";
 import { DownloadTemplateToLocalConfirm } from "./DownloadTemplateToLocalConfirm";
 import { ImportTemplateConfirm } from "./ImportTemplateConfirm";
 import { toast } from "sonner";
+import { useUserStats } from "src/hooks/useUserStats";
 
 export function SubActionMenu({
   getImageFile,
@@ -31,8 +32,10 @@ export function SubActionMenu({
   const [isImportTemplateSheetOpen, setIsImportTemplateSheetOpen] =
     useState(false);
   const { onResetTags } = useTagAction();
+  const { incrementDownload } = useUserStats();
 
   const onDownload = () => {
+    incrementDownload();
     downloadImage();
     toast.message("Downloaded Successfully", {
       duration: 5000,

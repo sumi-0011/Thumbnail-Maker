@@ -6,15 +6,21 @@ import ThumbnailMaker from "src/components/thumbnail-maker";
 import { PaletteProvider } from "src/components/thumbnail-maker/Palette.context";
 import { TagProvider } from "src/components/thumbnail-maker/Tag.context";
 import { Button } from "src/components/ui/button";
+import { useUserStats } from "src/hooks/useUserStats";
 
 export default function Home() {
   const { t } = useTranslation("translation");
   const [isToastShown, setIsToastShown] = useState(false);
+  const { incrementVisit, shouldShowGitHubToast } = useUserStats();
+
+  useEffect(() => {
+    incrementVisit();
+  }, []);
 
   useEffect(() => {
     // 약간의 지연을 주어 toast가 준비된 후 실행
     const timer = setTimeout(() => {
-      if (!isToastShown) {
+      if (!isToastShown && shouldShowGitHubToast) {
         toast("Love this project? ⭐️", {
           duration: Infinity,
           position: "bottom-left",
@@ -45,7 +51,7 @@ export default function Home() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [isToastShown]);
+  }, [isToastShown, shouldShowGitHubToast]);
 
   return (
     <>
