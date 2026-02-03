@@ -1,0 +1,280 @@
+{
+  "templates": [
+    {
+      "id": "1",
+      "name": "React Basics",
+      "description": "Perfect for React tutorial thumbnails",
+      "palette": "blue_gradient",
+      "tags": [
+        {
+          "id": 1,
+          "content": { "type": "text", "value": "React" },
+          "tagVariant": "filled",
+          "tagShape": "round"
+        },
+        {
+          "id": 2,
+          "content": { "type": "text", "value": "Tutorial" },
+          "tagVariant": "outlined",
+          "tagShape": "round"
+        },
+        {
+          "id": 3,
+          "content": { "type": "text", "value": "Beginner" },
+          "tagVariant": "ghost",
+          "tagShape": "squared"
+        }
+      ],
+      "category": "development"
+    },
+    {
+      "id": "2",
+      "name": "TypeScript Guide",
+      "description": "Clean TypeScript content style",
+      "palette": "blue_dark",
+      "tags": [
+        {
+          "id": 1,
+          "content": { "type": "text", "value": "TypeScript" },
+          "tagVariant": "filled",
+          "tagShape": "round"
+        },
+        {
+          "id": 2,
+          "content": { "type": "text", "value": "Guide" },
+          "tagVariant": "filled",
+          "tagShape": "squared"
+        },
+        {
+          "id": 3,
+          "content": { "type": "text", "value": "Advanced" },
+          "tagVariant": "outlined",
+          "tagShape": "squared"
+        }
+      ],
+      "category": "development"
+    },
+    {
+      "id": "3",
+      "name": "Vue.js Project",
+      "description": "Green theme for Vue content",
+      "palette": "green_dark",
+      "tags": [
+        {
+          "id": 1,
+          "content": { "type": "text", "value": "Vue.js" },
+          "tagVariant": "filled",
+          "tagShape": "round"
+        },
+        {
+          "id": 2,
+          "content": { "type": "text", "value": "Project" },
+          "tagVariant": "outlined",
+          "tagShape": "round"
+        },
+        {
+          "id": 3,
+          "content": { "type": "text", "value": "2024" },
+          "tagVariant": "filled",
+          "tagShape": "squared"
+        }
+      ],
+      "category": "development"
+    },
+    {
+      "id": "4",
+      "name": "Design System",
+      "description": "Purple aesthetic for design content",
+      "palette": "purple_light",
+      "tags": [
+        {
+          "id": 1,
+          "content": { "type": "text", "value": "Design" },
+          "tagVariant": "filled",
+          "tagShape": "round"
+        },
+        {
+          "id": 2,
+          "content": { "type": "text", "value": "System" },
+          "tagVariant": "outlined",
+          "tagShape": "round"
+        },
+        {
+          "id": 3,
+          "content": { "type": "text", "value": "UI/UX" },
+          "tagVariant": "filled",
+          "tagShape": "squared"
+        }
+      ],
+      "category": "design"
+    },
+    {
+      "id": "5",
+      "name": "CSS Tips",
+      "description": "Rose gradient for stylish CSS content",
+      "palette": "rose_gradient",
+      "tags": [
+        {
+          "id": 1,
+          "content": { "type": "text", "value": "CSS" },
+          "tagVariant": "filled",
+          "tagShape": "round"
+        },
+        {
+          "id": 2,
+          "content": { "type": "text", "value": "Tips" },
+          "tagVariant": "filled",
+          "tagShape": "squared"
+        },
+        {
+          "id": 3,
+          "content": { "type": "text", "value": "Styling" },
+          "tagVariant": "outlined",
+          "tagShape": "round"
+        }
+      ],
+      "category": "design"
+    },
+    {
+      "id": "6",
+      "name": "JavaScript ES6+",
+      "description": "Yellow dark theme for JS content",
+      "palette": "yellow_dark",
+      "tags": [
+        {
+          "id": 1,
+          "content": { "type": "text", "value": "JavaScript" },
+          "tagVariant": "filled",
+          "tagShape": "round"
+        },
+        {
+          "id": 2,
+          "content": { "type": "text", "value": "ES6+" },
+          "tagVariant": "outlined",
+          "tagShape": "round"
+        },
+        {
+          "id": 3,
+          "content": { "type": "text", "value": "Modern" },
+          "tagVariant": "filled",
+          "tagShape": "squared"
+        }
+      ],
+      "category": "development"
+    },
+    {
+      "id": "7",
+      "name": "Next.js App",
+      "description": "Blue light theme for Next.js",
+      "palette": "blue_light",
+      "tags": [
+        {
+          "id": 1,
+          "content": { "type": "text", "value": "Next.js" },
+          "tagVariant": "filled",
+          "tagShape": "round"
+        },
+        {
+          "id": 2,
+          "content": { "type": "text", "value": "App Router" },
+          "tagVariant": "filled",
+          "tagShape": "squared"
+        },
+        {
+          "id": 3,
+          "content": { "type": "text", "value": "SSR" },
+          "tagVariant": "outlined",
+          "tagShape": "round"
+        }
+      ],
+      "category": "development"
+    },
+    {
+      "id": "8",
+      "name": "Node.js Backend",
+      "description": "Green light for backend content",
+      "palette": "green_light",
+      "tags": [
+        {
+          "id": 1,
+          "content": { "type": "text", "value": "Node.js" },
+          "tagVariant": "filled",
+          "tagShape": "round"
+        },
+        {
+          "id": 2,
+          "content": { "type": "text", "value": "Backend" },
+          "tagVariant": "outlined",
+          "tagShape": "round"
+        },
+        {
+          "id": 3,
+          "content": { "type": "text", "value": "API" },
+          "tagVariant": "filled",
+          "tagShape": "squared"
+        }
+      ],
+      "category": "development"
+    },
+    {
+      "id": "9",
+      "name": "Hot Tips",
+      "description": "Orange theme for hot takes",
+      "palette": "orange_light",
+      "tags": [
+        {
+          "id": 1,
+          "content": { "type": "text", "value": "Hot" },
+          "tagVariant": "filled",
+          "tagShape": "round"
+        },
+        {
+          "id": 2,
+          "content": { "type": "text", "value": "Tips" },
+          "tagVariant": "filled",
+          "tagShape": "squared"
+        },
+        {
+          "id": 3,
+          "content": { "type": "text", "value": "Trending" },
+          "tagVariant": "outlined",
+          "tagShape": "round"
+        }
+      ],
+      "category": "general"
+    },
+    {
+      "id": "10",
+      "name": "Love Code",
+      "description": "Pink theme for passion projects",
+      "palette": "pink_light",
+      "tags": [
+        {
+          "id": 1,
+          "content": { "type": "text", "value": "Passion" },
+          "tagVariant": "filled",
+          "tagShape": "round"
+        },
+        {
+          "id": 2,
+          "content": { "type": "text", "value": "Project" },
+          "tagVariant": "outlined",
+          "tagShape": "round"
+        },
+        {
+          "id": 3,
+          "content": { "type": "text", "value": "Coding" },
+          "tagVariant": "filled",
+          "tagShape": "squared"
+        }
+      ],
+      "category": "general"
+    }
+  ],
+  "categories": [
+    { "id": "all", "name": "All" },
+    { "id": "development", "name": "Development" },
+    { "id": "design", "name": "Design" },
+    { "id": "general", "name": "General" }
+  ]
+}
