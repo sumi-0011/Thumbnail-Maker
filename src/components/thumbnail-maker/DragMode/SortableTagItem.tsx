@@ -1,4 +1,5 @@
 import { useSortable } from "@dnd-kit/sortable";
+import { GripVertical } from "lucide-react";
 import { PropsWithChildren } from "react";
 import { cn } from "src/lib/utils";
 
@@ -24,8 +25,6 @@ export const SortableTagItem = ({
   return (
     <div
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
       style={{
         width: "auto",
         height: "auto",
@@ -35,8 +34,16 @@ export const SortableTagItem = ({
         transition,
         zIndex: isDragging ? 1 : undefined,
       }}
-      className={cn("touch-none", isDragging && "opacity-50")}
+      className={cn("group/drag relative", isDragging && "opacity-50")}
     >
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute -left-5 top-1/2 hidden h-full -translate-y-1/2 cursor-grab items-center touch-none group-hover/drag:flex [@media(hover:none)]:flex"
+        data-no-export
+      >
+        <GripVertical size={14} className="text-white/60" />
+      </div>
       {children}
     </div>
   );

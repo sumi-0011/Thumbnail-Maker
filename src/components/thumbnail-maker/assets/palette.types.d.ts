@@ -9,6 +9,9 @@ export type TagContentType =
   | {
       type: "3d-emoji";
       value: EmojiType;
+    }
+  | {
+      type: "line-break";
     };
 
 export type Tag = {
@@ -16,6 +19,7 @@ export type Tag = {
   content: TagContentType;
   tagVariant: TagVariant;
   tagShape: TagShape;
+  position?: { x: number; y: number };
 };
 
 export type PaletteTag = `${TagVariant}-${TagShape}`;

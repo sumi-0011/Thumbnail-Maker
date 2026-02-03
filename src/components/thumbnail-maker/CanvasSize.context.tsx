@@ -6,13 +6,19 @@ import {
   canvasSizePresets,
 } from "./assets/constants";
 
+export type LayoutMode = "flow" | "free-form";
+
+const LAYOUT_MODE_STORAGE_KEY = "@thumbnail-maker/layout-mode";
+
 interface CanvasSizeContextType {
   currentSize: CanvasSizePreset;
   canvasStyle: (typeof canvasSizePresets)[CanvasSizePreset];
+  layoutMode: LayoutMode;
 }
 
 interface CanvasSizeActionContextType {
   onSizeChange: (size: CanvasSizePreset) => void;
+  onLayoutModeChange: (mode: LayoutMode) => void;
 }
 
 const CanvasSizeContext = createContext<CanvasSizeContextType | undefined>(
@@ -30,13 +36,22 @@ export function CanvasSizeProvider({ children }: PropsWithChildren) {
     }
   );
 
+  const [layoutMode, setLayoutMode] = useStorageState<LayoutMode>(
+    LAYOUT_MODE_STORAGE_KEY,
+    {
+      defaultValue: "flow",
+    }
+  );
+
   const value = {
     currentSize,
     canvasStyle: canvasSizePresets[currentSize],
+    layoutMode,
   };
 
   const actions = {
     onSizeChange: (size: CanvasSizePreset) => setCurrentSize(size),
+    onLayoutModeChange: (mode: LayoutMode) => setLayoutMode(mode),
   };
 
   return (

@@ -37,8 +37,8 @@ export const getRandomTagStyles = (tags: Tag[]): Tag[] => {
   const shuffledStyles = shuffleArray(styleCombinations);
 
   return tags.map((tag, index) => {
-    // emoji shape를 가진 태그는 스타일 변경하지 않음
-    if (tag.tagShape === "emoji") {
+    // emoji shape나 line-break 태그는 스타일 변경하지 않음
+    if (tag.tagShape === "emoji" || tag.content.type === "line-break") {
       return tag;
     }
 

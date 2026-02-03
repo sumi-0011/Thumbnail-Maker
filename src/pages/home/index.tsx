@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import ThumbnailMaker from "src/components/thumbnail-maker";
 import { PaletteProvider } from "src/components/thumbnail-maker/Palette.context";
 import { TagProvider } from "src/components/thumbnail-maker/Tag.context";
+import { TagSizeProvider } from "src/components/thumbnail-maker/TagSize.context";
 import { Button } from "src/components/ui/button";
 
 export default function Home() {
@@ -54,7 +55,9 @@ export default function Home() {
       </Helmet>
       <PaletteProvider>
         <TagProvider>
-          <ThumbnailMaker />
+          <TagSizeProvider>
+            <ThumbnailMaker />
+          </TagSizeProvider>
         </TagProvider>
       </PaletteProvider>
     </>

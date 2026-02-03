@@ -12,6 +12,11 @@ export const usePreview = () => {
       const canvas = await html2canvas(previewRef.current, {
         allowTaint: true,
         useCORS: true,
+        onclone: (_doc, element) => {
+          element
+            .querySelectorAll("[data-no-export]")
+            .forEach((el) => ((el as HTMLElement).style.display = "none"));
+        },
       });
 
       return new Promise<Blob | null>((resolve) => {
@@ -32,6 +37,11 @@ export const usePreview = () => {
       const canvas = await html2canvas(previewRef.current, {
         allowTaint: true,
         useCORS: true,
+        onclone: (_doc, element) => {
+          element
+            .querySelectorAll("[data-no-export]")
+            .forEach((el) => ((el as HTMLElement).style.display = "none"));
+        },
       });
 
       canvas.toBlob((blob) => {

@@ -67,7 +67,7 @@ export function TagChangeSheet({ onStyleChange, onRemove }: Props) {
           <div className="mb-8">
             <p className="mb-3 text-[13px] text-[#9292A1]">Tag text</p>
             <Input
-              value={tag.content.value}
+              value={"value" in tag.content ? tag.content.value : ""}
               onChange={(e) => onChangeTagContent(e.target.value)}
               onKeyDown={onKeyDown}
             />

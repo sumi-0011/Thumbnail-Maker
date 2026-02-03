@@ -6,6 +6,7 @@ import { useCurrentPaletteStyle } from "./Palette.context";
 import { Tag } from "./assets/palette.types";
 import { cva } from "class-variance-authority";
 import { get3DEmojiImage } from "../3d-emoji-picker";
+import { useTagSize, TagSizeStyle } from "./TagSize.context";
 
 interface Props {
   tag: Tag;
@@ -41,31 +42,86 @@ interface TagItemViewProps {
   tag: Tag;
   tagStyle: CSSProperties;
   size?: "base" | "small";
+  sizeStyleOverride?: TagSizeStyle;
 }
 
 export function TagItemView({
   tag,
   tagStyle,
   size = "base",
+  sizeStyleOverride,
 }: TagItemViewProps) {
+  const tagSizeCtx = useTagSize();
+  const sizeStyle = sizeStyleOverride ?? tagSizeCtx.sizeStyle;
+
+  // small size는 편집 시트 프리뷰 전용 - 기존 CVA 사용
+  if (size === "small") {
+    return (
+      <div
+        className={cn(
+          tagVariants({ variant: tag.tagVariant, shape: tag.tagShape, size })
+        )}
+        style={tagStyle}
+      >
+        {tag.content.type === "3d-emoji" ? (
+          <img
+            src={get3DEmojiImage(tag.content.value)}
+            width={48}
+            height={48}
+            style={{ pointerEvents: "none" }}
+            className="h-full w-full"
+          />
+        ) : tag.content.type === "text" ? (
+          tag.content.value
+        ) : null}
+      </div>
+    );
+  }
+
+  // base size는 TagSize Context의 동적 값 사용
+  const dynamicStyle: CSSProperties = {
+    ...tagStyle,
+    fontSize: sizeStyle.fontSize,
+    height: sizeStyle.tagHeight,
+    lineHeight: sizeStyle.lineHeight,
+  };
+
+  if (tag.tagShape === "emoji") {
+    dynamicStyle.width = sizeStyle.emojiSize;
+    dynamicStyle.height = sizeStyle.emojiSize;
+  } else if (tag.tagVariant !== "ghost") {
+    dynamicStyle.paddingLeft = sizeStyle.paddingX;
+    dynamicStyle.paddingRight = sizeStyle.paddingX;
+  }
+
+  if (tag.tagShape === "round") {
+    dynamicStyle.borderRadius = sizeStyle.borderRadius.round;
+  } else if (tag.tagShape === "squared") {
+    dynamicStyle.borderRadius = sizeStyle.borderRadius.squared;
+  }
+
+  if (tag.tagVariant === "outlined") {
+    dynamicStyle.borderWidth = sizeStyle.borderWidth;
+  }
+
   return (
     <div
       className={cn(
-        tagVariants({ variant: tag.tagVariant, shape: tag.tagShape, size })
+        tagVariants({ variant: tag.tagVariant, shape: tag.tagShape, size: "base" })
       )}
-      style={tagStyle}
+      style={dynamicStyle}
     >
       {tag.content.type === "3d-emoji" ? (
         <img
           src={get3DEmojiImage(tag.content.value)}
-          width={90}
-          height={90}
+          width={parseInt(sizeStyle.emojiSize)}
+          height={parseInt(sizeStyle.emojiSize)}
           style={{ pointerEvents: "none" }}
           className="h-full w-full"
         />
-      ) : (
+      ) : tag.content.type === "text" ? (
         tag.content.value
-      )}
+      ) : null}
     </div>
   );
 }
@@ -75,17 +131,17 @@ const tagVariants = cva(
   {
     variants: {
       variant: {
-        filled: "px-6",
-        outlined: "px-6 border-[4px] border-white/70 bg-white/10 text-white",
-        ghost: "px-3 bg-transparent color-white",
+        filled: "",
+        outlined: "border-white/70 bg-white/10 text-white",
+        ghost: "bg-transparent color-white",
       },
       size: {
-        base: "h-[90px] text-[48px] font-bold leading-[90px]",
+        base: "font-bold",
         small: "h-[48px] text-[24px] font-bold leading-[48px] px-3",
       },
       shape: {
-        round: "rounded-[45px]",
-        squared: "rounded-[16px]",
+        round: "",
+        squared: "",
         emoji: "rounded-0 p-0",
       },
     },

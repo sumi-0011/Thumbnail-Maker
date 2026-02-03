@@ -7,40 +7,74 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
+import { CornerDownLeft, Plus } from "lucide-react";
 import { useState } from "react";
 import { Tag, TagShape, TagVariant } from "./assets/palette.types";
 import { EmojiPicker } from "./EmojiPicker";
 import { EmojiType } from "../3d-emoji-picker";
+import useStorageState from "use-storage-state";
+
+const LAST_TAG_STYLE_KEY = "@thumbnail-maker/last-tag-style";
 
 interface Props {
   onAction: (tag: Tag) => void;
+  onBatchAction?: (tags: Tag[]) => void;
 }
 
-export function AddTagSection({ onAction }: Props) {
+export function AddTagSection({ onAction, onBatchAction }: Props) {
   const [inputValue, setInputValue] = useState("");
-  const [tagVariant, setTagVariant] = useState<TagVariant>("filled");
-  const [tagShape, setTagShape] = useState<TagShape>("round");
+  const [savedStyle, setSavedStyle] = useStorageState<{
+    variant: TagVariant;
+    shape: TagShape;
+  }>(LAST_TAG_STYLE_KEY, {
+    defaultValue: { variant: "filled", shape: "round" },
+  });
+
+  const tagVariant = savedStyle.variant;
+  const tagShape = savedStyle.shape;
+
+  const setTagVariant = (variant: TagVariant) => {
+    setSavedStyle({ ...savedStyle, variant });
+  };
+
+  const setTagShape = (shape: TagShape) => {
+    setSavedStyle({ ...savedStyle, shape });
+  };
 
   const onActionClick = async () => {
     if (inputValue.trim() === "") return;
 
-    const id = new Date().getTime();
+    const parts = inputValue
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s !== "");
 
-    onAction({
-      id,
+    if (parts.length === 0) return;
+
+    const tags: Tag[] = parts.map((text) => ({
+      id: Date.now() + Math.random(),
       content: {
-        type: "text",
-        value: inputValue,
+        type: "text" as const,
+        value: text,
       },
-      tagVariant: tagVariant,
-      tagShape: tagShape,
-    });
+      tagVariant,
+      tagShape,
+    }));
+
+    if (tags.length === 1) {
+      onAction(tags[0]);
+    } else if (onBatchAction) {
+      onBatchAction(tags);
+    } else {
+      // fallback: 하나씩 추가
+      tags.forEach((tag) => onAction(tag));
+    }
+
     setInputValue("");
   };
 
   const onEmojiClick = (emoji: EmojiType) => {
-    const id = new Date().getTime();
+    const id = Date.now() + Math.random();
     onAction({
       id,
       content: {
@@ -58,7 +92,7 @@ export function AddTagSection({ onAction }: Props) {
         type="text"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Enter a tag"
+        placeholder="Enter tags (comma separated)"
         // enter 누르면
         onKeyDown={(e) => {
           if (e.nativeEvent.isComposing || e.keyCode === 229) return;
@@ -97,6 +131,20 @@ export function AddTagSection({ onAction }: Props) {
       </Select>
       <Button onClick={onActionClick}>
         <Plus size={12} className="mr-3" /> Add
+      </Button>
+      <Button
+        variant="outline"
+        onClick={() => {
+          onAction({
+            id: Date.now() + Math.random(),
+            content: { type: "line-break" },
+            tagVariant: "ghost",
+            tagShape: "round",
+          });
+        }}
+        title="Add line break"
+      >
+        <CornerDownLeft size={14} />
       </Button>
       <EmojiPicker onAction={onEmojiClick} />
     </div>

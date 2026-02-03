@@ -23,7 +23,9 @@ import {
   useTagStyle,
 } from "../Tag.context";
 import { TagItem } from "../TagItem";
+import { LineBreakTag } from "../LineBreakTag";
 import { useCanvasSize } from "../CanvasSize.context";
+import { useTagSize } from "../TagSize.context";
 
 interface Props {
   previewRef: React.RefObject<HTMLDivElement>;
@@ -33,6 +35,7 @@ interface Props {
 export function DragModeCanvas({ previewRef, tagsContainerRef }: Props) {
   const paletteStyle = useCurrentPaletteStyle();
   const { canvasStyle: canvasSize } = useCanvasSize();
+  const { sizeStyle } = useTagSize();
 
   const { tags } = useTagList();
   const { onUpdateTagOrder } = useTagAction();
@@ -80,7 +83,7 @@ export function DragModeCanvas({ previewRef, tagsContainerRef }: Props) {
           <div
             ref={tagsContainerRef}
             style={{
-              gap: canvasSize.gap,
+              gap: sizeStyle.gap,
               ...TAG_ALIGNMENT_VALUES[alignment],
             }}
             className="flex h-full flex-wrap "
@@ -91,7 +94,11 @@ export function DragModeCanvas({ previewRef, tagsContainerRef }: Props) {
             >
               {tags.map((tag) => (
                 <SortableTagItem key={tag.id} tag={tag}>
-                  <TagItem tag={tag} />
+                  {tag.content.type === "line-break" ? (
+                    <LineBreakTag onRemove={() => {}} />
+                  ) : (
+                    <TagItem tag={tag} />
+                  )}
                 </SortableTagItem>
               ))}
             </SortableContext>

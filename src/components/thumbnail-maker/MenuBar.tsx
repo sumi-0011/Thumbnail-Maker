@@ -1,4 +1,4 @@
-import { MousePointer2, Move, RotateCcw, Shuffle } from "lucide-react";
+import { RotateCcw, Shuffle } from "lucide-react";
 import {
   Menubar,
   MenubarContent,
@@ -23,9 +23,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { useCanvasSize, useCanvasSizeAction } from "./CanvasSize.context";
+import {
+  LayoutMode,
+  useCanvasSize,
+  useCanvasSizeAction,
+} from "./CanvasSize.context";
 import { CanvasSizePreset, canvasSizePresets } from "./assets/constants";
 import { AlignmentMenu } from "./SubMenu/AlignmentMenu";
+import { TagSizePreset, useTagSize, useTagSizeAction } from "./TagSize.context";
 
 const canvasSizeLabels: Record<CanvasSizePreset, string> = {
   wide: "Wide (1080 x 565)",
@@ -33,21 +38,18 @@ const canvasSizeLabels: Record<CanvasSizePreset, string> = {
 } as const;
 
 export function MenuBar({
-  isDragMode,
-  setIsDragMode,
   downloadImage,
   getImageFile,
 }: {
-  isDragMode: boolean;
-  setIsDragMode: (isDragMode: boolean) => void;
   downloadImage: () => void;
   getImageFile: () => Promise<Blob | null>;
 }) {
   return (
     <Menubar>
       <TemplateMenu downloadImage={downloadImage} getImageFile={getImageFile} />
-      <CanvasMenu isDragMode={isDragMode} setIsDragMode={setIsDragMode} />
+      <CanvasMenu />
       <CanvasSizeMenu />
+      <TagSizeMenu />
     </Menubar>
   );
 }
@@ -103,17 +105,11 @@ function TemplateMenu({
   );
 }
 
-function CanvasMenu({
-  isDragMode,
-  setIsDragMode,
-}: {
-  isDragMode: boolean;
-  setIsDragMode: (isDragMode: boolean) => void;
-}) {
+function CanvasMenu() {
   const { onRandomShuffle, onResetTags } = useTagAction();
-  const handleChangeDragMode = () => setIsDragMode(!isDragMode);
+  const { layoutMode } = useCanvasSize();
+  const { onLayoutModeChange } = useCanvasSizeAction();
 
-  useHotkeys("ctrl+d", handleChangeDragMode);
   useHotkeys("ctrl+r", onRandomShuffle);
   return (
     <MenubarMenu>
@@ -133,11 +129,6 @@ function CanvasMenu({
         <MenubarItem onClick={onResetTags}>
           <RotateCcw color="#fff" size={16} /> Reset Canvas
         </MenubarItem>
-        <MenubarItem onClick={() => setIsDragMode(!isDragMode)}>
-          {isDragMode ? <MousePointer2 size={16} /> : <Move size={16} />}
-          {isDragMode ? "Change to Select Mode" : "Change to Drag Mode"}
-          <MenubarShortcut>^D</MenubarShortcut>
-        </MenubarItem>
         <MenubarSeparator />
         <MenubarItem onClick={onRandomShuffle}>
           <Shuffle color="#fff" size={16} /> Random Shuffle
@@ -146,8 +137,50 @@ function CanvasMenu({
         <MenubarItem>
           <AlignmentMenu />
         </MenubarItem>
+        <MenubarSeparator />
+        <MenubarItem
+          onClick={() => onLayoutModeChange("flow")}
+        >
+          {layoutMode === "flow" ? "✓ " : ""}Auto Layout (Flow)
+        </MenubarItem>
+        <MenubarItem
+          onClick={() => onLayoutModeChange("free-form")}
+        >
+          {layoutMode === "free-form" ? "✓ " : ""}Free Position
+        </MenubarItem>
       </MenubarContent>
     </MenubarMenu>
+  );
+}
+
+const tagSizeLabels: Record<TagSizePreset, string> = {
+  S: "Small (S)",
+  M: "Medium (M)",
+  L: "Large (L)",
+} as const;
+
+function TagSizeMenu() {
+  const { currentSize } = useTagSize();
+  const { onSizeChange } = useTagSizeAction();
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm">
+          Tag Size: {currentSize}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {(["S", "M", "L"] as TagSizePreset[]).map((size) => (
+          <DropdownMenuItem
+            key={size}
+            onClick={() => onSizeChange(size)}
+          >
+            {tagSizeLabels[size]} {size === currentSize ? "✓" : ""}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 

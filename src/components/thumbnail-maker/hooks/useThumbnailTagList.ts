@@ -10,11 +10,15 @@ export function useThumbnailTagList() {
   });
   const prevTags = useRef(tags);
 
-  const onAddTag = (newTag: Tag) => {
+  const onAddTags = (newTagList: Tag[]) => {
     prevTags.current = tags;
 
-    const newTags = [...tags, newTag];
+    const newTags = [...tags, ...newTagList];
     setTags(newTags);
+  };
+
+  const onAddTag = (newTag: Tag) => {
+    onAddTags([newTag]);
   };
 
   const onRemoveTag = (tagId: number) => {
@@ -55,6 +59,7 @@ export function useThumbnailTagList() {
   return {
     tags,
     onAddTag,
+    onAddTags,
     onRemoveTag,
     onRollbackTags,
     onUpdateTag,
