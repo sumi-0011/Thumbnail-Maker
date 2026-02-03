@@ -24,6 +24,7 @@ export const CANVAS_SIZE_STORAGE_KEY = "@thumbnail-maker/canvas-size";
 
 export const THUMBNAIL_MAKER_STORAGE_KEY = "@thumbnail-maker/tags";
 export const THUMBNAIL_MAKERS_PALETTE_STORAGE_KEY = "@thumbnail-maker/palette";
+export const USER_STATS_STORAGE_KEY = "@thumbnail-maker/user-stats";
 
 export const EMPTY_TAG = {
   id: -1,
