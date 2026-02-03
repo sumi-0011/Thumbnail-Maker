@@ -25,6 +25,7 @@ function ThumbnailMaker() {
 
   const {
     onAddTag,
+    onAddTags,
     onRemoveTag,
     onRollbackTags,
     onUpdateTag,
@@ -40,7 +41,18 @@ function ThumbnailMaker() {
       const overflow = checkOverflow();
       if (overflow) {
         showOverflowToast(overflow);
-        onRollbackTags();
+        // 자동 롤백 제거 - 사용자가 직접 태그 조정 가능
+      }
+    });
+  };
+
+  const handleAddTags = (newTags: Tag[]) => {
+    onAddTags(newTags);
+
+    requestAnimationFrame(() => {
+      const overflow = checkOverflow();
+      if (overflow) {
+        showOverflowToast(overflow);
       }
     });
   };
@@ -80,7 +92,7 @@ function ThumbnailMaker() {
 
 
          </div>
-            <AddTagSection onAction={handleAddTag} />
+            <AddTagSection onAction={handleAddTag} onBatchAction={handleAddTags} />
 
           {isDragMode ? (
             <DragModeCanvas

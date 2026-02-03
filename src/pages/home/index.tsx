@@ -58,11 +58,13 @@ export default function Home() {
       <Helmet>
         <title>Thumbnail Maker</title>
       </Helmet>
+      {/* page 1 */}
       <PaletteProvider>
         <TagProvider>
           <ThumbnailMaker />
         </TagProvider>
       </PaletteProvider>
+      {/* page 2 */}
     </>
   );
 }
