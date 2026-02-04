@@ -45,6 +45,7 @@
     "clsx": "^2.0.0",
     "dotenv": "^16.4.5",
     "file-saver": "^2.0.5",
+    "framer-motion": "^12.31.0",
     "fuse.js": "^7.0.0",
     "html2canvas": "^1.4.1",
     "i18next": "^23.5.1",
