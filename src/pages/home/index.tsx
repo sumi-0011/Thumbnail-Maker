@@ -10,7 +10,7 @@ import { FullPageScroller, useScrollToSection } from "src/components/landing/Ful
 import { Section } from "src/components/landing/Section";
 import { ScrollHint } from "src/components/landing/ScrollHint";
 import { TemplateGallery } from "src/components/template-gallery/TemplateGallery";
-import { Template } from "src/components/template-gallery/useTemplates";
+import { Template } from "src/components/gallery/GalleryItem";
 import { useSetTemplate } from "src/components/thumbnail-maker/hooks/useSetTemplate";
 
 export default function Home() {
@@ -61,11 +61,8 @@ export default function Home() {
   }, [scrollToSection]);
 
   const handleApplyTemplate = useCallback((template: Template) => {
-    // 템플릿 데이터를 useSetTemplate 형식에 맞게 변환
-    onUseTemplate({
-      palette: { type: template.palette },
-      tags: JSON.stringify(template.tags),
-    });
+    // Supabase Template 데이터를 useSetTemplate 형식으로 전달
+    onUseTemplate(template.data);
 
     // Provider를 리마운트하여 새로운 상태 반영
     setTemplateKey((prev) => prev + 1);
