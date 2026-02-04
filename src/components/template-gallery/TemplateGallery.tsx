@@ -18,7 +18,7 @@ type ViewMode = "carousel" | "marquee" | "grid";
 export function TemplateGallery({ onApply }: TemplateGalleryProps) {
   const { templates, isLoading, error } = useSupabaseTemplates();
   const { scrollToSection } = useScrollToSection();
-  const [viewMode, setViewMode] = useState<ViewMode>("carousel");
+  const [viewMode, setViewMode] = useState<ViewMode>("marquee");
 
   const handleScrollToEditor = useCallback(() => {
     scrollToSection("editor");
