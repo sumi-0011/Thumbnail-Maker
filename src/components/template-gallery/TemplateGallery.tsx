@@ -35,38 +35,42 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
       <div className="relative z-10 h-full flex flex-col px-6 py-8 max-w-[1200px] mx-auto w-full">
         {/* Header */}
         <motion.div
-          className="flex items-center justify-between mb-8"
+          className="text-center mb-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div>
-            <motion.h2
-              className="text-3xl font-bold text-foreground"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              ✨ Template Gallery
-            </motion.h2>
-            <motion.p
-              className="text-base text-gray-300 mt-2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              Create thumbnails easily using templates made by others! 🎨🚀
-            </motion.p>
-          </div>
-          <motion.button
-            onClick={handleScrollToEditor}
-            className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            whileHover={{ y: -2 }}
+          <motion.p
+            className="text-sm text-muted-foreground mb-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <ChevronUp className="w-4 h-4" />
-            Back to Editor
-          </motion.button>
+            Pick a style, make it yours
+          </motion.p>
+          <motion.h2
+            className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Template Gallery
+          </motion.h2>
         </motion.div>
+
+        {/* Back Button - Floating */}
+        <motion.button
+          onClick={handleScrollToEditor}
+          className="absolute top-6 right-6 z-20 flex items-center gap-1.5 px-3 py-2 text-sm text-muted-foreground hover:text-foreground bg-background/50 backdrop-blur-sm rounded-full border border-border/30 transition-colors"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ChevronUp className="w-4 h-4" />
+          Editor
+        </motion.button>
 
         {/* Error State */}
         {error && (
