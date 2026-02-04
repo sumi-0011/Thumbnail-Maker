@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "src/lib/supabaseClient";
 import { Template as GalleryTemplate } from "src/components/gallery/GalleryItem";
 import templatesData from "src/data/templates.json";
 
-// templates.json에 정의된 템플릿 ID 목록
-const ALLOWED_TEMPLATE_IDS = new Set(
+// templates.json에 정의된 템플릿 ID 목록 (우선 표시용)
+const PRIORITY_TEMPLATE_IDS = new Set(
   templatesData.templates.map((t) => Number(t.id))
 );
 
@@ -27,12 +27,19 @@ export function useSupabaseTemplates() {
           throw new Error(supabaseError.message);
         }
 
-        // templates.json에 정의된 ID와 매칭되는 템플릿만 필터링
-        const filteredTemplates = (data as GalleryTemplate[])?.filter(
-          (template) => ALLOWED_TEMPLATE_IDS.has(template.id)
-        ) || [];
+        const allTemplates = (data as GalleryTemplate[]) || [];
 
-        setTemplates(filteredTemplates);
+        // templates.json에 있는 템플릿을 우선 정렬
+        const sortedTemplates = allTemplates.sort((a, b) => {
+          const aIsPriority = PRIORITY_TEMPLATE_IDS.has(a.id);
+          const bIsPriority = PRIORITY_TEMPLATE_IDS.has(b.id);
+
+          if (aIsPriority && !bIsPriority) return -1;
+          if (!aIsPriority && bIsPriority) return 1;
+          return 0;
+        });
+
+        setTemplates(sortedTemplates);
       } catch (err) {
         console.error("Error fetching templates:", err);
         setError(err instanceof Error ? err : new Error("Unknown error"));
