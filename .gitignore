@@ -18,3 +18,4 @@ TODOs.md
 .eslintcache
 .env
 .env.production
+.playwright-mcp

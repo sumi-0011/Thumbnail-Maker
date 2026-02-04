@@ -95,18 +95,28 @@
   height: 100%;
 }
 
-// Full page scroll
-.full-page-container {
+// Full page scroll (Swiper)
+.full-page-wrapper {
   height: 100vh;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
+}
+
+.full-page-wrapper .swiper {
+  height: 100%;
+  width: 100%;
+}
+
+.full-page-wrapper .swiper-slide {
+  height: 100vh;
+  overflow: hidden;
 }
 
 .section {
-  height: 100vh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  height: 100%;
   overflow: hidden;
+}
+
+.slide-content {
+  height: 100%;
+  width: 100%;
 }

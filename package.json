@@ -61,6 +61,7 @@
     "react-i18next": "^13.2.2",
     "react-router-dom": "^6.10.0",
     "sonner": "^1.5.0",
+    "swiper": "^12.1.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
     "thesaurus-com": "^1.2.3",

@@ -1,79 +1,108 @@
-import { PropsWithChildren, useRef, useCallback, useEffect, useState } from "react";
+import {
+  PropsWithChildren,
+  Children,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+  isValidElement,
+  cloneElement,
+  ReactElement,
+} from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Mousewheel, Keyboard } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import { FullPageProvider, useFullPageContext, useScrollToSectionStandalone } from "./FullPageContext";
+
+import "swiper/css";
 
 interface FullPageScrollerProps extends PropsWithChildren {
   className?: string;
 }
 
-export function FullPageScroller({ children, className = "" }: FullPageScrollerProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [currentSection, setCurrentSection] = useState(0);
-  const isScrollingRef = useRef(false);
+interface FullPageContentProps extends PropsWithChildren {
+  className?: string;
+}
 
-  const scrollToSection = useCallback((index: number) => {
-    if (containerRef.current && !isScrollingRef.current) {
-      const sections = containerRef.current.querySelectorAll("[data-section]");
-      const maxIndex = sections.length - 1;
-      const targetIndex = Math.max(0, Math.min(index, maxIndex));
+function FullPageContent({ children, className = "" }: FullPageContentProps) {
+  const { registerSection, setScrollHandler, setCurrentIndex } = useFullPageContext();
+  const swiperRef = useRef<SwiperType | null>(null);
 
-      if (sections[targetIndex]) {
-        isScrollingRef.current = true;
-        setCurrentSection(targetIndex);
-        sections[targetIndex].scrollIntoView({ behavior: "smooth" });
+  const childArray = Children.toArray(children);
 
-        // 스크롤 애니메이션 완료 후 플래그 해제
-        setTimeout(() => {
-          isScrollingRef.current = false;
-        }, 800);
+  // Extract section IDs once to avoid infinite loop
+  const sectionIds = useMemo(() => {
+    return childArray.map((child, index) => {
+      if (isValidElement(child)) {
+        return { id: child.props?.id as string | undefined, index };
       }
-    }
-  }, []);
+      return { id: undefined, index };
+    });
+  }, [children]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-
-      if (isScrollingRef.current) return;
-
-      const sections = container.querySelectorAll("[data-section]");
-      const maxIndex = sections.length - 1;
-
-      if (e.deltaY > 0) {
-        // 아래로 스크롤
-        scrollToSection(Math.min(currentSection + 1, maxIndex));
-      } else {
-        // 위로 스크롤
-        scrollToSection(Math.max(currentSection - 1, 0));
+    sectionIds.forEach(({ id, index }) => {
+      if (id) {
+        registerSection(id, index);
       }
-    };
+    });
+  }, [sectionIds, registerSection]);
 
-    container.addEventListener("wheel", handleWheel, { passive: false });
+  const handleSwiperInit = useCallback((swiper: SwiperType) => {
+    swiperRef.current = swiper;
+    setScrollHandler((index: number) => {
+      swiper.slideTo(index);
+    });
+  }, [setScrollHandler]);
 
-    return () => {
-      container.removeEventListener("wheel", handleWheel);
-    };
-  }, [currentSection, scrollToSection]);
+  const handleSlideChange = useCallback((swiper: SwiperType) => {
+    setCurrentIndex(swiper.activeIndex);
+  }, [setCurrentIndex]);
 
   return (
-    <div
-      ref={containerRef}
-      className={`full-page-container ${className}`}
-      data-scroller
-    >
-      {children}
+    <div className={`full-page-wrapper ${className}`}>
+      <Swiper
+        direction="vertical"
+        slidesPerView={1}
+        mousewheel={{
+          forceToAxis: true,
+          sensitivity: 1,
+          thresholdDelta: 10,
+        }}
+        keyboard={{
+          enabled: true,
+        }}
+        speed={800}
+        modules={[Mousewheel, Keyboard]}
+        onSwiper={handleSwiperInit}
+        onSlideChange={handleSlideChange}
+        className="h-full"
+      >
+        {childArray.map((child, index) => {
+          if (isValidElement(child)) {
+            return (
+              <SwiperSlide key={child.props?.id || index}>
+                {cloneElement(child as ReactElement<{ className?: string }>, {
+                  className: `${child.props?.className || ""} slide-content`.trim(),
+                })}
+              </SwiperSlide>
+            );
+          }
+          return <SwiperSlide key={index}>{child}</SwiperSlide>;
+        })}
+      </Swiper>
     </div>
   );
 }
 
-export function useScrollToSection() {
-  const scrollToSection = useCallback((sectionId: string) => {
-    const section = document.querySelector(`[data-section="${sectionId}"]`);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
-  }, []);
+export function FullPageScroller({ children, className = "" }: FullPageScrollerProps) {
+  return (
+    <FullPageProvider>
+      <FullPageContent className={className}>{children}</FullPageContent>
+    </FullPageProvider>
+  );
+}
 
-  return { scrollToSection };
+export function useScrollToSection() {
+  return useScrollToSectionStandalone();
 }
