@@ -96,13 +96,13 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
         {/* Marquee View */}
         {!isLoading && !error && templates.length > 0 && (
           <motion.div
-            className="flex-1 flex flex-col justify-center gap-6"
+            className="flex-1 flex flex-col justify-center gap-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            {/* Top row - left direction */}
-            <Marquee direction="left" speed={40} pauseOnHover>
+            {/* Row 1 - left */}
+            <Marquee direction="left" speed={35} pauseOnHover>
               {templates.map((template) => (
                 <MarqueeCard
                   key={template.id}
@@ -112,8 +112,30 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
               ))}
             </Marquee>
 
-            {/* Bottom row - right direction */}
-            <Marquee direction="right" speed={35} pauseOnHover>
+            {/* Row 2 - right */}
+            <Marquee direction="right" speed={30} pauseOnHover>
+              {[...templates].reverse().map((template) => (
+                <MarqueeCard
+                  key={template.id}
+                  template={template}
+                  onClick={() => handleItemClick(template)}
+                />
+              ))}
+            </Marquee>
+
+            {/* Row 3 - left (slower) */}
+            <Marquee direction="left" speed={25} pauseOnHover>
+              {templates.map((template) => (
+                <MarqueeCard
+                  key={template.id}
+                  template={template}
+                  onClick={() => handleItemClick(template)}
+                />
+              ))}
+            </Marquee>
+
+            {/* Row 4 - right (slower) */}
+            <Marquee direction="right" speed={20} pauseOnHover>
               {[...templates].reverse().map((template) => (
                 <MarqueeCard
                   key={template.id}
