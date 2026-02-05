@@ -31,6 +31,14 @@ export default function Home() {
   }, [scrollToSection]);
 
   const handleApplyTemplate = useCallback((template: Template) => {
+    // blog_only 타입은 블로그 링크만 열기
+    if (template.template_type === "blog_only") {
+      if (template.blog_url) {
+        window.open(template.blog_url, "_blank", "noopener,noreferrer");
+      }
+      return;
+    }
+
     // Supabase Template 데이터를 useSetTemplate 형식으로 전달
     onUseTemplate(template.data);
 

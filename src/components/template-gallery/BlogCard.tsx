@@ -21,7 +21,7 @@ export function BlogCard({ template }: BlogCardProps) {
   return (
     <motion.div
       className="relative w-[280px] h-[160px] rounded-xl overflow-hidden shrink-0 border border-border/30 bg-card"
-      whileHover={{ scale: 1.02 }}
+      whileHover={{ scale: 1.03   }}
       transition={{ duration: 0.3 }}
     >
       {/* 이미지 */}

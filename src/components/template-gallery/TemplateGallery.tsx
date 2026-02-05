@@ -1,19 +1,22 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronUp } from "lucide-react";
+import { ChevronUp, Plus } from "lucide-react";
 import { useScrollToSection } from "../landing/FullPageScroller";
 import { useSupabaseTemplates } from "./useSupabaseTemplates";
 import { Skeleton } from "src/components/ui/skeleton";
 import { Template } from "src/components/gallery/GalleryItem";
 import { Marquee, ParticleBackground } from "./animations";
+import { BlogCard } from "./BlogCard";
+import { AddBlogExampleSheet } from "./AddBlogExampleSheet";
 
 interface TemplateGalleryProps {
   onApply: (template: Template) => void;
 }
 
 export function TemplateGallery({ onApply }: TemplateGalleryProps) {
-  const { templates, isLoading, error } = useSupabaseTemplates();
+  const { templates, isLoading, error, refetch } = useSupabaseTemplates();
   const { scrollToSection } = useScrollToSection();
+  const [isAddSheetOpen, setIsAddSheetOpen] = useState(false);
 
   const handleScrollToEditor = useCallback(() => {
     scrollToSection("editor");
@@ -25,6 +28,10 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
     },
     [onApply]
   );
+
+  const handleAddSuccess = useCallback(() => {
+    refetch();
+  }, [refetch]);
 
   return (
     <div className="relative h-full flex flex-col overflow-hidden">
@@ -58,19 +65,36 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
           </motion.h2>
         </motion.div>
 
-        {/* Back Button - Floating */}
-        <motion.button
-          onClick={handleScrollToEditor}
-          className="absolute top-6 right-6 z-20 flex items-center gap-1.5 px-3 py-2 text-sm text-muted-foreground hover:text-foreground bg-background/50 backdrop-blur-sm rounded-full border border-border/30 transition-colors"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <ChevronUp className="w-4 h-4" />
-          Editor
-        </motion.button>
+        {/* Floating Buttons */}
+        <div className="absolute top-6 right-6 z-20 flex items-center gap-2">
+          {/* Add Example Button */}
+          <motion.button
+            onClick={() => setIsAddSheetOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-2 text-sm text-purple-300 hover:text-purple-200 bg-purple-500/20 hover:bg-purple-500/30 backdrop-blur-sm rounded-full border border-purple-500/30 transition-colors"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Plus className="w-4 h-4" />
+            사용 예시 추가
+          </motion.button>
+
+          {/* Back Button */}
+          <motion.button
+            onClick={handleScrollToEditor}
+            className="flex items-center gap-1.5 px-3 py-2 text-sm text-muted-foreground hover:text-foreground bg-background/50 backdrop-blur-sm rounded-full border border-border/30 transition-colors"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <ChevronUp className="w-4 h-4" />
+            Editor
+          </motion.button>
+        </div>
 
         {/* Error State */}
         {error && (
@@ -154,22 +178,38 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
           </div>
         )}
       </div>
+
+      {/* Add Blog Example Sheet */}
+      <AddBlogExampleSheet
+        open={isAddSheetOpen}
+        onOpenChange={setIsAddSheetOpen}
+        onSuccess={handleAddSuccess}
+      />
     </div>
   );
 }
 
-// Marquee card component
+// Marquee card component - 템플릿 타입에 따라 다른 카드 렌더링
 interface MarqueeCardProps {
   template: Template;
   onClick: () => void;
 }
 
 function MarqueeCard({ template, onClick }: MarqueeCardProps) {
+  // blog_only 타입은 BlogCard로 렌더링
+  if (template.template_type === "blog_only") {
+    return <BlogCard template={template} onClick={onClick} />;
+  }
+
+  // full_with_blog 타입: 기존 템플릿 카드 + 블로그 링크 배지
+  const hasBlog =
+    template.template_type === "full_with_blog" && template.blog_url;
+
   return (
     <motion.div
       className="relative w-[280px] h-[160px] rounded-xl overflow-hidden cursor-pointer shrink-0 border border-border/30"
       onClick={onClick}
-      whileHover={{ scale: 1.05, y: -5 }}
+      whileHover={{ scale: 1.02, y: -5 }}
       transition={{ duration: 0.3 }}
     >
       <img
@@ -183,12 +223,28 @@ function MarqueeCard({ template, onClick }: MarqueeCardProps) {
         initial={{ opacity: 0 }}
         whileHover={{ opacity: 1 }}
       >
-        <div>
+        <div className="flex-1">
           <h3 className="text-white font-medium text-sm">{template.title}</h3>
           <p className="text-gray-300 text-xs mt-1 line-clamp-1">
             {template.description}
           </p>
+          {template.author_name && (
+            <p className="text-gray-400 text-xs mt-1">
+              by {template.author_name}
+            </p>
+          )}
         </div>
+        {hasBlog && (
+          <a
+            href={template.blog_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="ml-2 text-xs text-purple-300 hover:text-purple-200 underline"
+          >
+            Blog
+          </a>
+        )}
       </motion.div>
     </motion.div>
   );

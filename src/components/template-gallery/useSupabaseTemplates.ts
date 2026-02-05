@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "src/lib/supabaseClient";
 import { Template as GalleryTemplate } from "src/components/gallery/GalleryItem";
 import templatesData from "src/data/templates.json";
@@ -11,44 +11,44 @@ export function useSupabaseTemplates() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    async function fetchTemplates() {
-      setIsLoading(true);
-      setError(null);
+  const fetchTemplates = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
 
-      try {
-        const { data, error: supabaseError } = await supabase
-          .from("template")
-          .select("*");
+    try {
+      const { data, error: supabaseError } = await supabase
+        .from("template")
+        .select("*");
 
-        if (supabaseError) {
-          throw new Error(supabaseError.message);
-        }
-
-        const allTemplates = (data as GalleryTemplate[]) || [];
-
-        // templates.json에 있는 템플릿을 우선 정렬
-        const sortedTemplates = allTemplates.sort((a, b) => {
-          const aIsPriority = PRIORITY_TEMPLATE_IDS.has(a.id);
-          const bIsPriority = PRIORITY_TEMPLATE_IDS.has(b.id);
-
-          if (aIsPriority && !bIsPriority) return -1;
-          if (!aIsPriority && bIsPriority) return 1;
-          return 0;
-        });
-
-        setTemplates(sortedTemplates);
-      } catch (err) {
-        console.error("Error fetching templates:", err);
-        setError(err instanceof Error ? err : new Error("Unknown error"));
-        setTemplates([]);
-      } finally {
-        setIsLoading(false);
+      if (supabaseError) {
+        throw new Error(supabaseError.message);
       }
-    }
 
-    fetchTemplates();
+      const allTemplates = (data as GalleryTemplate[]) || [];
+
+      // templates.json에 있는 템플릿을 우선 정렬
+      const sortedTemplates = allTemplates.sort((a, b) => {
+        const aIsPriority = PRIORITY_TEMPLATE_IDS.has(a.id);
+        const bIsPriority = PRIORITY_TEMPLATE_IDS.has(b.id);
+
+        if (aIsPriority && !bIsPriority) return -1;
+        if (!aIsPriority && bIsPriority) return 1;
+        return 0;
+      });
+
+      setTemplates(sortedTemplates);
+    } catch (err) {
+      console.error("Error fetching templates:", err);
+      setError(err instanceof Error ? err : new Error("Unknown error"));
+      setTemplates([]);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  return { templates, isLoading, error };
+  useEffect(() => {
+    fetchTemplates();
+  }, [fetchTemplates]);
+
+  return { templates, isLoading, error, refetch: fetchTemplates };
 }

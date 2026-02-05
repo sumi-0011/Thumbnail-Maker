@@ -92,7 +92,7 @@ function ImageSection({ image, alt, variant }: ImageSectionProps) {
         <img
           src={image}
           alt={alt}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-cover group-hover:scale-[101%] transition-transform duration-300"
           draggable={false}
         />
       ) : (
