@@ -3,10 +3,8 @@ import { supabase } from "src/lib/supabaseClient";
 import { Template as GalleryTemplate } from "src/components/gallery/GalleryItem";
 import templatesData from "src/data/templates.json";
 
-// templates.json에 정의된 템플릿 ID 목록 (우선 표시용)
-const PRIORITY_TEMPLATE_IDS = new Set(
-  templatesData.templates.map((t) => Number(t.id))
-);
+// templates.json에 정의된 우선 표시 템플릿 ID 목록
+const PRIORITY_TEMPLATE_IDS = new Set(templatesData.priorityTemplateIds);
 
 export function useSupabaseTemplates() {
   const [templates, setTemplates] = useState<GalleryTemplate[]>([]);
