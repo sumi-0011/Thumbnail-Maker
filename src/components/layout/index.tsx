@@ -50,7 +50,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <SidebarProvider defaultOpen={false}>
       <AppSidebar />
       <SidebarInset>
-        <div className="flex min-h-screen items-center justify-center bg-[#1D2027]">
+        <div className="h-screen overflow-hidden bg-[#1D2027]">
           {children}
         </div>
       </SidebarInset>
