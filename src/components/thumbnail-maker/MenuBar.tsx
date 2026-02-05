@@ -1,11 +1,15 @@
-import { MousePointer2, Move, RotateCcw, Shuffle } from "lucide-react";
+import {
+  MousePointer2,
+  Move,
+  RotateCcw,
+  Shuffle,
+} from "lucide-react";
 import {
   Menubar,
   MenubarContent,
   MenubarItem,
   MenubarMenu,
   MenubarSeparator,
-  MenubarShortcut,
   MenubarTrigger,
 } from "../ui/menubar";
 import { useTagAction } from "./Tag.context";
@@ -17,46 +21,124 @@ import { DownloadTemplateToLocalConfirm } from "./SubMenu/DownloadTemplateToLoca
 import { ImportTemplateConfirm } from "./SubMenu/ImportTemplateConfirm";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 import { useCanvasSize, useCanvasSizeAction } from "./CanvasSize.context";
-import { CanvasSizePreset, canvasSizePresets } from "./assets/constants";
+import { CanvasSizePreset } from "./assets/constants";
 import { AlignmentMenu } from "./SubMenu/AlignmentMenu";
-
-const canvasSizeLabels: Record<CanvasSizePreset, string> = {
-  wide: "Wide (1080 x 565)",
-  square: "Square (1:1)",
-} as const;
+import { Toggle } from "../ui/toggle";
+import { Separator } from "../ui/separator";
 
 export function MenuBar({
-  isDragMode,
-  setIsDragMode,
-  downloadImage,
   getImageFile,
 }: {
-  isDragMode: boolean;
-  setIsDragMode: (isDragMode: boolean) => void;
-  downloadImage: () => void;
   getImageFile: () => Promise<Blob | null>;
 }) {
   return (
-    <Menubar>
-      <TemplateMenu downloadImage={downloadImage} getImageFile={getImageFile} />
-      <CanvasMenu isDragMode={isDragMode} setIsDragMode={setIsDragMode} />
-      <CanvasSizeMenu />
+    <Menubar className="border-none p-0 bg-transparent">
+      <TemplateMenu getImageFile={getImageFile} />
     </Menubar>
   );
 }
 
+export function Toolbar({
+  isDragMode,
+  setIsDragMode,
+}: {
+  isDragMode: boolean;
+  setIsDragMode: (isDragMode: boolean) => void;
+}) {
+  const { onRandomShuffle, onResetTags } = useTagAction();
+  const handleChangeDragMode = () => setIsDragMode(!isDragMode);
+
+  useHotkeys("ctrl+d", handleChangeDragMode);
+  useHotkeys("ctrl+r", onRandomShuffle);
+
+  return (
+    <div className="flex items-center gap-1 rounded-md ">
+      {/* Left group: Reset, Shuffle, Drag/Select */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="ghost" size="icon" onClick={onResetTags}>
+            <RotateCcw size={16} />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p className="text-xs">Reset Canvas</p>
+        </TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="ghost" size="icon" onClick={onRandomShuffle}>
+            <Shuffle size={16} />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p className="text-xs">Random Shuffle (Ctrl+R)</p>
+        </TooltipContent>
+      </Tooltip>
+
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Toggle
+            size="sm"
+            pressed={isDragMode}
+            onPressedChange={handleChangeDragMode}
+          >
+            {isDragMode ? <Move size={16} /> : <MousePointer2 size={16} />}
+          </Toggle>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p className="text-xs">
+            {isDragMode ? "Drag Mode" : "Select Mode"} (Ctrl+D)
+          </p>
+        </TooltipContent>
+      </Tooltip>
+
+      <Separator orientation="vertical" className="mx-1 h-6" />
+
+      {/* Right group: Alignment, Canvas Size */}
+      <AlignmentMenu />
+
+      <Separator orientation="vertical" className="mx-1 h-6" />
+
+      <CanvasSizeSegment />
+    </div>
+  );
+}
+
+function CanvasSizeSegment() {
+  const { currentSize } = useCanvasSize();
+  const { onSizeChange } = useCanvasSizeAction();
+
+  const sizes: { value: CanvasSizePreset; label: string }[] = [
+    { value: "wide", label: "Wide" },
+    { value: "square", label: "Square" },
+  ];
+
+  return (
+    <div className="flex gap-0.5 rounded-md border p-0.5">
+      {sizes.map(({ value, label }) => (
+        <Button
+          key={value}
+          variant="ghost"
+          size="sm"
+          className={
+            currentSize === value
+              ? "bg-accent text-accent-foreground"
+              : "text-muted-foreground"
+          }
+          onClick={() => onSizeChange(value)}
+        >
+          {label}
+        </Button>
+      ))}
+    </div>
+  );
+}
+
 function TemplateMenu({
-  downloadImage,
   getImageFile,
 }: {
-  downloadImage: () => void;
   getImageFile: () => Promise<Blob | null>;
 }) {
   const [isSaveTemplateSheetOpen, setIsSaveTemplateSheetOpen] = useState(false);
@@ -100,78 +182,5 @@ function TemplateMenu({
         onClose={() => setIsImportTemplateSheetOpen(false)}
       />
     </>
-  );
-}
-
-function CanvasMenu({
-  isDragMode,
-  setIsDragMode,
-}: {
-  isDragMode: boolean;
-  setIsDragMode: (isDragMode: boolean) => void;
-}) {
-  const { onRandomShuffle, onResetTags } = useTagAction();
-  const handleChangeDragMode = () => setIsDragMode(!isDragMode);
-
-  useHotkeys("ctrl+d", handleChangeDragMode);
-  useHotkeys("ctrl+r", onRandomShuffle);
-  return (
-    <MenubarMenu>
-      <Tooltip defaultOpen>
-        <TooltipTrigger>
-          <MenubarTrigger>Canvas</MenubarTrigger>
-        </TooltipTrigger>
-        <TooltipContent className="max-w-[200px]">
-          <p className="text-sm font-medium">Random Shuffle Open 🎉</p>
-          <p className="text-xs text-muted-foreground">
-            Randomly changes the style of the tag. It's useful if you want to
-            make a thumbnail easily.
-          </p>
-        </TooltipContent>
-      </Tooltip>
-      <MenubarContent>
-        <MenubarItem onClick={onResetTags}>
-          <RotateCcw color="#fff" size={16} /> Reset Canvas
-        </MenubarItem>
-        <MenubarItem onClick={() => setIsDragMode(!isDragMode)}>
-          {isDragMode ? <MousePointer2 size={16} /> : <Move size={16} />}
-          {isDragMode ? "Change to Select Mode" : "Change to Drag Mode"}
-          <MenubarShortcut>^D</MenubarShortcut>
-        </MenubarItem>
-        <MenubarSeparator />
-        <MenubarItem onClick={onRandomShuffle}>
-          <Shuffle color="#fff" size={16} /> Random Shuffle
-          <MenubarShortcut>^R</MenubarShortcut>
-        </MenubarItem>
-        <MenubarItem>
-          <AlignmentMenu />
-        </MenubarItem>
-      </MenubarContent>
-    </MenubarMenu>
-  );
-}
-
-export function CanvasSizeMenu() {
-  const { currentSize } = useCanvasSize();
-  const { onSizeChange } = useCanvasSizeAction();
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          {canvasSizeLabels[currentSize]}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {Object.keys(canvasSizePresets).map((size) => (
-          <DropdownMenuItem
-            key={size}
-            onClick={() => onSizeChange(size as CanvasSizePreset)}
-          >
-            {canvasSizeLabels[size as CanvasSizePreset]}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }

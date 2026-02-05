@@ -12,50 +12,20 @@ import { ScrollHint } from "src/components/landing/ScrollHint";
 import { TemplateGallery } from "src/components/template-gallery/TemplateGallery";
 import { Template } from "src/components/gallery/GalleryItem";
 import { useSetTemplate } from "src/components/thumbnail-maker/hooks/useSetTemplate";
+import { useUserStats } from "src/hooks/useUserStats";
 
 export default function Home() {
   const { t } = useTranslation("translation");
-  const [isToastShown, setIsToastShown] = useState(false);
   const [templateKey, setTemplateKey] = useState(0);
   const { scrollToSection } = useScrollToSection();
   const { onUseTemplate } = useSetTemplate();
+  const { incrementVisit, shouldShowGitHubToast } = useUserStats();
 
   useEffect(() => {
-    // 약간의 지연을 주어 toast가 준비된 후 실행
-    const timer = setTimeout(() => {
-      if (!isToastShown) {
-        toast("Love this project? ⭐️", {
-          duration: Infinity,
-          position: "bottom-left",
-          description: (
-            <>
-              Show your support by giving us a star on GitHub!
-              <br />
-              Stars help others discover this project and keep you notified of
-              updates and new features.
-              <Button
-                size="sm"
-                variant="outline"
-                className="mt-2 ml-auto flex justify-center items-center w-fit"
-                asChild
-              >
-                <a
-                  href="https://github.com/sumi-0011/Thumbnail-Maker"
-                  target="_blank"
-                >
-                  Star on GitHub
-                </a>
-              </Button>
-            </>
-          ),
-        });
-        setIsToastShown(true);
-      }
-    }, 1000);
+    incrementVisit();
+  }, []);
 
-    return () => clearTimeout(timer);
-  }, [isToastShown]);
-
+ 
   const handleScrollToTemplates = useCallback(() => {
     scrollToSection("templates");
   }, [scrollToSection]);
