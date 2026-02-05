@@ -35,6 +35,7 @@ interface TagListContextType {
 
 interface TagActionContextType {
   onAddTag: (tag: Tag) => void;
+  onAddTags: (tags: Tag[]) => void;
   onRemoveTag: (tagId: number) => void;
   onUpdateTag: (tagId: number, newTag: Tag) => void;
   onResetTags: () => void;
@@ -57,6 +58,7 @@ const TagListContext = createContext<TagListContextType | undefined>({
 });
 const TagActionContext = createContext<TagActionContextType | undefined>({
   onAddTag: () => {},
+  onAddTags: () => {},
   onRemoveTag: () => {},
   onUpdateTag: () => {},
   onResetTags: () => {},
@@ -99,6 +101,7 @@ export const TagProvider = ({ children }: PropsWithChildren) => {
   const {
     tags,
     onAddTag,
+    onAddTags,
     onRemoveTag,
     onUpdateTag,
     onResetTags,
@@ -124,6 +127,7 @@ export const TagProvider = ({ children }: PropsWithChildren) => {
       <TagActionContext.Provider
         value={{
           onAddTag,
+          onAddTags,
           onRemoveTag,
           onUpdateTag,
           onResetTags,
