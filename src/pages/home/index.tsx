@@ -5,14 +5,17 @@ import { toast } from "sonner";
 import ThumbnailMaker from "src/components/thumbnail-maker";
 import { PaletteProvider } from "src/components/thumbnail-maker/Palette.context";
 import { TagProvider } from "src/components/thumbnail-maker/Tag.context";
-import { Button } from "src/components/ui/button";
-import { FullPageScroller, useScrollToSection } from "src/components/landing/FullPageScroller";
+import {
+  FullPageScroller,
+  useScrollToSection,
+} from "src/components/landing/FullPageScroller";
 import { Section } from "src/components/landing/Section";
 import { ScrollHint } from "src/components/landing/ScrollHint";
 import { TemplateGallery } from "src/components/template-gallery/TemplateGallery";
 import { Template } from "src/components/gallery/GalleryItem";
 import { useSetTemplate } from "src/components/thumbnail-maker/hooks/useSetTemplate";
 import { useUserStats } from "src/hooks/useUserStats";
+import { ThankYouAlert } from "./ThankYouAlert";
 
 export default function Home() {
   const { t } = useTranslation("translation");
@@ -25,31 +28,33 @@ export default function Home() {
     incrementVisit();
   }, []);
 
- 
   const handleScrollToTemplates = useCallback(() => {
     scrollToSection("templates");
   }, [scrollToSection]);
 
-  const handleApplyTemplate = useCallback((template: Template) => {
-    // blog_only 타입은 블로그 링크만 열기
-    if (template.template_type === "blog_only") {
-      if (template.blog_url) {
-        window.open(template.blog_url, "_blank", "noopener,noreferrer");
+  const handleApplyTemplate = useCallback(
+    (template: Template) => {
+      // blog_only 타입은 블로그 링크만 열기
+      if (template.template_type === "blog_only") {
+        if (template.blog_url) {
+          window.open(template.blog_url, "_blank", "noopener,noreferrer");
+        }
+        return;
       }
-      return;
-    }
 
-    // Supabase Template 데이터를 useSetTemplate 형식으로 전달
-    onUseTemplate(template.data);
+      // Supabase Template 데이터를 useSetTemplate 형식으로 전달
+      onUseTemplate(template.data);
 
-    // Provider를 리마운트하여 새로운 상태 반영
-    setTemplateKey((prev) => prev + 1);
+      // Provider를 리마운트하여 새로운 상태 반영
+      setTemplateKey((prev) => prev + 1);
 
-    // 에디터 섹션으로 스크롤
-    scrollToSection("editor");
+      // 에디터 섹션으로 스크롤
+      scrollToSection("editor");
 
-    toast.success("Template applied successfully!");
-  }, [scrollToSection, onUseTemplate]);
+      toast.success("Template applied successfully!");
+    },
+    [scrollToSection, onUseTemplate],
+  );
 
   return (
     <>
@@ -58,17 +63,26 @@ export default function Home() {
       </Helmet>
       <FullPageScroller>
         {/* Page 1: Editor */}
-        <Section id="editor" className="relative">
+        <Section
+          id="editor"
+          className="relative grid grid-cols-[1fr_782px_1fr] gap-4 px-4"
+        >
+          <div></div>
           <PaletteProvider key={`palette-${templateKey}`}>
             <TagProvider key={`tag-${templateKey}`}>
               <ThumbnailMaker />
             </TagProvider>
           </PaletteProvider>
+
+          <div className="flex justify-end">
+            <ThankYouAlert />
+          </div>
+
           <ScrollHint onClick={handleScrollToTemplates} />
         </Section>
 
         {/* Page 2: Template Gallery */}
-        <Section id="templates" className="bg-[#1D2027]">
+        <Section id="templates">
           <TemplateGallery onApply={handleApplyTemplate} />
         </Section>
       </FullPageScroller>

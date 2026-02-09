@@ -12,7 +12,7 @@ const alertVariants = cva(
         destructive:
           "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
         outline:
-          "border-outline bg-transparent text-foreground border-[1px] border-white/70 px-3",
+          "border-outline bg-transparent text-foreground border-[1px] border-white/30 px-3",
       },
     },
     defaultVariants: {

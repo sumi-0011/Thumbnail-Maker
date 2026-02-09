@@ -6,7 +6,7 @@ import { cn } from "src/lib/utils";
 import { PropsWithChildren } from "react";
 
 const buttonVariants = cva(
-  "inline-flex items-center  whitespace-nowrap	 justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-nowrap ",
+  "inline-flex items-center gap-2  whitespace-nowrap	 justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-nowrap ",
   {
     variants: {
       variant: {
