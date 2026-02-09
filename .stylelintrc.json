@@ -1,0 +1,22 @@
+{
+  "extends": "stylelint-config-standard",
+  "customSyntax": "postcss-less",
+  "plugins": ["stylelint-prettier"],
+  "rules": {
+    "prettier/prettier": true,
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["tailwind", "apply", "layer"]
+      }
+    ],
+    "selector-class-pattern": null,
+    "no-descending-specificity": null,
+    "function-no-unknown": [
+      true,
+      {
+        "ignoreFunctions": ["theme", "hsl"]
+      }
+    ]
+  }
+}

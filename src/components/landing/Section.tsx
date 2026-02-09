@@ -8,10 +8,7 @@ interface SectionProps extends PropsWithChildren {
 
 export function Section({ id, children, className }: SectionProps) {
   return (
-    <section
-      data-section={id}
-      className={cn("section", className)}
-    >
+    <section data-section={id} className={cn("section", className)}>
       {children}
     </section>
   );

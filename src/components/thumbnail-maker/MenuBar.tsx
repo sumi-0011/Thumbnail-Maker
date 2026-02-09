@@ -1,9 +1,7 @@
-import {
-  MousePointer2,
-  Move,
-  RotateCcw,
-  Shuffle,
-} from "lucide-react";
+import { MousePointer2, Move, RotateCcw, Shuffle } from "lucide-react";
+import { useHotkeys } from "react-hotkeys-hook";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Menubar,
   MenubarContent,
@@ -12,20 +10,17 @@ import {
   MenubarSeparator,
   MenubarTrigger,
 } from "../ui/menubar";
-import { useTagAction } from "./Tag.context";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { useHotkeys } from "react-hotkeys-hook";
-import { useState } from "react";
+import { Button } from "../ui/button";
+import { Toggle } from "../ui/toggle";
+import { Separator } from "../ui/separator";
+import { useTagAction } from "./Tag.context";
 import { SaveTemplateSheet } from "./SubMenu/SaveTemplateSheet";
 import { DownloadTemplateToLocalConfirm } from "./SubMenu/DownloadTemplateToLocalConfirm";
 import { ImportTemplateConfirm } from "./SubMenu/ImportTemplateConfirm";
-import { Link } from "react-router-dom";
-import { Button } from "../ui/button";
 import { useCanvasSize, useCanvasSizeAction } from "./CanvasSize.context";
 import { CanvasSizePreset } from "./assets/constants";
 import { AlignmentMenu } from "./SubMenu/AlignmentMenu";
-import { Toggle } from "../ui/toggle";
-import { Separator } from "../ui/separator";
 
 export function MenuBar({
   getImageFile,
@@ -33,7 +28,7 @@ export function MenuBar({
   getImageFile: () => Promise<Blob | null>;
 }) {
   return (
-    <Menubar className="border-none p-0 bg-transparent">
+    <Menubar className="border-none bg-transparent p-0">
       <TemplateMenu getImageFile={getImageFile} />
     </Menubar>
   );

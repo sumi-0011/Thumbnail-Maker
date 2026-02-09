@@ -36,7 +36,12 @@ export function ParticleBackground({
   }, [particleCount]);
 
   return (
-    <div className={cn("absolute inset-0 overflow-hidden pointer-events-none", className)}>
+    <div
+      className={cn(
+        "pointer-events-none absolute inset-0 overflow-hidden",
+        className,
+      )}
+    >
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/10 to-blue-900/20" />
 
@@ -57,7 +62,11 @@ export function ParticleBackground({
           animate={{
             y: [0, -30, 0],
             x: [0, Math.random() * 20 - 10, 0],
-            opacity: [particle.opacity, particle.opacity * 1.5, particle.opacity],
+            opacity: [
+              particle.opacity,
+              particle.opacity * 1.5,
+              particle.opacity,
+            ],
             scale: [1, 1.2, 1],
           }}
           transition={{
@@ -71,9 +80,10 @@ export function ParticleBackground({
 
       {/* Glowing orbs */}
       <motion.div
-        className="absolute w-64 h-64 rounded-full"
+        className="absolute h-64 w-64 rounded-full"
         style={{
-          background: "radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%)",
+          background:
+            "radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%)",
           left: "10%",
           top: "20%",
         }}
@@ -84,9 +94,10 @@ export function ParticleBackground({
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute w-96 h-96 rounded-full"
+        className="absolute h-96 w-96 rounded-full"
         style={{
-          background: "radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%)",
+          background:
+            "radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%)",
           right: "5%",
           bottom: "10%",
         }}
@@ -94,7 +105,12 @@ export function ParticleBackground({
           scale: [1, 1.3, 1],
           opacity: [0.2, 0.4, 0.2],
         }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 2,
+        }}
       />
     </div>
   );

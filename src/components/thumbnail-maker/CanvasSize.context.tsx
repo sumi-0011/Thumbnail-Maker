@@ -16,7 +16,7 @@ interface CanvasSizeActionContextType {
 }
 
 const CanvasSizeContext = createContext<CanvasSizeContextType | undefined>(
-  undefined
+  undefined,
 );
 const CanvasSizeActionContext = createContext<
   CanvasSizeActionContextType | undefined
@@ -27,7 +27,7 @@ export function CanvasSizeProvider({ children }: PropsWithChildren) {
     CANVAS_SIZE_STORAGE_KEY,
     {
       defaultValue: "wide",
-    }
+    },
   );
 
   const value = {
@@ -60,7 +60,7 @@ export const useCanvasSizeAction = () => {
   const context = useContext(CanvasSizeActionContext);
   if (context === undefined) {
     throw new Error(
-      "useCanvasSizeAction must be used within a CanvasSizeProvider"
+      "useCanvasSizeAction must be used within a CanvasSizeProvider",
     );
   }
   return context;

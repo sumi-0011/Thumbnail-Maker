@@ -5,7 +5,9 @@
 *.cpuprofile
 *.local
 *.log
-/.vscode/
+/.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 /docs/.vitepress/cache
 /packages/vite/LICENSE
 dist

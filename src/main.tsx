@@ -5,5 +5,5 @@ import "./styles/globals.less";
 import "./i18n/config";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <App />
+  <App />,
 );

@@ -1,5 +1,3 @@
-import { AlertCircle } from "lucide-react";
-import { useImportTemplate } from "../hooks/useImportTemplate";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "src/components/ui/alert-dialog";
+import { useImportTemplate } from "../hooks/useImportTemplate";
 
 export function ImportTemplateConfirm({
   isOpen,
