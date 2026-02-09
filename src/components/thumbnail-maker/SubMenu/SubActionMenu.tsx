@@ -53,7 +53,7 @@ export function SubActionMenu({
   return (
     <div className="flex items-center gap-2">
       <Button onClick={onDownload}>
-        <ImageIcon size={20} className="mr-2" /> Download Image
+        <ImageIcon size={20} /> Download Image
       </Button>
     </div>
   );

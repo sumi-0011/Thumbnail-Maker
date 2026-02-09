@@ -1,3 +1,5 @@
+import { Plus, Settings2 } from "lucide-react";
+import { useState } from "react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import {
@@ -17,11 +19,9 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { Plus, Settings2 } from "lucide-react";
-import { useState } from "react";
+import { EmojiType } from "../3d-emoji-picker";
 import { Tag, TagShape, TagVariant } from "./assets/palette.types";
 import { EmojiPicker } from "./EmojiPicker";
-import { EmojiType } from "../3d-emoji-picker";
 
 type SeparatorMode = "single" | "comma" | "newline" | "space";
 
@@ -102,7 +102,7 @@ export function AddTagSection({ onAction, onBatchAction }: Props) {
   };
 
   const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     if (e.nativeEvent.isComposing || e.keyCode === 229) return;
 
@@ -207,7 +207,8 @@ export function AddTagSection({ onAction, onBatchAction }: Props) {
         </Select>
 
         <Button onClick={onActionClick}>
-          <Plus size={12} className="mr-3" /> Add
+          <Plus size={12} />
+          Add
         </Button>
         <EmojiPicker onAction={onEmojiClick} />
       </div>

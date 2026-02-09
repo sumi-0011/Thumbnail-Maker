@@ -79,7 +79,7 @@ function ThumbnailMaker() {
   return (
     <PaletteProvider>
       <CanvasSizeProvider>
-        <div className="mx-auto flex max-w-[768px] flex-col gap-4 py-8">
+        <div className="mx-auto flex w-full flex-col gap-4 py-8">
           <h1 className="mb-7 text-center text-[60px] text-[#C1CCFF]">
             Thumbnail Maker
           </h1>
@@ -122,23 +122,7 @@ function ThumbnailMaker() {
               downloadImage={downloadImage}
             />
           </div>
-          <Alert variant="outline" className="mt-8">
-            <InfoIcon className="mt-0 h-4 w-4" />
-            <div>
-              <AlertTitle>
-                Thank you everyone for using Thumbnail Maker 😄
-              </AlertTitle>
-              <AlertDescription>
-                - Please provide sources when using thumbnails on your blog
-                <br />- Your valuable input helps us create a better service for
-                everyone [
-                <a href="https://github.com/sumi-0011/Thumbnail-Maker/issues/new">
-                  feedback form
-                </a>
-                ]
-              </AlertDescription>
-            </div>
-          </Alert>
+       
         </div>
       </CanvasSizeProvider>
     </PaletteProvider>
