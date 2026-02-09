@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Loader2, Sparkles, Send } from "lucide-react";
+import { toast } from "sonner";
 import {
   Sheet,
   SheetContent,
@@ -12,7 +13,6 @@ import { Label } from "src/components/ui/label";
 import { Button } from "src/components/ui/button";
 import { fetchBlogMetadata } from "src/lib/fetchBlogMetadata";
 import { supabase } from "src/lib/supabaseClient";
-import { toast } from "sonner";
 
 interface AddBlogExampleSheetProps {
   open: boolean;
@@ -100,7 +100,7 @@ export function AddBlogExampleSheet({
       <SheetContent side="right" className="w-[400px] sm:max-w-[400px]">
         <SheetHeader className="mb-6">
           <SheetTitle className="flex items-center gap-2 text-white">
-            <Sparkles className="w-5 h-5 text-purple-400" />
+            <Sparkles className="h-5 w-5 text-purple-400" />
             사용 예시 추가
           </SheetTitle>
           <SheetDescription>
@@ -154,19 +154,19 @@ export function AddBlogExampleSheet({
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 처리 중...
               </>
             ) : (
               <>
-                <Send className="w-4 h-4 mr-2" />
+                <Send className="mr-2 h-4 w-4" />
                 추가하기
               </>
             )}
           </Button>
 
           {/* 안내 문구 */}
-          <p className="text-xs text-center text-muted-foreground">
+          <p className="text-center text-xs text-muted-foreground">
             URL을 입력하면 제목, 설명, 이미지를 자동으로 가져옵니다
           </p>
         </div>

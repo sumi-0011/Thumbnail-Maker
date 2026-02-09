@@ -20,8 +20,8 @@ export function BlogCard({ template }: BlogCardProps) {
 
   return (
     <motion.div
-      className="relative w-[280px] h-[160px] rounded-xl overflow-hidden shrink-0 border border-border/30 bg-card"
-      whileHover={{ scale: 1.03   }}
+      className="relative h-[160px] w-[280px] shrink-0 overflow-hidden rounded-xl border border-border/30 bg-card"
+      whileHover={{ scale: 1.03 }}
       transition={{ duration: 0.3 }}
     >
       {/* 이미지 */}
@@ -29,11 +29,11 @@ export function BlogCard({ template }: BlogCardProps) {
         <img
           src={displayImage}
           alt={displayTitle}
-          className="w-full h-full object-cover"
+          className="h-full w-full object-cover"
           draggable={false}
         />
       ) : (
-        <div className="w-full h-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-500/20 to-pink-500/20">
           <span className="text-4xl">📝</span>
         </div>
       )}
@@ -41,11 +41,11 @@ export function BlogCard({ template }: BlogCardProps) {
       {/* 블로그 버튼만 표시 */}
       <motion.button
         onClick={handleBlogClick}
-        className="absolute bottom-3 right-3 flex items-center gap-1.5 px-2.5 py-1.5 bg-purple-500/80 hover:bg-purple-500 backdrop-blur-sm rounded-full text-white text-xs font-medium transition-colors"
+        className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-purple-500/80 px-2.5 py-1.5 text-xs font-medium text-white backdrop-blur-sm transition-colors hover:bg-purple-500"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        <ExternalLink className="w-3 h-3" />
+        <ExternalLink className="h-3 w-3" />
         Blog
       </motion.button>
     </motion.div>
