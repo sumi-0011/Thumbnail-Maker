@@ -1,7 +1,7 @@
 import useStorageState from "use-storage-state";
+import { useRef } from "react";
 import { THUMBNAIL_MAKER_STORAGE_KEY } from "../assets/constants";
 import { Tag } from "../assets/palette.types";
-import { useRef } from "react";
 import { getRandomTagStyles } from "../assets/utils";
 
 export function useThumbnailTagList() {
@@ -39,7 +39,7 @@ export function useThumbnailTagList() {
     prevTags.current = tags;
 
     const newTags = tags.map((tag) =>
-      tag.id === tagId ? { ...tag, ...newTag } : tag
+      tag.id === tagId ? { ...tag, ...newTag } : tag,
     );
 
     setTags(newTags);

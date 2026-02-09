@@ -1,10 +1,10 @@
 import { useMemo } from "react";
+import Fuse from "fuse.js";
 import {
   THREE_D_EMOJI_CATEGORIES,
   THREE_D_EMOJI_MAP,
   ThreeDEmojiCategory,
 } from "./index.constants";
-import Fuse from "fuse.js";
 import { EmojiType } from "./index.types";
 
 interface UseEmojiProps {
@@ -35,7 +35,7 @@ export function useEmoji({
 
   const fuse = useMemo(
     () => new Fuse(emojis, fuseOptions),
-    [emojis, fuseOptions]
+    [emojis, fuseOptions],
   );
 
   const searchResults: EmojiType[] = useMemo(() => {

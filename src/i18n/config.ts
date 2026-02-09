@@ -13,7 +13,7 @@ i18next
       // no reason there is a language called 'dev', just passed it away
       if (language === "dev") return;
       return import(`./locales/${language}/${namespace}.json`);
-    })
+    }),
   )
   .init({
     debug: true,

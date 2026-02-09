@@ -1,10 +1,10 @@
 import { useCallback } from "react";
 import { motion } from "framer-motion";
 import { ChevronUp } from "lucide-react";
-import { useScrollToSection } from "../landing/FullPageScroller";
-import { useSupabaseTemplates } from "./useSupabaseTemplates";
 import { Skeleton } from "src/components/ui/skeleton";
 import { Template } from "src/components/gallery/GalleryItem";
+import { useScrollToSection } from "../landing/FullPageScroller";
+import { useSupabaseTemplates } from "./useSupabaseTemplates";
 import { Marquee, ParticleBackground } from "./animations";
 
 interface TemplateGalleryProps {
@@ -23,25 +23,25 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
     (template: Template) => {
       onApply(template);
     },
-    [onApply]
+    [onApply],
   );
 
   return (
-    <div className="relative h-full flex flex-col overflow-hidden">
+    <div className="relative flex h-full flex-col overflow-hidden">
       {/* Particle Background */}
       <ParticleBackground particleCount={60} />
 
       {/* Content */}
-      <div className="relative z-10 h-full flex flex-col px-6 py-8 max-w-[1200px] mx-auto w-full">
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-[1200px] flex-col px-6 py-8">
         {/* Header */}
         <motion.div
-          className="text-center mb-6"
+          className="mb-6 text-center"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           <motion.p
-            className="text-sm text-muted-foreground mb-2"
+            className="mb-2 text-sm text-muted-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -49,7 +49,7 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
             Pick a style, make it yours
           </motion.p>
           <motion.h2
-            className="text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent"
+            className="bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-4xl font-bold text-transparent"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -61,33 +61,30 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
         {/* Back Button - Floating */}
         <motion.button
           onClick={handleScrollToEditor}
-          className="absolute top-6 right-6 z-20 flex items-center gap-1.5 px-3 py-2 text-sm text-muted-foreground hover:text-foreground bg-background/50 backdrop-blur-sm rounded-full border border-border/30 transition-colors"
+          className="absolute right-6 top-6 z-20 flex items-center gap-1.5 rounded-full border border-border/30 bg-background/50 px-3 py-2 text-sm text-muted-foreground backdrop-blur-sm transition-colors hover:text-foreground"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
         >
-          <ChevronUp className="w-4 h-4" />
+          <ChevronUp className="h-4 w-4" />
           Editor
         </motion.button>
 
         {/* Error State */}
         {error && (
-          <div className="flex items-center justify-center h-40 text-red-400">
+          <div className="flex h-40 items-center justify-center text-red-400">
             Failed to load templates. Please try again later.
           </div>
         )}
 
         {/* Loading State */}
         {isLoading && (
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex flex-1 items-center justify-center">
             <div className="flex gap-4">
               {[...Array(3)].map((_, i) => (
-                <Skeleton
-                  key={i}
-                  className="w-[280px] h-[160px] rounded-xl"
-                />
+                <Skeleton key={i} className="h-[160px] w-[280px] rounded-xl" />
               ))}
             </div>
           </div>
@@ -96,7 +93,7 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
         {/* Marquee View */}
         {!isLoading && !error && templates.length > 0 && (
           <motion.div
-            className="flex-1 flex flex-col justify-center gap-4"
+            className="flex flex-1 flex-col justify-center gap-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -149,7 +146,7 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
 
         {/* Empty State */}
         {!isLoading && !error && templates.length === 0 && (
-          <div className="flex-1 flex items-center justify-center text-muted-foreground">
+          <div className="flex flex-1 items-center justify-center text-muted-foreground">
             No templates available
           </div>
         )}
@@ -167,7 +164,7 @@ interface MarqueeCardProps {
 function MarqueeCard({ template, onClick }: MarqueeCardProps) {
   return (
     <motion.div
-      className="relative w-[280px] h-[160px] rounded-xl overflow-hidden cursor-pointer shrink-0 border border-border/30"
+      className="relative h-[160px] w-[280px] shrink-0 cursor-pointer overflow-hidden rounded-xl border border-border/30"
       onClick={onClick}
       whileHover={{ scale: 1.05, y: -5 }}
       transition={{ duration: 0.3 }}
@@ -175,17 +172,17 @@ function MarqueeCard({ template, onClick }: MarqueeCardProps) {
       <img
         src={template.thumbnail}
         alt={template.title}
-        className="w-full h-full object-cover"
+        className="h-full w-full object-cover"
         draggable={false}
       />
       <motion.div
-        className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end p-4"
+        className="absolute inset-0 flex items-end bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 opacity-0 transition-opacity hover:opacity-100"
         initial={{ opacity: 0 }}
         whileHover={{ opacity: 1 }}
       >
         <div>
-          <h3 className="text-white font-medium text-sm">{template.title}</h3>
-          <p className="text-gray-300 text-xs mt-1 line-clamp-1">
+          <h3 className="text-sm font-medium text-white">{template.title}</h3>
+          <p className="mt-1 line-clamp-1 text-xs text-gray-300">
             {template.description}
           </p>
         </div>

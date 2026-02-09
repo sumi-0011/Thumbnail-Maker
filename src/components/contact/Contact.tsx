@@ -1,6 +1,5 @@
 import React from "react";
-import { Toggle } from "../ui/toggle";
-import { ContactIcon, Github, Info } from "lucide-react";
+import { Github, Info } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 function Contact() {

@@ -1,9 +1,5 @@
 import React from "react";
-import { Header } from "../header";
-import Contact from "../contact/Contact";
 import { Separator } from "@radix-ui/react-select";
-import { AppSidebar } from "../SideBar/Sidebar";
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "../ui/sidebar";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -12,6 +8,8 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from "src/components/ui/breadcrumb";
+import { AppSidebar } from "../SideBar/Sidebar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "../ui/sidebar";
 
 export const getNoneLayout = (page: React.ReactElement) => page;
 
@@ -50,9 +48,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <SidebarProvider defaultOpen={false}>
       <AppSidebar />
       <SidebarInset>
-        <div className="h-screen overflow-hidden bg-[#1D2027]">
-          {children}
-        </div>
+        <div className="h-screen overflow-hidden bg-[#1D2027]">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

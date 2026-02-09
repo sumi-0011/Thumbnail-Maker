@@ -1,4 +1,10 @@
-import { ArrowRightIcon, ExternalLink, User, Sparkles, LucideIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  ExternalLink,
+  User,
+  Sparkles,
+  LucideIcon,
+} from "lucide-react";
 import { PaletteVariant } from "../thumbnail-maker/assets/palette.types";
 
 export type TemplateType = "blog_only" | "full_with_blog" | "template_only";
@@ -92,12 +98,12 @@ function ImageSection({ image, alt, variant }: ImageSectionProps) {
         <img
           src={image}
           alt={alt}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           draggable={false}
         />
       ) : (
         <div
-          className={`w-full h-full bg-gradient-to-br ${styles.fallbackGradient} flex items-center justify-center`}
+          className={`h-full w-full bg-gradient-to-br ${styles.fallbackGradient} flex items-center justify-center`}
         >
           <span className="text-4xl">{styles.fallbackEmoji}</span>
         </div>
@@ -117,9 +123,9 @@ function Badge({ variant }: BadgeProps) {
 
   return (
     <p
-      className={`shrink-0 inline-flex items-center gap-1 px-2 py-0.5 ${styles.badge} rounded-full text-[10px] font-medium`}
+      className={`inline-flex shrink-0 items-center gap-1 px-2 py-0.5 ${styles.badge} rounded-full text-[10px] font-medium`}
     >
-      <Icon className="w-2.5 h-2.5" />
+      <Icon className="h-2.5 w-2.5" />
       {config.badgeText}
     </p>
   );
@@ -138,11 +144,11 @@ function ContentSection({ title, description, variant }: ContentSectionProps) {
     <>
       <Badge variant={variant} />
       <div className="flex items-start gap-2">
-        <h3 className="text-sm font-semibold text-white line-clamp-1 flex-1">
+        <h3 className="line-clamp-1 flex-1 text-sm font-semibold text-white">
           {title}
         </h3>
       </div>
-      <p className="text-xs text-gray-400 line-clamp-2 min-h-[32px]">
+      <p className="line-clamp-2 min-h-[32px] text-xs text-gray-400">
         {description || config.defaultDescription}
       </p>
     </>
@@ -160,10 +166,10 @@ function FooterSection({ template, variant }: FooterSectionProps) {
     variant === "template" && template.template_type === "full_with_blog";
 
   return (
-    <div className="flex items-center justify-between pt-2 border-t border-white/10">
+    <div className="flex items-center justify-between border-t border-white/10 pt-2">
       {template.author_name ? (
         <div className="flex items-center gap-1.5 text-gray-400">
-          <User className="w-3 h-3" />
+          <User className="h-3 w-3" />
           <span className="text-xs">{template.author_name}</span>
         </div>
       ) : (
@@ -175,7 +181,7 @@ function FooterSection({ template, variant }: FooterSectionProps) {
           className={`flex items-center gap-1 ${styles.action} text-xs transition-colors`}
         >
           <span>View Blog</span>
-          <ExternalLink className="w-3 h-3" />
+          <ExternalLink className="h-3 w-3" />
         </div>
       ) : (
         <div className="flex items-center gap-2">
@@ -185,10 +191,10 @@ function FooterSection({ template, variant }: FooterSectionProps) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1 text-xs text-purple-400 hover:text-purple-300 transition-colors"
+              className="flex items-center gap-1 text-xs text-purple-400 transition-colors hover:text-purple-300"
             >
               Blog
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="h-3 w-3" />
             </a>
           )}
           <div
@@ -230,12 +236,12 @@ function GalleryCard({ template, variant, onClick }: GalleryCardProps) {
 
   return (
     <div
-      className={`group cursor-pointer rounded-xl overflow-hidden border ${styles.border} bg-gradient-to-b ${styles.bg} to-background ${styles.hoverBorder} transition-all duration-300 hover:shadow-lg ${styles.shadow}`}
+      className={`group cursor-pointer overflow-hidden rounded-xl border ${styles.border} bg-gradient-to-b ${styles.bg} to-background ${styles.hoverBorder} transition-all duration-300 hover:shadow-lg ${styles.shadow}`}
       onClick={() => onClick(template)}
     >
       <ImageSection image={displayImage} alt={displayTitle} variant={variant} />
 
-      <div className="p-4 space-y-2">
+      <div className="space-y-2 p-4">
         <ContentSection
           title={displayTitle}
           description={displayDescription}

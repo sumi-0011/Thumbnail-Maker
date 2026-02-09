@@ -18,7 +18,7 @@ export function useSetTemplate() {
   });
 
   const [, setPalette] = useStorageState<PaletteVariant>(
-    THUMBNAIL_MAKERS_PALETTE_STORAGE_KEY
+    THUMBNAIL_MAKERS_PALETTE_STORAGE_KEY,
   );
 
   const onUseTemplate = (template: TemplateDataType) => {

@@ -8,11 +8,11 @@ import {
   SheetFooter,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
+import { EmojiType, ThreeDEmojiPicker } from "../3d-emoji-picker";
 import { TagItemView } from "./TagItem";
 import { getTagStyleKey } from "./assets/utils";
 import { useCurrentPaletteStyle } from "./Palette.context";
-import { Tag, TagShape, TagVariant } from "./assets/palette.types";
-import { EmojiType, ThreeDEmojiPicker } from "../3d-emoji-picker";
+import { Tag } from "./assets/palette.types";
 import { useSelectedTag, useSelectedTagAction } from "./Tag.context";
 import { EMPTY_TAG } from "./assets/constants";
 

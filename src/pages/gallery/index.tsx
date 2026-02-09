@@ -1,10 +1,12 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { Helmet } from "react-helmet";
 import { Plus } from "lucide-react";
+import useStorageState from "use-storage-state";
+import { useNavigate } from "react-router-dom";
+// import { AddBlogExampleSheet } from "src/components/template-gallery/AddBlogExampleSheet";
+import { ScrollArea } from "src/components/ui/scroll-area";
 import GalleryItem, { Template } from "src/components/gallery/GalleryItem";
 import { Tabs, TabsList, TabsTrigger } from "src/components/ui/tabs";
-
-import useStorageState from "use-storage-state";
 import {
   THUMBNAIL_MAKER_STORAGE_KEY,
   THUMBNAIL_MAKERS_PALETTE_STORAGE_KEY,
@@ -14,12 +16,9 @@ import {
   Tag,
 } from "src/components/thumbnail-maker/assets/palette.types";
 import { supabase } from "src/lib/supabaseClient";
-import { useNavigate } from "react-router-dom";
 import { Skeleton } from "src/components/ui/skeleton";
 import { useSetTemplate } from "src/components/thumbnail-maker/hooks/useSetTemplate";
-import { AddBlogExampleSheet } from "src/components/template-gallery/AddBlogExampleSheet";
 import { Button } from "src/components/ui/button";
-import { ScrollArea } from "src/components/ui/scroll-area";
 
 type FilterType = "all" | "template" | "blog";
 
@@ -49,7 +48,9 @@ export default function GalleryPage() {
       return;
     }
 
-    onUseTemplate(template.data);
+    if (template.data) {
+      onUseTemplate(template.data);
+    }
     navigate(`/?templateId=${template.id}`);
   };
 
@@ -62,7 +63,7 @@ export default function GalleryPage() {
       <Helmet>
         <title>Thumbnail Maker</title>
       </Helmet>
-      <div className="mx-auto h-screen w-full max-w-[1024px] px-6 py-[10vh] overflow-hidden flex flex-col">
+      <div className="mx-auto flex h-screen w-full max-w-[1024px] flex-col overflow-hidden px-6 py-[10vh]">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">Gallery</h1>
@@ -75,7 +76,7 @@ export default function GalleryPage() {
             variant="outline"
             className="flex items-center gap-2"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="h-4 w-4" />
             사용 예시 추가
           </Button>
         </div>
@@ -93,7 +94,7 @@ export default function GalleryPage() {
           </TabsList>
         </Tabs>
 
-        <ScrollArea className="flex-1 min-h-0">
+        <ScrollArea className="min-h-0 flex-1">
           <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
             {isLoading && (
               <>
@@ -117,11 +118,11 @@ export default function GalleryPage() {
       </div>
 
       {/* Add Blog Example Sheet */}
-      <AddBlogExampleSheet
+      {/* <AddBlogExampleSheet
         open={isAddSheetOpen}
         onOpenChange={setIsAddSheetOpen}
         onSuccess={handleAddSuccess}
-      />
+      /> */}
     </>
   );
 }
@@ -132,7 +133,7 @@ const useUseTemplate = () => {
   });
 
   const [, setPalette] = useStorageState<PaletteVariant>(
-    THUMBNAIL_MAKERS_PALETTE_STORAGE_KEY
+    THUMBNAIL_MAKERS_PALETTE_STORAGE_KEY,
   );
 
   const onUseTemplate = (template: Template) => {

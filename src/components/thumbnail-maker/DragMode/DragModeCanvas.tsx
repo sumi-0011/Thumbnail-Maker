@@ -15,7 +15,6 @@ import {
 } from "@dnd-kit/sortable";
 import { cn } from "src/lib/utils";
 import { useCurrentPaletteStyle } from "../Palette.context";
-import { SortableTagItem } from "./SortableTagItem";
 import {
   TAG_ALIGNMENT_VALUES,
   useTagAction,
@@ -24,6 +23,7 @@ import {
 } from "../Tag.context";
 import { TagItem } from "../TagItem";
 import { useCanvasSize } from "../CanvasSize.context";
+import { SortableTagItem } from "./SortableTagItem";
 
 interface Props {
   previewRef: React.RefObject<HTMLDivElement>;
@@ -42,7 +42,7 @@ export function DragModeCanvas({ previewRef, tagsContainerRef }: Props) {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragEnd = (event: DragEndEvent) => {

@@ -37,23 +37,17 @@ export function FullPageProvider({ children }: PropsWithChildren) {
     }
   }, []);
 
-  const setScrollHandler = useCallback(
-    (handler: (index: number) => void) => {
-      scrollHandlerRef.current = handler;
-      globalScrollHandler = handler;
-    },
-    []
-  );
+  const setScrollHandler = useCallback((handler: (index: number) => void) => {
+    scrollHandlerRef.current = handler;
+    globalScrollHandler = handler;
+  }, []);
 
-  const scrollToSection = useCallback(
-    (id: string) => {
-      const index = sectionMappingRef.current[id];
-      if (index !== undefined && scrollHandlerRef.current) {
-        scrollHandlerRef.current(index);
-      }
-    },
-    []
-  );
+  const scrollToSection = useCallback((id: string) => {
+    const index = sectionMappingRef.current[id];
+    if (index !== undefined && scrollHandlerRef.current) {
+      scrollHandlerRef.current(index);
+    }
+  }, []);
 
   return (
     <FullPageContext.Provider
@@ -94,7 +88,7 @@ export function useScrollToSectionStandalone() {
         globalScrollHandler(index);
       }
     },
-    [context]
+    [context],
   );
 
   return { scrollToSection };

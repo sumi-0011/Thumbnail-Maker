@@ -1,11 +1,11 @@
 import { X } from "lucide-react";
-import { cn } from "src/lib/utils";
 import { CSSProperties } from "react";
+import { cva } from "class-variance-authority";
+import { cn } from "src/lib/utils";
+import { get3DEmojiImage } from "../3d-emoji-picker";
 import { getTagStyleKey } from "./assets/utils";
 import { useCurrentPaletteStyle } from "./Palette.context";
 import { Tag } from "./assets/palette.types";
-import { cva } from "class-variance-authority";
-import { get3DEmojiImage } from "../3d-emoji-picker";
 
 interface Props {
   tag: Tag;
@@ -51,7 +51,7 @@ export function TagItemView({
   return (
     <div
       className={cn(
-        tagVariants({ variant: tag.tagVariant, shape: tag.tagShape, size })
+        tagVariants({ variant: tag.tagVariant, shape: tag.tagShape, size }),
       )}
       style={tagStyle}
     >
@@ -121,5 +121,5 @@ const tagVariants = cva(
       variant: "filled",
       size: "base",
     },
-  }
+  },
 );

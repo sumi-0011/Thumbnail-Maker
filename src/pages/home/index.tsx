@@ -5,8 +5,10 @@ import { toast } from "sonner";
 import ThumbnailMaker from "src/components/thumbnail-maker";
 import { PaletteProvider } from "src/components/thumbnail-maker/Palette.context";
 import { TagProvider } from "src/components/thumbnail-maker/Tag.context";
-import { Button } from "src/components/ui/button";
-import { FullPageScroller, useScrollToSection } from "src/components/landing/FullPageScroller";
+import {
+  FullPageScroller,
+  useScrollToSection,
+} from "src/components/landing/FullPageScroller";
 import { Section } from "src/components/landing/Section";
 import { ScrollHint } from "src/components/landing/ScrollHint";
 import { TemplateGallery } from "src/components/template-gallery/TemplateGallery";
@@ -25,23 +27,27 @@ export default function Home() {
     incrementVisit();
   }, []);
 
- 
   const handleScrollToTemplates = useCallback(() => {
     scrollToSection("templates");
   }, [scrollToSection]);
 
-  const handleApplyTemplate = useCallback((template: Template) => {
-    // Supabase Template 데이터를 useSetTemplate 형식으로 전달
-    onUseTemplate(template.data);
+  const handleApplyTemplate = useCallback(
+    (template: Template) => {
+      // Supabase Template 데이터를 useSetTemplate 형식으로 전달
+      if (template.data) {
+        onUseTemplate(template.data);
+      }
 
-    // Provider를 리마운트하여 새로운 상태 반영
-    setTemplateKey((prev) => prev + 1);
+      // Provider를 리마운트하여 새로운 상태 반영
+      setTemplateKey((prev) => prev + 1);
 
-    // 에디터 섹션으로 스크롤
-    scrollToSection("editor");
+      // 에디터 섹션으로 스크롤
+      scrollToSection("editor");
 
-    toast.success("Template applied successfully!");
-  }, [scrollToSection, onUseTemplate]);
+      toast.success("Template applied successfully!");
+    },
+    [scrollToSection, onUseTemplate],
+  );
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { InfoIcon } from "lucide-react";
+import { useState } from "react";
 import { AddTagSection } from "./AddTagSection";
 import { CanvasContainer } from "./CanvasContainer";
 import { useCheckTagOverflow } from "./hooks/useCheckTagOverflow";
@@ -10,8 +10,6 @@ import { TagEmojiSheet } from "./TagEmojiSheet";
 import { SubActionMenu } from "./SubMenu/SubActionMenu";
 import { TagList } from "./TagList";
 import { useSelectedTagAction, useTagAction } from "./Tag.context";
-import { useState } from "react";
-import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
 import { DragModeCanvas } from "./DragMode/DragModeCanvas";
 import { MenuBar, Toolbar } from "./MenuBar";
 import { CanvasSizeProvider } from "./CanvasSize.context";
@@ -23,13 +21,8 @@ function ThumbnailMaker() {
   const { tagsContainerRef, checkOverflow, showOverflowToast } =
     useCheckTagOverflow();
 
-  const {
-    onAddTag,
-    onAddTags,
-    onRemoveTag,
-    onRollbackTags,
-    onUpdateTag,
-  } = useTagAction();
+  const { onAddTag, onAddTags, onRemoveTag, onRollbackTags, onUpdateTag } =
+    useTagAction();
 
   const { onSelectTag, clearSelectedTag } = useSelectedTagAction();
 
@@ -83,16 +76,14 @@ function ThumbnailMaker() {
           <h1 className="mb-7 text-center text-[60px] text-[#C1CCFF]">
             Thumbnail Maker
           </h1>
-         <div className="flex bg-[#1D2027] flex-col gap-1 rounded-md border border-[#31353F] p-1">
-          <MenuBar getImageFile={getImageFile} />
-            <Toolbar
-              isDragMode={isDragMode}
-              setIsDragMode={setIsDragMode}
-            />
-
-
-         </div>
-            <AddTagSection onAction={handleAddTag} onBatchAction={handleAddTags} />
+          <div className="flex flex-col gap-1 rounded-md border border-[#31353F] bg-[#1D2027] p-1">
+            <MenuBar getImageFile={getImageFile} />
+            <Toolbar isDragMode={isDragMode} setIsDragMode={setIsDragMode} />
+          </div>
+          <AddTagSection
+            onAction={handleAddTag}
+            onBatchAction={handleAddTags}
+          />
 
           {isDragMode ? (
             <DragModeCanvas
@@ -122,7 +113,6 @@ function ThumbnailMaker() {
               downloadImage={downloadImage}
             />
           </div>
-       
         </div>
       </CanvasSizeProvider>
     </PaletteProvider>
