@@ -1,7 +1,7 @@
-import { createContext, PropsWithChildren, useContext, useState } from "react";
+import { createContext, PropsWithChildren, useContext } from "react";
+import useStorageState from "use-storage-state";
 import { PALETTE } from "./assets/palette.constants";
 import { PaletteVariant } from "./assets/palette.types";
-import useStorageState from "use-storage-state";
 import { THUMBNAIL_MAKERS_PALETTE_STORAGE_KEY } from "./assets/constants";
 
 interface PaletteContextType {
@@ -23,7 +23,7 @@ export const PaletteProvider = ({ children }: PropsWithChildren) => {
     THUMBNAIL_MAKERS_PALETTE_STORAGE_KEY,
     {
       defaultValue: "blue_gradient",
-    }
+    },
   );
 
   const setPalette = (palette: PaletteVariant) => {

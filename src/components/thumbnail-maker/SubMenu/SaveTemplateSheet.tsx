@@ -45,7 +45,7 @@ export function SaveTemplateSheet({
 
   const uploadThumbnail = async (
     thumbnail: Blob,
-    id: string
+    id: string,
   ): Promise<string | null> => {
     try {
       // 임시 이미지 객체

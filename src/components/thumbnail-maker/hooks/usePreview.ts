@@ -1,6 +1,6 @@
 import saveAs from "file-saver";
 import html2canvas from "html2canvas";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 export const usePreview = () => {
   const previewRef = useRef<HTMLDivElement>(null);

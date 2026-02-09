@@ -12,7 +12,11 @@ import {
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Mousewheel, Keyboard } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
-import { FullPageProvider, useFullPageContext, useScrollToSectionStandalone } from "./FullPageContext";
+import {
+  FullPageProvider,
+  useFullPageContext,
+  useScrollToSectionStandalone,
+} from "./FullPageContext";
 
 import "swiper/css";
 
@@ -25,7 +29,8 @@ interface FullPageContentProps extends PropsWithChildren {
 }
 
 function FullPageContent({ children, className = "" }: FullPageContentProps) {
-  const { registerSection, setScrollHandler, setCurrentIndex } = useFullPageContext();
+  const { registerSection, setScrollHandler, setCurrentIndex } =
+    useFullPageContext();
   const swiperRef = useRef<SwiperType | null>(null);
 
   const childArray = Children.toArray(children);
@@ -48,16 +53,22 @@ function FullPageContent({ children, className = "" }: FullPageContentProps) {
     });
   }, [sectionIds, registerSection]);
 
-  const handleSwiperInit = useCallback((swiper: SwiperType) => {
-    swiperRef.current = swiper;
-    setScrollHandler((index: number) => {
-      swiper.slideTo(index);
-    });
-  }, [setScrollHandler]);
+  const handleSwiperInit = useCallback(
+    (swiper: SwiperType) => {
+      swiperRef.current = swiper;
+      setScrollHandler((index: number) => {
+        swiper.slideTo(index);
+      });
+    },
+    [setScrollHandler],
+  );
 
-  const handleSlideChange = useCallback((swiper: SwiperType) => {
-    setCurrentIndex(swiper.activeIndex);
-  }, [setCurrentIndex]);
+  const handleSlideChange = useCallback(
+    (swiper: SwiperType) => {
+      setCurrentIndex(swiper.activeIndex);
+    },
+    [setCurrentIndex],
+  );
 
   return (
     <div className={`full-page-wrapper ${className}`}>
@@ -83,7 +94,9 @@ function FullPageContent({ children, className = "" }: FullPageContentProps) {
             return (
               <SwiperSlide key={child.props?.id || index}>
                 {cloneElement(child as ReactElement<{ className?: string }>, {
-                  className: `${child.props?.className || ""} slide-content`.trim(),
+                  className: `${
+                    child.props?.className || ""
+                  } slide-content`.trim(),
                 })}
               </SwiperSlide>
             );
@@ -95,7 +108,10 @@ function FullPageContent({ children, className = "" }: FullPageContentProps) {
   );
 }
 
-export function FullPageScroller({ children, className = "" }: FullPageScrollerProps) {
+export function FullPageScroller({
+  children,
+  className = "",
+}: FullPageScrollerProps) {
   return (
     <FullPageProvider>
       <FullPageContent className={className}>{children}</FullPageContent>

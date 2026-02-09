@@ -15,7 +15,7 @@ export function PalettePicker() {
           className={cn(
             "h-8 w-8 rounded-[4px]",
             "bg-cover",
-            currentPalette === variant ? "border-[1px] border-white" : ""
+            currentPalette === variant ? "border-[1px] border-white" : "",
           )}
           style={{ background: palette.paletteBackground }}
           onClick={() => onPaletteChange(variant as PaletteVariant)}

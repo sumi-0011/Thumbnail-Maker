@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import ThreeDEmojiMap from "src/assets/emojis/3d-emoji-map.json";
 import { cn } from "src/lib/utils";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
+import { Input } from "../ui/input";
 import { EmojiType } from "./index.types";
 import {
   THREE_D_EMOJI_CATEGORY_EMOJI_MAP,
   ThreeDEmojiCategory,
 } from "./index.constants";
-import { Input } from "../ui/input";
 import { useEmoji } from "./useEmoji";
 
 interface Props {
@@ -58,7 +57,7 @@ export const ThreeDEmojiPicker = ({ onEmojiSelect }: Props) => {
             </TabsTrigger>
           ))}
         </TabsList>
-        <div className="flex max-h-[300px] flex-wrap gap-1 overflow-y-auto p-1 scrollbar">
+        <div className="scrollbar flex max-h-[300px] flex-wrap gap-1 overflow-y-auto p-1">
           {searchResults.map((emoji) => (
             <div
               key={emoji.cldr}
@@ -106,7 +105,7 @@ function EmojiItem({ emoji }: { emoji: EmojiType }) {
     <div
       className={cn(
         emoji.cldr,
-        "flex-0 flex h-[38px] w-[38px] items-center justify-center"
+        "flex-0 flex h-[38px] w-[38px] items-center justify-center",
       )}
     >
       <img

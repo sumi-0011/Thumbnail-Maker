@@ -57,9 +57,9 @@ export function Marquee({
         }}
       >
         {/* Original content */}
-        <div className="flex gap-6 shrink-0">{children}</div>
+        <div className="flex shrink-0 gap-6">{children}</div>
         {/* Duplicate for seamless loop */}
-        <div className="flex gap-6 shrink-0">{children}</div>
+        <div className="flex shrink-0 gap-6">{children}</div>
       </motion.div>
     </div>
   );

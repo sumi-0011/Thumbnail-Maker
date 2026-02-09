@@ -5,18 +5,21 @@ interface ScrollHintProps {
   text?: string;
 }
 
-export function ScrollHint({ onClick, text = "Explore Templates" }: ScrollHintProps) {
+export function ScrollHint({
+  onClick,
+  text = "Explore Templates",
+}: ScrollHintProps) {
   return (
     <button
       onClick={onClick}
-      className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer group"
+      className="group absolute bottom-8 left-1/2 flex -translate-x-1/2 cursor-pointer flex-col items-center gap-2 text-muted-foreground transition-colors hover:text-foreground"
       aria-label="Scroll to templates"
     >
-      <span className="text-sm font-medium opacity-70 group-hover:opacity-100 transition-opacity">
+      <span className="text-sm font-medium opacity-70 transition-opacity group-hover:opacity-100">
         {text}
       </span>
       <div className="animate-bounce">
-        <ChevronDown className="w-6 h-6" />
+        <ChevronDown className="h-6 w-6" />
       </div>
     </button>
   );
