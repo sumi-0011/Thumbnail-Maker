@@ -21,6 +21,7 @@ export function ThankYouAlert() {
                   className="underline"
                 />
               ),
+              br: <br />,
             }}
           />
         </AlertDescription>

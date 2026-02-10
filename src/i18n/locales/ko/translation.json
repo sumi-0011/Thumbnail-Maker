@@ -16,7 +16,7 @@
     "urlPlaceholder": "https://...",
     "authorLabel": "저자명 (선택)",
     "authorPlaceholder": "작성자 이름 (비워두면 자동 추출)",
-    "authorHint": "비워두면 블로그에서 자동으로 추출합니다",
+    "authorHint": "비워두면 블로그에서 자동으로 추출됩니다",
     "button": {
       "submit": "추가하기",
       "submitting": "처리 중..."
@@ -26,20 +26,78 @@
       "invalidUrl": "유효한 URL을 입력해주세요",
       "fetchingMetadata": "메타데이터를 가져오는 중...",
       "saving": "저장 중...",
-      "success": "사용 예시가 추가되었습니다!",
+      "success": "사용 예시가 성공적으로 추가되었습니다!",
       "error": "추가에 실패했습니다. URL을 확인해주세요."
     }
   },
   "gallery": {
     "addExample": "사용 예시 추가",
-    "editor": "Editor",
-    "failedLoadTemplates": "템플릿을 불러오는데 실패했습니다. 나중에 다시 시도해주세요.",
+    "editor": "에디터",
+    "failedLoadTemplates": "템플릿을 불러오는 데 실패했습니다. 잠시 후 다시 시도해주세요.",
     "noTemplates": "사용 가능한 템플릿이 없습니다",
-    "by": "by",
-    "blog": "Blog"
+    "by": "작성자",
+    "blog": "블로그"
   },
   "thankYou": {
-    "title": "Thumbnail Maker를 사용해주셔서 감사합니다 😄",
-    "description": "- 블로그에서 썸네일을 사용할 때 출처를 명시해주세요\n- 귀하의 소중한 의견은 더 나은 서비스를 만드는 데 도움이 됩니다 [<a>피드백 양식</a>]"
+    "title": "Thumbnail Maker를 이용해주셔서 감사합니다 😄",
+    "description": "- 블로그에서 썸네일을 사용하실 때는 출처를 표기해주세요<br/>- 여러분의 소중한 의견이 더 나은 서비스를 만드는 데 큰 도움이 됩니다. <br/>[<a>피드백 남기기</a>]"
+  },
+  "menuBar": {
+    "template": "템플릿",
+    "goToManyTemplates": "다양한 템플릿 보기",
+    "saveTemplate": "템플릿 저장",
+    "downloadTemplateToLocal": "템플릿을 로컬에 다운로드",
+    "importTemplate": "템플릿 가져오기"
+  },
+  "toolbar": {
+    "resetCanvas": "캔버스 초기화",
+    "randomShuffle": "랜덤 셔플 (Ctrl+R)",
+    "dragMode": "드래그 모드",
+    "selectMode": "선택 모드 (Ctrl+D)",
+    "wide": "Wide",
+    "square": "Square",
+    "alignLeft": "왼쪽 정렬",
+    "alignCenter": "가운데 정렬",
+    "alignRight": "오른쪽 정렬"
+  },
+  "saveTemplate": {
+    "title": "템플릿 저장",
+    "description": "만든 썸네일을 템플릿으로 저장해 다른 사람들과 공유해보세요! 🚀",
+    "titleLabel": "제목 *",
+    "titlePlaceholder": "제목을 입력해주세요",
+    "descriptionLabel": "설명",
+    "descriptionPlaceholder": "설명을 입력해주세요",
+    "blogUrlLabel": "블로그 URL",
+    "blogUrlPlaceholder": "https://",
+    "usernameLabel": "사용자명",
+    "usernamePlaceholder": "@",
+    "button": "템플릿 저장",
+    "alertTitle": "저장된 템플릿은 갤러리에서 확인할 수 있습니다.",
+    "alertDescription": "현재는 익명으로 추가됩니다.",
+    "toast": {
+      "success": "템플릿이 성공적으로 저장되었습니다",
+      "error": "썸네일 업로드 중 오류가 발생했습니다"
+    }
+  },
+  "downloadTemplate": {
+    "title": "템플릿 다운로드",
+    "description": "만든 템플릿을 로컬 장치에 다운로드합니다.",
+    "cancel": "취소",
+    "download": "다운로드"
+  },
+  "importTemplate": {
+    "title": "템플릿 가져오기",
+    "warning": "경고!",
+    "description": "캔버스의 현재 내용이 모두 삭제됩니다. 정말로 가져오시겠습니까?",
+    "cancel": "취소",
+    "import": "가져오기"
+  },
+  "subActionMenu": {
+    "downloadImage": "이미지 다운로드",
+    "toast": {
+      "title": "다운로드 완료",
+      "description": "갤러리를 통해 정성스럽게 만든 이미지를 다른 사람들과 공유해보세요! 🎨",
+      "upload": "업로드"
+    }
   }
 }

@@ -41,5 +41,63 @@
   "thankYou": {
     "title": "Thank you everyone for using Thumbnail Maker 😄",
     "description": "- Please provide sources when using thumbnails on your blog\n- Your valuable input helps us create a better service for everyone [<a>feedback form</a>]"
+  },
+  "menuBar": {
+    "template": "Template",
+    "goToManyTemplates": "Go to Many Templates",
+    "saveTemplate": "Save Template",
+    "downloadTemplateToLocal": "Download Template to Local",
+    "importTemplate": "Import Template"
+  },
+  "toolbar": {
+    "resetCanvas": "Reset Canvas",
+    "randomShuffle": "Random Shuffle (Ctrl+R)",
+    "dragMode": "Drag Mode",
+    "selectMode": "Select Mode (Ctrl+D)",
+    "wide": "Wide",
+    "square": "Square",
+    "alignLeft": "Align Left",
+    "alignCenter": "Align Center",
+    "alignRight": "Align Right"
+  },
+  "saveTemplate": {
+    "title": "Save Template",
+    "description": "Make the thumbnail you made into a template and share it with others! 🚀",
+    "titleLabel": "Title *",
+    "titlePlaceholder": "Please enter a title",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Please enter a description",
+    "blogUrlLabel": "Blog URL",
+    "blogUrlPlaceholder": "https://",
+    "usernameLabel": "Username",
+    "usernamePlaceholder": "@",
+    "button": "Save Template",
+    "alertTitle": "The added templates are available in the gallery.",
+    "alertDescription": "Only anonymous additions are available at this time.",
+    "toast": {
+      "success": "Template saved successfully",
+      "error": "Error uploading thumbnail"
+    }
+  },
+  "downloadTemplate": {
+    "title": "Download Template",
+    "description": "Download the template you made to your local device.",
+    "cancel": "Cancel",
+    "download": "Download"
+  },
+  "importTemplate": {
+    "title": "Import Template",
+    "warning": "Warning!",
+    "description": "The current content on the canvas will be lost. Are you sure you want to import?",
+    "cancel": "Cancel",
+    "import": "Import"
+  },
+  "subActionMenu": {
+    "downloadImage": "Download Image",
+    "toast": {
+      "title": "Downloaded Successfully",
+      "description": "Share your carefully crafted image with others through the gallery! 🎨",
+      "upload": "Upload"
+    }
   }
 }

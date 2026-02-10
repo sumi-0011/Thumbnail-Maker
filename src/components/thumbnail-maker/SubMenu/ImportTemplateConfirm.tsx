@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,23 +18,25 @@ export function ImportTemplateConfirm({
   isOpen: boolean;
   onClose: () => void;
 }) {
+  const { t } = useTranslation("translation");
   const { handleImportTemplate } = useImportTemplate();
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Import Template</AlertDialogTitle>
+          <AlertDialogTitle>{t("importTemplate.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            <div className="flex items-center gap-1">Warning!</div>
-            The current content on the canvas will be lost. Are you sure you
-            want to import?
+            <div className="flex items-center gap-1">
+              {t("importTemplate.warning")}
+            </div>
+            {t("importTemplate.description")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{t("importTemplate.cancel")}</AlertDialogCancel>
           <AlertDialogAction onClick={handleImportTemplate}>
-            Import
+            {t("importTemplate.import")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -1,5 +1,6 @@
 import { ImageIcon } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useUserStats } from "src/hooks/useUserStats";
 import { useTagAction } from "../Tag.context";
@@ -12,6 +13,7 @@ export function SubActionMenu({
   getImageFile: () => Promise<Blob | null>;
   downloadImage: () => void;
 }) {
+  const { t } = useTranslation("translation");
   const [isSaveTemplateSheetOpen, setIsSaveTemplateSheetOpen] = useState(false);
   const [isDownloadTemplateSheetOpen, setIsDownloadTemplateSheetOpen] =
     useState(false);
@@ -23,12 +25,11 @@ export function SubActionMenu({
   const onDownload = () => {
     incrementDownload();
     downloadImage();
-    toast.message("Downloaded Successfully", {
+    toast.message(t("subActionMenu.toast.title"), {
       duration: 5000,
-      description:
-        "Share your carefully crafted image with others through the gallery! 🎨",
+      description: t("subActionMenu.toast.description"),
       action: {
-        label: "Upload",
+        label: t("subActionMenu.toast.upload"),
         onClick: () => {
           setIsSaveTemplateSheetOpen(true);
         },
@@ -39,7 +40,7 @@ export function SubActionMenu({
   return (
     <div className="flex items-center gap-2">
       <Button onClick={onDownload}>
-        <ImageIcon size={20} /> Download Image
+        <ImageIcon size={20} /> {t("subActionMenu.downloadImage")}
       </Button>
     </div>
   );

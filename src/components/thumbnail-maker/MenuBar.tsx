@@ -1,6 +1,7 @@
 import { MousePointer2, Move, RotateCcw, Shuffle } from "lucide-react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import {
   Menubar,
@@ -41,6 +42,7 @@ export function Toolbar({
   isDragMode: boolean;
   setIsDragMode: (isDragMode: boolean) => void;
 }) {
+  const { t } = useTranslation("translation");
   const { onRandomShuffle, onResetTags } = useTagAction();
   const handleChangeDragMode = () => setIsDragMode(!isDragMode);
 
@@ -57,7 +59,7 @@ export function Toolbar({
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p className="text-xs">Reset Canvas</p>
+          <p className="text-xs">{t("toolbar.resetCanvas")}</p>
         </TooltipContent>
       </Tooltip>
 
@@ -68,7 +70,7 @@ export function Toolbar({
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p className="text-xs">Random Shuffle (Ctrl+R)</p>
+          <p className="text-xs">{t("toolbar.randomShuffle")}</p>
         </TooltipContent>
       </Tooltip>
 
@@ -84,7 +86,7 @@ export function Toolbar({
         </TooltipTrigger>
         <TooltipContent>
           <p className="text-xs">
-            {isDragMode ? "Drag Mode" : "Select Mode"} (Ctrl+D)
+            {isDragMode ? t("toolbar.dragMode") : t("toolbar.selectMode")}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -102,17 +104,18 @@ export function Toolbar({
 }
 
 function CanvasSizeSegment() {
+  const { t } = useTranslation("translation");
   const { currentSize } = useCanvasSize();
   const { onSizeChange } = useCanvasSizeAction();
 
-  const sizes: { value: CanvasSizePreset; label: string }[] = [
-    { value: "wide", label: "Wide" },
-    { value: "square", label: "Square" },
+  const sizes: { value: CanvasSizePreset; labelKey: string }[] = [
+    { value: "wide", labelKey: "toolbar.wide" },
+    { value: "square", labelKey: "toolbar.square" },
   ];
 
   return (
     <div className="flex gap-0.5 rounded-md border p-0.5">
-      {sizes.map(({ value, label }) => (
+      {sizes.map(({ value, labelKey }) => (
         <Button
           key={value}
           variant="ghost"
@@ -124,7 +127,7 @@ function CanvasSizeSegment() {
           }
           onClick={() => onSizeChange(value)}
         >
-          {label}
+          {t(labelKey as "toolbar.wide" | "toolbar.square")}
         </Button>
       ))}
     </div>
@@ -136,6 +139,7 @@ function TemplateMenu({
 }: {
   getImageFile: () => Promise<Blob | null>;
 }) {
+  const { t } = useTranslation("translation");
   const [isSaveTemplateSheetOpen, setIsSaveTemplateSheetOpen] = useState(false);
   const [isDownloadTemplateSheetOpen, setIsDownloadTemplateSheetOpen] =
     useState(false);
@@ -145,21 +149,21 @@ function TemplateMenu({
   return (
     <>
       <MenubarMenu>
-        <MenubarTrigger>Template</MenubarTrigger>
+        <MenubarTrigger>{t("menuBar.template")}</MenubarTrigger>
         <MenubarContent>
           <Link to="/gallery">
-            <MenubarItem>Go to Many Templates</MenubarItem>
+            <MenubarItem>{t("menuBar.goToManyTemplates")}</MenubarItem>
           </Link>
           <MenubarSeparator />
           <MenubarItem onClick={() => setIsSaveTemplateSheetOpen(true)}>
-            Save Template
+            {t("menuBar.saveTemplate")}
           </MenubarItem>
           <MenubarSeparator />
           <MenubarItem onClick={() => setIsDownloadTemplateSheetOpen(true)}>
-            Download Template to Local
+            {t("menuBar.downloadTemplateToLocal")}
           </MenubarItem>
           <MenubarItem onClick={() => setIsImportTemplateSheetOpen(true)}>
-            Import Template
+            {t("menuBar.importTemplate")}
           </MenubarItem>
         </MenubarContent>
       </MenubarMenu>
