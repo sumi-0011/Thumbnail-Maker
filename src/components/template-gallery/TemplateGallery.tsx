@@ -1,10 +1,11 @@
 import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { ChevronUp, Plus } from "lucide-react";
 import { Skeleton } from "src/components/ui/skeleton";
 import { Template } from "src/components/gallery/GalleryItem";
-import { useScrollToSection } from "../landing/FullPageScroller";
-import { Button } from "../ui/button";
+import { useScrollToSection } from "src/components/landing/FullPageScroller";
+import { Button } from "src/components/ui/button";
 import { useSupabaseTemplates } from "./useSupabaseTemplates";
 import { Marquee, ParticleBackground } from "./animations";
 import { BlogCard } from "./BlogCard";
@@ -15,6 +16,7 @@ interface TemplateGalleryProps {
 }
 
 export function TemplateGallery({ onApply }: TemplateGalleryProps) {
+  const { t } = useTranslation("translation");
   const { templates, isLoading, error, refetch } = useSupabaseTemplates();
   const { scrollToSection } = useScrollToSection();
   const [isAddSheetOpen, setIsAddSheetOpen] = useState(false);
@@ -55,13 +57,12 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
           >
             <Button onClick={() => setIsAddSheetOpen(true)} variant="default">
               <Plus className="h-4 w-4" />
-              사용 예시 추가
+              {t("gallery.addExample")}
             </Button>
           </motion.div>
 
           {/* Back Button */}
           <motion.div
-            onClick={handleScrollToEditor}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -70,7 +71,7 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
           >
             <Button onClick={handleScrollToEditor} variant="outline">
               <ChevronUp className="h-4 w-4" />
-              Editor
+              {t("gallery.editor")}
             </Button>
           </motion.div>
         </div>
@@ -78,7 +79,7 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
         {/* Error State */}
         {error && (
           <div className="flex h-40 items-center justify-center text-red-400">
-            Failed to load templates. Please try again later.
+            {t("gallery.failedLoadTemplates")}
           </div>
         )}
 
@@ -150,7 +151,7 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
         {/* Empty State */}
         {!isLoading && !error && templates.length === 0 && (
           <div className="flex flex-1 items-center justify-center text-muted-foreground">
-            No templates available
+            {t("gallery.noTemplates")}
           </div>
         )}
       </div>
@@ -172,6 +173,7 @@ interface MarqueeCardProps {
 }
 
 function MarqueeCard({ template, onClick }: MarqueeCardProps) {
+  const { t } = useTranslation("translation");
   // blog_only 타입은 BlogCard로 렌더링
   if (template.template_type === "blog_only") {
     return <BlogCard template={template} onClick={onClick} />;
@@ -206,7 +208,7 @@ function MarqueeCard({ template, onClick }: MarqueeCardProps) {
           </p>
           {template.author_name && (
             <p className="mt-1 text-xs text-gray-400">
-              by {template.author_name}
+              {t("gallery.by")} {template.author_name}
             </p>
           )}
         </div>
@@ -218,7 +220,7 @@ function MarqueeCard({ template, onClick }: MarqueeCardProps) {
             onClick={(e) => e.stopPropagation()}
             className="ml-2 text-xs text-purple-300 underline hover:text-purple-200"
           >
-            Blog
+            {t("gallery.blog")}
           </a>
         )}
       </motion.div>

@@ -42,6 +42,12 @@ export default function Home() {
         return;
       }
 
+      // template.data 검증
+      if (!template.data) {
+        console.warn("Template data is missing");
+        return;
+      }
+
       // Supabase Template 데이터를 useSetTemplate 형식으로 전달
       onUseTemplate(template.data);
 
@@ -65,7 +71,7 @@ export default function Home() {
         {/* Page 1: Editor */}
         <Section
           id="editor"
-          className="relative grid grid-cols-[1fr_782px_1fr] gap-4 px-4"
+          className="relative grid w-full grid-cols-[1fr_minmax(0,782px)_1fr] gap-4 px-4 md:grid-cols-[1fr_782px_1fr]"
         >
           <div></div>
           <PaletteProvider key={`palette-${templateKey}`}>

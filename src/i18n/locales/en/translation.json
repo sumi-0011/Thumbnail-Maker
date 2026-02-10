@@ -8,5 +8,38 @@
   "linters": "Lint all code at save",
   "linters-desc": "Built with ESLint, Prettier, Stylelint, and Commitlint",
   "hero-title": "Building Apps with the best DX we love",
-  "get-started": "Get Started"
+  "get-started": "Get Started",
+  "addBlog": {
+    "title": "Add Usage Example",
+    "description": "Enter a blog URL to automatically fetch and add information",
+    "urlLabel": "Blog URL",
+    "urlPlaceholder": "https://...",
+    "authorLabel": "Author Name (Optional)",
+    "authorPlaceholder": "Author name (leave blank to auto-extract)",
+    "authorHint": "Leave blank to auto-extract from blog",
+    "button": {
+      "submit": "Add",
+      "submitting": "Processing..."
+    },
+    "toast": {
+      "urlRequired": "Please enter a URL",
+      "invalidUrl": "Please enter a valid URL",
+      "fetchingMetadata": "Fetching metadata...",
+      "saving": "Saving...",
+      "success": "Usage example added successfully!",
+      "error": "Failed to add. Please check the URL."
+    }
+  },
+  "gallery": {
+    "addExample": "Add Usage Example",
+    "editor": "Editor",
+    "failedLoadTemplates": "Failed to load templates. Please try again later.",
+    "noTemplates": "No templates available",
+    "by": "by",
+    "blog": "Blog"
+  },
+  "thankYou": {
+    "title": "Thank you everyone for using Thumbnail Maker 😄",
+    "description": "- Please provide sources when using thumbnails on your blog\n- Your valuable input helps us create a better service for everyone [<a>feedback form</a>]"
+  }
 }

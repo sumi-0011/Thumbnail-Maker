@@ -1,15 +1,15 @@
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import { Template } from "src/components/gallery/GalleryItem";
+import { getDisplayImageAndTitle } from "./templateUtils";
 
 interface BlogCardProps {
   template: Template;
   onClick?: () => void;
 }
 
-export function BlogCard({ template }: BlogCardProps) {
-  const displayImage = template.blog_image || template.thumbnail;
-  const displayTitle = template.blog_title || template.title;
+export function BlogCard({ template, onClick }: BlogCardProps) {
+  const { displayImage, displayTitle } = getDisplayImageAndTitle(template);
 
   const handleBlogClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -20,9 +20,10 @@ export function BlogCard({ template }: BlogCardProps) {
 
   return (
     <motion.div
-      className="relative h-[160px] w-[280px] shrink-0 overflow-hidden rounded-xl border border-border/30 bg-card"
+      className="relative h-[160px] w-[280px] shrink-0 cursor-pointer overflow-hidden rounded-xl border border-border/30 bg-card"
       whileHover={{ scale: 1.03 }}
       transition={{ duration: 0.3 }}
+      onClick={onClick}
     >
       {/* 이미지 */}
       {displayImage ? (

@@ -11,7 +11,7 @@ export function useSupabaseTemplates() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchTemplates = useCallback(async () => {
+  const fetchTemplates = useCallback(async (signal?: AbortSignal) => {
     setIsLoading(true);
     setError(null);
 
@@ -20,14 +20,16 @@ export function useSupabaseTemplates() {
         .from("template")
         .select("*");
 
+      if (signal?.aborted) return;
+
       if (supabaseError) {
         throw new Error(supabaseError.message);
       }
 
       const allTemplates = (data as GalleryTemplate[]) || [];
 
-      // templates.json에 있는 템플릿을 우선 정렬
-      const sortedTemplates = allTemplates.sort((a, b) => {
+      // templates.json에 있는 템플릿을 우선 정렬 (복사본 사용)
+      const sortedTemplates = [...allTemplates].sort((a, b) => {
         const aIsPriority = PRIORITY_TEMPLATE_IDS.has(a.id);
         const bIsPriority = PRIORITY_TEMPLATE_IDS.has(b.id);
 
@@ -36,18 +38,29 @@ export function useSupabaseTemplates() {
         return 0;
       });
 
+      if (signal?.aborted) return;
+
       setTemplates(sortedTemplates);
     } catch (err) {
+      if (signal?.aborted) return;
+
       console.error("Error fetching templates:", err);
       setError(err instanceof Error ? err : new Error("Unknown error"));
       setTemplates([]);
     } finally {
-      setIsLoading(false);
+      if (!signal?.aborted) {
+        setIsLoading(false);
+      }
     }
   }, []);
 
   useEffect(() => {
-    fetchTemplates();
+    const abortController = new AbortController();
+    fetchTemplates(abortController.signal);
+
+    return () => {
+      abortController.abort();
+    };
   }, [fetchTemplates]);
 
   return { templates, isLoading, error, refetch: fetchTemplates };

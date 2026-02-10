@@ -6,6 +6,7 @@ import {
   LucideIcon,
 } from "lucide-react";
 import { PaletteVariant } from "../thumbnail-maker/assets/palette.types";
+import { getDisplayImageAndTitle } from "../template-gallery/templateUtils";
 
 export type TemplateType = "blog_only" | "full_with_blog" | "template_only";
 
@@ -223,12 +224,10 @@ function GalleryCard({ template, variant, onClick }: GalleryCardProps) {
   const styles = variantStyles[variant];
 
   // blog variant는 블로그 데이터 우선 사용
-  const displayImage =
+  const { displayImage, displayTitle } =
     variant === "blog"
-      ? template.blog_image || template.thumbnail
-      : template.thumbnail;
-  const displayTitle =
-    variant === "blog" ? template.blog_title || template.title : template.title;
+      ? getDisplayImageAndTitle(template)
+      : { displayImage: template.thumbnail, displayTitle: template.title };
   const displayDescription =
     variant === "blog"
       ? template.blog_description || template.description
