@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2, Sparkles, Send } from "lucide-react";
+import { Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
 import {
   Sheet,
@@ -7,9 +7,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
+  SheetFooter,
 } from "src/components/ui/sheet";
 import { Input } from "src/components/ui/input";
-import { Label } from "src/components/ui/label";
 import { Button } from "src/components/ui/button";
 import { fetchBlogMetadata } from "src/lib/fetchBlogMetadata";
 import { supabase } from "src/lib/supabaseClient";
@@ -97,23 +97,17 @@ export function AddBlogExampleSheet({
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetContent side="right" className="w-[400px] sm:max-w-[400px]">
-        <SheetHeader className="mb-6">
-          <SheetTitle className="flex items-center gap-2 text-white">
-            <Sparkles className="h-5 w-5 text-purple-400" />
-            사용 예시 추가
-          </SheetTitle>
+      <SheetContent inner="center">
+        <SheetHeader>
+          <SheetTitle>사용 예시 추가</SheetTitle>
           <SheetDescription>
             블로그 URL을 입력하면 자동으로 정보를 가져와 추가합니다
           </SheetDescription>
         </SheetHeader>
-
-        <div className="space-y-6">
+        <div className="flex min-w-fit flex-col overflow-y-auto pt-[14px]">
           {/* URL 입력 */}
-          <div className="space-y-2">
-            <Label htmlFor="blog-url" className="text-white">
-              블로그 URL
-            </Label>
+          <div className="mb-8">
+            <p className="mb-3 text-[13px] text-[#9292A1]">블로그 URL</p>
             <Input
               id="blog-url"
               type="url"
@@ -122,15 +116,12 @@ export function AddBlogExampleSheet({
               onChange={(e) => setUrl(e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={isSubmitting}
-              className="bg-background/50"
             />
           </div>
 
           {/* 저자명 입력 (선택) */}
-          <div className="space-y-2">
-            <Label htmlFor="author-name" className="text-white">
-              저자명 (선택)
-            </Label>
+          <div className="mb-8">
+            <p className="mb-3 text-[13px] text-[#9292A1]">저자명 (선택)</p>
             <Input
               id="author-name"
               type="text"
@@ -139,19 +130,14 @@ export function AddBlogExampleSheet({
               onChange={(e) => setAuthorName(e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={isSubmitting}
-              className="bg-background/50"
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="mt-2 text-xs text-[#9292A1]">
               비워두면 블로그에서 자동으로 추출합니다
             </p>
           </div>
-
-          {/* 제출 버튼 */}
-          <Button
-            onClick={handleSubmit}
-            disabled={isSubmitting || !url.trim()}
-            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
-          >
+        </div>
+        <SheetFooter className="mt-[96px] flex justify-center gap-2 sm:justify-center">
+          <Button onClick={handleSubmit} disabled={isSubmitting || !url.trim()}>
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -164,12 +150,7 @@ export function AddBlogExampleSheet({
               </>
             )}
           </Button>
-
-          {/* 안내 문구 */}
-          <p className="text-center text-xs text-muted-foreground">
-            URL을 입력하면 제목, 설명, 이미지를 자동으로 가져옵니다
-          </p>
-        </div>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

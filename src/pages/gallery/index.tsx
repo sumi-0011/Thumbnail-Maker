@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { Plus } from "lucide-react";
 import useStorageState from "use-storage-state";
 import { useNavigate } from "react-router-dom";
-// import { AddBlogExampleSheet } from "src/components/template-gallery/AddBlogExampleSheet";
+import { AddBlogExampleSheet } from "src/components/template-gallery/AddBlogExampleSheet";
 import { ScrollArea } from "src/components/ui/scroll-area";
 import GalleryItem, { Template } from "src/components/gallery/GalleryItem";
 import { Tabs, TabsList, TabsTrigger } from "src/components/ui/tabs";
@@ -118,11 +118,11 @@ export default function GalleryPage() {
       </div>
 
       {/* Add Blog Example Sheet */}
-      {/* <AddBlogExampleSheet
+      <AddBlogExampleSheet
         open={isAddSheetOpen}
         onOpenChange={setIsAddSheetOpen}
         onSuccess={handleAddSuccess}
-      /> */}
+      />
     </>
   );
 }
