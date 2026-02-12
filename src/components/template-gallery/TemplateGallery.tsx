@@ -7,7 +7,7 @@ import { Template } from "src/components/gallery/GalleryItem";
 import { useScrollToSection } from "src/components/landing/FullPageScroller";
 import { Button } from "src/components/ui/button";
 import { useSupabaseTemplates } from "./useSupabaseTemplates";
-import { Marquee, ParticleBackground } from "./animations";
+import { Marquee } from "./animations";
 import { BlogCard } from "./BlogCard";
 import { AddBlogExampleSheet } from "./AddBlogExampleSheet";
 
@@ -39,7 +39,7 @@ export function TemplateGallery({ onApply }: TemplateGalleryProps) {
   return (
     <div className="relative flex h-full flex-col overflow-hidden">
       {/* Particle Background */}
-      <ParticleBackground particleCount={60} />
+      {/* <ParticleBackground particleCount={60} /> */}
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex h-full w-full max-w-[1200px] flex-col px-6 py-8">

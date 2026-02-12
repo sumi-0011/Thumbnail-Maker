@@ -46,6 +46,13 @@ export function FullPageProvider({ children }: PropsWithChildren) {
     const index = sectionMappingRef.current[id];
     if (index !== undefined && scrollHandlerRef.current) {
       scrollHandlerRef.current(index);
+      return;
+    }
+
+    // Fallback: 일반 스크롤 모드에서 직접 DOM 요소로 스크롤
+    const element = document.querySelector(`[data-section="${id}"]`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, []);
 
@@ -86,6 +93,13 @@ export function useScrollToSectionStandalone() {
       const index = globalSectionMapping[id];
       if (index !== undefined && globalScrollHandler) {
         globalScrollHandler(index);
+        return;
+      }
+
+      // Fallback: 일반 스크롤 모드에서 직접 DOM 요소로 스크롤
+      const element = document.querySelector(`[data-section="${id}"]`);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     },
     [context],

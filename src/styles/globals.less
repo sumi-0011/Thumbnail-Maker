@@ -101,6 +101,49 @@
   overflow: hidden;
 }
 
+// 일반 스크롤 모드 (작은 화면)
+.full-page-wrapper--normal-scroll {
+  height: auto;
+  min-height: 100vh;
+  overflow: visible;
+}
+
+// 일반 스크롤 모드일 때 모든 부모 컨테이너의 overflow를 override
+body[data-scroll-mode="normal"],
+html:has(body[data-scroll-mode="normal"]) {
+  overflow: auto !important;
+  height: auto !important;
+}
+
+// Layout의 overflow-hidden을 override
+body[data-scroll-mode="normal"] [class*="h-screen"][class*="overflow-hidden"],
+body[data-scroll-mode="normal"] .h-screen.overflow-hidden {
+  overflow: auto !important;
+  height: auto !important;
+  min-height: 100vh !important;
+}
+
+// SidebarInset도 스크롤 가능하도록
+body[data-scroll-mode="normal"] main[class*="SidebarInset"],
+body[data-scroll-mode="normal"] [class*="SidebarInset"] {
+  overflow: visible !important;
+  min-height: auto !important;
+}
+
+// fullpage 스크롤 모드일 때는 기존 동작 유지
+body[data-scroll-mode="fullpage"],
+html:has(body[data-scroll-mode="fullpage"]) {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
+// fullpage 스크롤 모드일 때 Layout의 overflow-hidden 유지
+body[data-scroll-mode="fullpage"] [class*="h-screen"][class*="overflow-hidden"],
+body[data-scroll-mode="fullpage"] .h-screen.overflow-hidden {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
 .full-page-wrapper .swiper {
   height: 100%;
   width: 100%;
@@ -116,9 +159,24 @@
   overflow: hidden;
 }
 
+// 일반 스크롤 모드에서 섹션 스타일
+.full-page-wrapper--normal-scroll .section {
+  min-height: 840px;
+  height: auto;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+}
+
 .slide-content {
   height: 100%;
   width: 100%;
+}
+
+// 일반 스크롤 모드에서 slide-content 스타일
+.full-page-wrapper--normal-scroll .slide-content {
+  min-height: 840px;
+  height: auto;
 }
 
 // 3D Transform utilities
