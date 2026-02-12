@@ -17,6 +17,7 @@ import {
   useFullPageContext,
   useScrollToSectionStandalone,
 } from "./FullPageContext";
+import { useViewportHeight } from "src/hooks/useViewportHeight";
 
 import "swiper/css";
 
@@ -32,6 +33,7 @@ function FullPageContent({ children, className = "" }: FullPageContentProps) {
   const { registerSection, setScrollHandler, setCurrentIndex } =
     useFullPageContext();
   const swiperRef = useRef<SwiperType | null>(null);
+  const { isSmallViewport } = useViewportHeight();
 
   const childArray = Children.toArray(children);
 
@@ -53,6 +55,27 @@ function FullPageContent({ children, className = "" }: FullPageContentProps) {
     });
   }, [sectionIds, registerSection]);
 
+  // 일반 스크롤 모드에서 섹션으로 스크롤하는 핸들러
+  const scrollToSectionById = useCallback((id: string) => {
+    const element = document.querySelector(`[data-section="${id}"]`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
+
+  // 작은 화면에서는 일반 스크롤 핸들러 설정
+  useEffect(() => {
+    if (isSmallViewport) {
+      setScrollHandler((index: number) => {
+        const sectionId = sectionIds.find((s) => s.index === index)?.id;
+        if (sectionId) {
+          scrollToSectionById(sectionId);
+        }
+      });
+    }
+    // 큰 화면에서는 Swiper 초기화 시 handleSwiperInit에서 설정됨
+  }, [isSmallViewport, setScrollHandler, sectionIds, scrollToSectionById]);
+
   const handleSwiperInit = useCallback(
     (swiper: SwiperType) => {
       swiperRef.current = swiper;
@@ -70,6 +93,38 @@ function FullPageContent({ children, className = "" }: FullPageContentProps) {
     [setCurrentIndex],
   );
 
+  // 스크롤 모드에 따라 body에 data 속성 설정
+  useEffect(() => {
+    if (isSmallViewport) {
+      document.body.setAttribute("data-scroll-mode", "normal");
+    } else {
+      document.body.setAttribute("data-scroll-mode", "fullpage");
+    }
+    return () => {
+      document.body.removeAttribute("data-scroll-mode");
+    };
+  }, [isSmallViewport]);
+
+  // 작은 화면: 일반 스크롤 모드
+  if (isSmallViewport) {
+    return (
+      <div
+        className={`full-page-wrapper full-page-wrapper--normal-scroll ${className}`}
+      >
+        {childArray.map((child, index) => {
+          if (isValidElement(child)) {
+            return cloneElement(child as ReactElement<{ className?: string }>, {
+              key: child.props?.id || index,
+              className: `${child.props?.className || ""} slide-content`.trim(),
+            });
+          }
+          return <div key={index}>{child}</div>;
+        })}
+      </div>
+    );
+  }
+
+  // 큰 화면: Swiper 기반 fullpage 스크롤
   return (
     <div className={`full-page-wrapper ${className}`}>
       <Swiper

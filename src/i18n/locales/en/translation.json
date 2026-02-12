@@ -8,5 +8,96 @@
   "linters": "Lint all code at save",
   "linters-desc": "Built with ESLint, Prettier, Stylelint, and Commitlint",
   "hero-title": "Building Apps with the best DX we love",
-  "get-started": "Get Started"
+  "get-started": "Get Started",
+  "addBlog": {
+    "title": "Add Usage Example",
+    "description": "Enter a blog URL to automatically fetch and add information",
+    "urlLabel": "Blog URL",
+    "urlPlaceholder": "https://...",
+    "authorLabel": "Author Name (Optional)",
+    "authorPlaceholder": "Author name (leave blank to auto-extract)",
+    "authorHint": "Leave blank to auto-extract from blog",
+    "button": {
+      "submit": "Add",
+      "submitting": "Processing..."
+    },
+    "toast": {
+      "urlRequired": "Please enter a URL",
+      "invalidUrl": "Please enter a valid URL",
+      "fetchingMetadata": "Fetching metadata...",
+      "saving": "Saving...",
+      "success": "Usage example added successfully!",
+      "error": "Failed to add. Please check the URL."
+    }
+  },
+  "gallery": {
+    "addExample": "Add Usage Example",
+    "editor": "Editor",
+    "failedLoadTemplates": "Failed to load templates. Please try again later.",
+    "noTemplates": "No templates available",
+    "by": "by",
+    "blog": "Blog"
+  },
+  "thankYou": {
+    "title": "Thank you everyone for using Thumbnail Maker 😄",
+    "description": "- Please provide sources when using thumbnails on your blog\n- Your valuable input helps us create a better service for everyone [<a>feedback form</a>]"
+  },
+  "menuBar": {
+    "template": "Template",
+    "goToManyTemplates": "Go to Many Templates",
+    "saveTemplate": "Save Template",
+    "downloadTemplateToLocal": "Download Template to Local",
+    "importTemplate": "Import Template"
+  },
+  "toolbar": {
+    "resetCanvas": "Reset Canvas",
+    "randomShuffle": "Random Shuffle (Ctrl+R)",
+    "dragMode": "Drag Mode",
+    "selectMode": "Select Mode (Ctrl+D)",
+    "wide": "Wide",
+    "square": "Square",
+    "alignLeft": "Align Left",
+    "alignCenter": "Align Center",
+    "alignRight": "Align Right"
+  },
+  "saveTemplate": {
+    "title": "Save Template",
+    "description": "Make the thumbnail you made into a template and share it with others! 🚀",
+    "titleLabel": "Title *",
+    "titlePlaceholder": "Please enter a title",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Please enter a description",
+    "blogUrlLabel": "Blog URL",
+    "blogUrlPlaceholder": "https://",
+    "usernameLabel": "Username",
+    "usernamePlaceholder": "@",
+    "button": "Save Template",
+    "alertTitle": "The added templates are available in the gallery.",
+    "alertDescription": "Only anonymous additions are available at this time.",
+    "toast": {
+      "success": "Template saved successfully",
+      "error": "Error uploading thumbnail"
+    }
+  },
+  "downloadTemplate": {
+    "title": "Download Template",
+    "description": "Download the template you made to your local device.",
+    "cancel": "Cancel",
+    "download": "Download"
+  },
+  "importTemplate": {
+    "title": "Import Template",
+    "warning": "Warning!",
+    "description": "The current content on the canvas will be lost. Are you sure you want to import?",
+    "cancel": "Cancel",
+    "import": "Import"
+  },
+  "subActionMenu": {
+    "downloadImage": "Download Image",
+    "toast": {
+      "title": "Downloaded Successfully",
+      "description": "Share your carefully crafted image with others through the gallery! 🎨",
+      "upload": "Upload"
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,6 +21,7 @@ export function DownloadTemplateToLocalConfirm({
   isOpen,
   onClose,
 }: DownloadTemplateToLocalConfirmProps) {
+  const { t } = useTranslation("translation");
   const { tags } = useTagList();
   const { currentPalette } = usePalette();
 
@@ -64,15 +66,15 @@ export function DownloadTemplateToLocalConfirm({
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Download Template</AlertDialogTitle>
+          <AlertDialogTitle>{t("downloadTemplate.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            Download the template you made to your local device.
+            {t("downloadTemplate.description")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{t("downloadTemplate.cancel")}</AlertDialogCancel>
           <AlertDialogAction onClick={onDownloadTemplate}>
-            Download
+            {t("downloadTemplate.download")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

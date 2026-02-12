@@ -1,5 +1,6 @@
 import { InfoIcon } from "lucide-react";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Alert, AlertTitle, AlertDescription } from "src/components/ui/alert";
 import { Button } from "src/components/ui/button";
@@ -27,6 +28,7 @@ export function SaveTemplateSheet({
   onClose: () => void;
   getImageFile: () => Promise<Blob | null>;
 }) {
+  const { t } = useTranslation("translation");
   const { tags } = useTagList();
   const { currentPalette } = usePalette();
 
@@ -72,7 +74,7 @@ export function SaveTemplateSheet({
       }
     } catch (error) {
       console.error("Error uploading thumbnail:", error);
-      toast.error("Error uploading thumbnail");
+      toast.error(t("saveTemplate.toast.error"));
       return null;
     }
   };
@@ -107,45 +109,42 @@ export function SaveTemplateSheet({
         .from("template")
         .insert(requestData);
 
-      toast.success("Template saved successfully");
+      toast.success(t("saveTemplate.toast.success"));
       onClose();
     } catch (error) {
       console.error("Error uploading thumbnail:", error);
-      toast.error("Error uploading thumbnail");
+      toast.error(t("saveTemplate.toast.error"));
     }
   };
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent className="min-w-[520px] pt-[80px]">
         <SheetHeader>
-          <SheetTitle>Save Template</SheetTitle>
-          <SheetDescription>
-            Make the thumbnail you made into a template and share it with
-            others! 🚀
-          </SheetDescription>
+          <SheetTitle>{t("saveTemplate.title")}</SheetTitle>
+          <SheetDescription>{t("saveTemplate.description")}</SheetDescription>
         </SheetHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid-cols-[80px 1fr] grid items-center gap-4">
             <Label htmlFor="title" className="text-left">
-              Title *
+              {t("saveTemplate.titleLabel")}
             </Label>
             <Input
               id="title"
               className="col-span-3"
-              placeholder="Please enter a title"
+              placeholder={t("saveTemplate.titlePlaceholder")}
               onChange={(e) => (inputValues.current.title = e.target.value)}
               defaultValue={initTitle}
             />
           </div>
           <div className="grid-cols-[80px 1fr] grid items-center gap-4">
             <Label htmlFor="description" className="text-left">
-              Description
+              {t("saveTemplate.descriptionLabel")}
             </Label>
             <Input
               id="description"
               className="col-span-3"
-              placeholder="Please enter a description"
+              placeholder={t("saveTemplate.descriptionPlaceholder")}
               onChange={(e) =>
                 (inputValues.current.description = e.target.value)
               }
@@ -153,23 +152,23 @@ export function SaveTemplateSheet({
           </div>
           <div className="grid-cols-[80px 1fr] grid items-center gap-4">
             <Label htmlFor="blogUrl" className="text-left">
-              Blog URL
+              {t("saveTemplate.blogUrlLabel")}
             </Label>
             <Input
               id="blogUrl"
               className="col-span-3"
-              placeholder="https://"
+              placeholder={t("saveTemplate.blogUrlPlaceholder")}
               onChange={(e) => (inputValues.current.blogUrl = e.target.value)}
             />
           </div>
           <div className="grid-cols-[80px 1fr] grid items-center gap-4">
             <Label htmlFor="username" className="text-left ">
-              Username
+              {t("saveTemplate.usernameLabel")}
             </Label>
             <Input
               id="username"
               className="col-span-3"
-              placeholder="@"
+              placeholder={t("saveTemplate.usernamePlaceholder")}
               onChange={(e) => (inputValues.current.username = e.target.value)}
             />
           </div>
@@ -178,11 +177,9 @@ export function SaveTemplateSheet({
           <Alert variant="outline">
             <InfoIcon className="mt-0 h-4 w-4" />
             <div>
-              <AlertTitle>
-                The added templates are available in the gallery.
-              </AlertTitle>
+              <AlertTitle>{t("saveTemplate.alertTitle")}</AlertTitle>
               <AlertDescription>
-                Only anonymous additions are available at this time.
+                {t("saveTemplate.alertDescription")}
               </AlertDescription>
             </div>
           </Alert>
@@ -191,7 +188,7 @@ export function SaveTemplateSheet({
         <SheetFooter>
           <SheetClose asChild>
             <Button type="submit" onClick={onSaveTemplate}>
-              Save Template
+              {t("saveTemplate.button")}
             </Button>
           </SheetClose>
         </SheetFooter>

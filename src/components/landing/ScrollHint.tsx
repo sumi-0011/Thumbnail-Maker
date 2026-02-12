@@ -1,4 +1,5 @@
 import { ChevronDown } from "lucide-react";
+import { useViewportHeight } from "src/hooks/useViewportHeight";
 
 interface ScrollHintProps {
   onClick?: () => void;
@@ -9,6 +10,13 @@ export function ScrollHint({
   onClick,
   text = "Explore Templates",
 }: ScrollHintProps) {
+  const { isSmallViewport } = useViewportHeight();
+
+  // 작은 화면에서는 ScrollHint를 숨김 (일반 스크롤 모드에서는 불필요)
+  if (isSmallViewport) {
+    return null;
+  }
+
   return (
     <button
       onClick={onClick}
