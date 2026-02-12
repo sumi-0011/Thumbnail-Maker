@@ -69,19 +69,18 @@ export default function Home() {
       </Helmet>
       <FullPageScroller>
         {/* Page 1: Editor */}
-        <Section
-          id="editor"
-          className="relative grid w-full grid-cols-[1fr_minmax(0,782px)_1fr] gap-4 px-4 md:grid-cols-[1fr_782px_1fr]"
-        >
-          <div></div>
-          <PaletteProvider key={`palette-${templateKey}`}>
-            <TagProvider key={`tag-${templateKey}`}>
-              <ThumbnailMaker />
-            </TagProvider>
-          </PaletteProvider>
+        <Section id="editor">
+          <div className="relative grid w-full grid-cols-[1fr_minmax(0,782px)_1fr] gap-4 px-4 md:grid-cols-[1fr_782px_1fr]">
+            <div></div>
+            <PaletteProvider key={`palette-${templateKey}`}>
+              <TagProvider key={`tag-${templateKey}`}>
+                <ThumbnailMaker />
+              </TagProvider>
+            </PaletteProvider>
 
-          <div className="flex justify-end">
-            <ThankYouAlert />
+            <div className="flex justify-end">
+              <ThankYouAlert />
+            </div>
           </div>
 
           <ScrollHint onClick={handleScrollToTemplates} />
