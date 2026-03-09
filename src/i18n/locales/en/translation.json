@@ -23,6 +23,27 @@
     "suggestedEmoji": "Emoji:",
     "addEmojiAsText": "Add emoji as text tag",
     "close": "Close",
-    "fallbackNotice": "Using title chunking (AI unavailable)"
+    "fallbackNotice": "Using keyword extraction (AI unavailable)",
+    "back": "Back to Editor",
+    "step1": "Content",
+    "step2": "Analysis",
+    "step3": "Titles",
+    "selectTitleType": "Review the analysis and select a title type",
+    "selectTitles": "Select a title to apply to your thumbnail",
+    "backToAnalysis": "Back to Analysis",
+    "analyzingContent": "Analyzing blog...",
+    "analyzeButton": "Analyze Blog",
+    "analysisResult": "Analysis Result",
+    "recommendedTypes": "Recommended Title Types",
+    "generatingTitles": "Generating titles...",
+    "hook": "Introduction Hook",
+    "coreTopic": "Core Topic",
+    "keyTerms": "Key Terms",
+    "takeaway": "Key Takeaway",
+    "clickToGenerate": "Click to generate titles",
+    "recommendedTitles": "Recommended Titles",
+    "clickToApply": "Click to apply",
+    "tryAgain": "Try with different content",
+    "selectedType": "Selected title type"
   }
 }

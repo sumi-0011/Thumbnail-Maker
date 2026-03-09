@@ -86,32 +86,56 @@ ThumbnailMaker (index.tsx)
 - 모델: `llama-3.1-70b-versatile`
 - 환경변수: `VITE_GROQ_API_KEY`
 
-**2단계 생성 프로세스:**
+**분석 기반 2단계 생성 프로세스:**
 
-1. **요약 생성** (`generateSummaries`): 블로그 콘텐츠(최대 2000자) → 4~5개 요약 + 키워드
-2. **태그 생성** (`generateTagsFromSummary`): 선택된 요약 + 스타일 → 3~5개 태그 추천
+1. **구조 분석** (`analyzeContent`): 블로그 콘텐츠(최대 2000자) → 도입부/본문/마무리 구조 분석 → `AnalysisResult` 반환
+2. **제목 생성** (`generateTitlesFromAnalysis`): 분석 결과 + 선택된 제목 타입 → 3개 제목 추천
 
-**6가지 스타일 옵션:**
+**AnalysisResult 데이터 모델:**
 
-| 스타일                    | 설명                    | creativity |
-| ------------------------- | ----------------------- | ---------- |
-| `narrative` (서술형)      | 자연스럽게 흐르는 조각  | 0.7        |
-| `highlight` (핵심 강조)   | 핵심 포인트 강조        | 0.6        |
-| `minimal` (심플 임팩트)   | 짧지만 강력한 표현      | 0.5        |
-| `creative` (크리에이티브) | 눈길을 끄는 창의적 표현 | 0.95       |
-| `technical` (테크 스펙)   | 전문적 기술 사양        | 0.4        |
-| `question` (궁금증 유발)  | 클릭을 유도하는 질문    | 0.8        |
+```typescript
+interface AnalysisResult {
+  intro: {
+    hook: string;                  // 도입부 후킹 요소
+    hook_type: "problem" | "curiosity" | "empathy" | "challenge" | "none";
+    writing_motivation: string;    // 글쓴 동기
+  };
+  body: {
+    core_topic: string;            // 핵심 주제 (20자 이내)
+    key_terms: string[];           // 핵심 키워드 3~5개
+    unique_angle: string;          // 글만의 차별점
+    content_type: string;          // tutorial | comparison | deep-dive | ...
+  };
+  conclusion: {
+    takeaway: string;              // 핵심 교훈/결론
+    emotion: string;               // satisfied | reflective | hopeful | ...
+  };
+  recommended_types: TitleType[];  // 추천 제목 타입 2~3개
+  language: "ko" | "en" | "mixed";
+}
+```
 
-**폴백:** API 키 미설정 또는 Rate Limit 시 `keywordExtractor.ts`로 로컬 키워드 추출 (94개 이상의 키워드-이모지 매핑 포함)
+**8가지 제목 타입 (`TitleType`):**
+
+| 타입             | 한국어명         | 설명                              |
+| ---------------- | --------------- | --------------------------------- |
+| `narrative`      | 서술형          | 자연스럽게 이어지는 문장형 제목    |
+| `question`       | 질문형          | 질문으로 호기심을 유발             |
+| `keyword_stack`  | 키워드 스택      | 핵심 키워드를 나열                 |
+| `subtitle`       | 부제 포함형      | 메인 제목 + 부제                   |
+| `retrospective`  | 회고/감성형      | 시간과 감성을 담은 회고            |
+| `provocative`    | 도발/놀라움형    | 의외성으로 시선을 끄는 제목        |
+| `highlight`      | 핵심 강조형      | 핵심 키워드를 강조                 |
+| `casual`         | 캐주얼/재미형    | 친근하고 재미있는 표현             |
+
+**폴백:** API 키 미설정 또는 Rate Limit 시 `keywordExtractor.ts`로 로컬 키워드 추출 → 최소한의 `AnalysisResult`로 변환
 
 **AI 태그 추천 흐름:**
 
-1. `/ai-tag` 페이지에서 블로그 콘텐츠 입력 (최소 10자)
-2. 스타일 선택 후 생성 → 요약 목록 표시
-3. 요약 선택 → 태그 추천 목록 표시
-4. 추천 클릭 → `pendingTags`에 저장
-5. `/` 페이지로 이동 → `PendingTagsHandler`가 자동 추가
-6. `pendingTags` 클리어
+1. `/ai-recommend` 페이지에서 블로그 콘텐츠 입력 (최소 10자)
+2. "블로그 분석하기" 클릭 → 분석 결과(hook, core_topic, key_terms, takeaway) 표시
+3. 추천 제목 타입(2~3개) 중 하나 클릭 → 해당 타입으로 제목 3개 생성
+4. 제목 클릭 → navigate("/", { state: { newTags } })로 메인 에디터에 태그 적용
 
 ### 6. 템플릿 저장/불러오기
 
@@ -202,14 +226,14 @@ Returns: {
 
 ### useAITagRecommend
 
-2단계 AI 추천 프로세스 관리.
+분석 기반 2단계 AI 추천 프로세스 관리.
 
 ```typescript
 State: {
-  step: "idle" | "summaries" | "tags";
+  step: "idle" | "analysis" | "titles";
   status: "idle" | "loading" | "success" | "error" | "fallback";
-  summaryItems: SummaryItem[];
-  selectedSummary: string | null;
+  analysisResult: AnalysisResult | null;
+  selectedTitleType: TitleType | null;
   titles: TitleRecommendation[];
   error: string | null;
   language: "ko" | "en" | "mixed";
@@ -218,9 +242,9 @@ State: {
 
 Returns: {
   ...state,
-  generateSummaries: (content: string) => Promise<void>;
-  generateTagsFromSummary: (summary: string, style?: TagStyle) => Promise<void>;
-  backToSummaries: () => void;
+  analyzeContent: (content: string) => Promise<void>;
+  generateTitles: (titleType: TitleType) => Promise<void>;
+  backToAnalysis: () => void;
   reset: () => void;
   isLoading: boolean;
 }
@@ -330,10 +354,10 @@ type CanvasSizePreset = "wide" | "square";
 ### AI 추천 → 태그 적용
 
 ```
-/ai-tag 접속 → 콘텐츠 입력 (10자 이상) → 스타일 선택 → 생성
-→ 요약 목록 → 요약 선택 → 태그 추천 목록
-→ 추천 클릭 → pendingTags 저장 → 홈 이동
-→ PendingTagsHandler 자동 추가 → pendingTags 클리어
+/ai-recommend 접속 → 콘텐츠 입력 (10자 이상) → "블로그 분석하기" 클릭
+→ 분석 결과 표시 (hook, core_topic, key_terms, takeaway)
+→ 추천 제목 타입 선택 → 제목 3개 생성
+→ 제목 클릭 → navigate("/", { state: { newTags } }) → 메인 에디터 적용
 ```
 
 ### 드래그 앤 드롭 재정렬

@@ -5,7 +5,12 @@ import { Helmet } from "react-helmet";
 import { Button } from "src/components/ui/button";
 import { Textarea } from "src/components/ui/textarea";
 import { useAITagRecommend } from "src/components/thumbnail-maker/hooks/useAITagRecommend";
-import { TitleRecommendation, SummaryItem } from "src/services/ai/geminiService";
+import {
+  TitleRecommendation,
+  AnalysisResult,
+  TitleType,
+  TITLE_TYPE_OPTIONS,
+} from "src/services/ai/geminiService";
 import {
   Tag,
   TagShape,
@@ -18,6 +23,10 @@ import {
   Info,
   ArrowLeft,
   ChevronRight,
+  Lightbulb,
+  Target,
+  Hash,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "src/lib/utils";
 
@@ -27,9 +36,10 @@ interface LocationState {
 }
 
 export default function AIRecommendPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+  const isKo = i18n.language === "ko";
 
   const locationState = location.state as LocationState | null;
   const currentTagVariant = locationState?.tagVariant ?? "filled";
@@ -39,30 +49,27 @@ export default function AIRecommendPage() {
 
   const {
     step,
-    summaryItems,
-    selectedSummary,
+    analysisResult,
+    selectedTitleType,
     titles,
     status,
     error,
     usedFallback,
     isLoading,
-    generateSummaries,
-    generateTagsFromSummary,
-    backToSummaries,
+    analyzeContent,
+    generateTitles,
+    backToAnalysis,
     reset,
   } = useAITagRecommend();
 
-  // Step 1: 요약 생성
-  const handleGenerateSummaries = () => {
-    generateSummaries(content);
+  const handleAnalyze = () => {
+    analyzeContent(content);
   };
 
-  // Step 2: 선택된 요약으로 태그 생성
-  const handleSummarySelect = (summary: string) => {
-    generateTagsFromSummary(summary, "question");
+  const handleTitleTypeSelect = (titleType: TitleType) => {
+    generateTitles(titleType);
   };
 
-  // 태그 선택 시 메인 페이지로 이동
   const handleTitleSelect = (title: TitleRecommendation) => {
     const newTags: Tag[] = title.tags.map((tagRec, index) => ({
       id: Date.now() + index,
@@ -78,8 +85,8 @@ export default function AIRecommendPage() {
   };
 
   const handleBack = () => {
-    if (step === "tags") {
-      backToSummaries();
+    if (step === "titles") {
+      backToAnalysis();
     } else {
       navigate("/");
     }
@@ -107,8 +114,8 @@ export default function AIRecommendPage() {
             className="-ml-2 mb-4 text-[#9292A1] hover:text-white"
           >
             <ArrowLeft size={16} className="mr-2" />
-            {step === "tags"
-              ? t("ai.backToSummaries", "Back to Summaries")
+            {step === "titles"
+              ? t("ai.backToAnalysis", "분석 결과로 돌아가기")
               : t("ai.back", "Back to Editor")}
           </Button>
 
@@ -120,12 +127,18 @@ export default function AIRecommendPage() {
             {step === "idle" &&
               t(
                 "ai.description",
-                "Paste your blog content and AI will suggest thumbnail titles"
+                "블로그 내용을 붙여넣으면 AI가 관련 태그를 추천해드립니다"
               )}
-            {step === "summaries" &&
-              t("ai.selectSummary", "Select a summary that best fits your blog")}
-            {step === "tags" &&
-              t("ai.selectTags", "Select tags to apply to your thumbnail")}
+            {step === "analysis" &&
+              t(
+                "ai.selectTitleType",
+                "분석 결과를 확인하고 제목 타입을 선택하세요"
+              )}
+            {step === "titles" &&
+              t(
+                "ai.selectTitles",
+                "제목을 선택하여 썸네일에 적용하세요"
+              )}
           </p>
         </div>
 
@@ -135,20 +148,20 @@ export default function AIRecommendPage() {
             number={1}
             label={t("ai.step1", "Content")}
             active={step === "idle"}
-            completed={step === "summaries" || step === "tags"}
+            completed={step === "analysis" || step === "titles"}
           />
           <ChevronRight size={16} className="text-[#464856]" />
           <StepIndicator
             number={2}
-            label={t("ai.step2", "Summary")}
-            active={step === "summaries"}
-            completed={step === "tags"}
+            label={t("ai.step2", "분석")}
+            active={step === "analysis"}
+            completed={step === "titles"}
           />
           <ChevronRight size={16} className="text-[#464856]" />
           <StepIndicator
             number={3}
-            label={t("ai.step3", "Tags")}
-            active={step === "tags"}
+            label={t("ai.step3", "제목")}
+            active={step === "titles"}
             completed={false}
           />
         </div>
@@ -166,14 +179,14 @@ export default function AIRecommendPage() {
                   onChange={(e) => setContent(e.target.value)}
                   placeholder={t(
                     "ai.contentPlaceholder",
-                    "Paste your blog post content here..."
+                    "블로그 글 내용을 여기에 붙여넣으세요..."
                   )}
                   className="min-h-[200px] resize-y"
                 />
               </section>
 
               <Button
-                onClick={handleGenerateSummaries}
+                onClick={handleAnalyze}
                 disabled={isLoading || content.trim().length < 10}
                 size="lg"
                 className="w-full"
@@ -181,79 +194,98 @@ export default function AIRecommendPage() {
                 {isLoading ? (
                   <>
                     <Loader2 size={18} className="mr-2 animate-spin" />
-                    {t("ai.analyzing", "Analyzing...")}
+                    {t("ai.analyzingContent", "블로그 분석 중...")}
                   </>
                 ) : (
                   <>
                     <Sparkles size={18} className="mr-2" />
-                    {t("ai.analyzeButton", "Analyze Content")}
+                    {t("ai.analyzeButton", "블로그 분석하기")}
                   </>
                 )}
               </Button>
             </>
           )}
 
-          {/* Step 2: Summary Selection */}
-          {step === "summaries" && (
+          {/* Step 2: Analysis Result + Title Type Selection */}
+          {step === "analysis" && (
             <>
               {isLoading ? (
                 <div className="flex flex-col items-center justify-center py-12">
                   <Loader2 size={32} className="mb-4 animate-spin text-[#6366f1]" />
                   <p className="text-[#9292A1]">
-                    {t("ai.generatingSummaries", "Generating summaries...")}
+                    {t("ai.analyzingContent", "블로그 분석 중...")}
                   </p>
                 </div>
-              ) : (
-                <section>
-                  <label className="mb-4 block text-sm font-medium text-[#e4e4e7]">
-                    {t("ai.summariesLabel", "Choose a summary")}
-                    <span className="ml-2 text-xs text-[#9292A1]">
-                      ({t("ai.clickToSelect", "Click to select")})
-                    </span>
-                  </label>
+              ) : analysisResult ? (
+                <section className="flex flex-col gap-6">
+                  {/* Analysis Summary Card */}
+                  <AnalysisSummaryCard
+                    analysis={analysisResult}
+                    isKo={isKo}
+                  />
 
-                  <div className="flex flex-col gap-3">
-                    {summaryItems.map((item, index) => (
-                      <SummaryOptionCard
-                        key={index}
-                        item={item}
-                        index={index}
-                        onClick={() => handleSummarySelect(item.summary)}
-                      />
-                    ))}
+                  {/* Title Type Selection */}
+                  <div>
+                    <label className="mb-4 block text-sm font-medium text-[#e4e4e7]">
+                      {t("ai.recommendedTypes", "추천 제목 타입")}
+                      <span className="ml-2 text-xs text-[#9292A1]">
+                        ({t("ai.clickToGenerate", "클릭하여 제목 생성")})
+                      </span>
+                    </label>
+
+                    <div className="flex flex-col gap-3">
+                      {analysisResult.recommended_types.map((typeId) => {
+                        const option = TITLE_TYPE_OPTIONS.find(
+                          (o) => o.id === typeId
+                        );
+                        if (!option) return null;
+                        return (
+                          <TitleTypeCard
+                            key={typeId}
+                            option={option}
+                            isKo={isKo}
+                            onClick={() => handleTitleTypeSelect(typeId)}
+                          />
+                        );
+                      })}
+                    </div>
                   </div>
 
                   <Button
                     variant="outline"
                     onClick={handleReset}
-                    className="mt-4 w-full"
+                    className="w-full"
                   >
                     {t("ai.tryAgain", "Try with different content")}
                   </Button>
                 </section>
-              )}
+              ) : null}
             </>
           )}
 
-          {/* Step 3: Tag Selection */}
-          {step === "tags" && (
+          {/* Step 3: Title Selection */}
+          {step === "titles" && (
             <>
               {isLoading ? (
                 <div className="flex flex-col items-center justify-center py-12">
                   <Loader2 size={32} className="mb-4 animate-spin text-[#6366f1]" />
                   <p className="text-[#9292A1]">
-                    {t("ai.generatingTags", "Generating tags...")}
+                    {t("ai.generatingTitles", "제목 생성 중...")}
                   </p>
                 </div>
               ) : (
                 <section>
-                  {/* Selected Summary Display */}
-                  {selectedSummary && (
+                  {/* Selected Title Type Display */}
+                  {selectedTitleType && (
                     <div className="mb-6 rounded-lg border border-[#6366f1]/30 bg-[#6366f1]/10 p-4">
                       <p className="text-xs text-[#9292A1]">
-                        {t("ai.selectedSummary", "Selected summary")}
+                        {t("ai.selectedType", "선택한 제목 타입")}
                       </p>
-                      <p className="mt-1 text-[#e4e4e7]">{selectedSummary}</p>
+                      <p className="mt-1 text-[#e4e4e7]">
+                        {isKo
+                          ? TITLE_TYPE_OPTIONS.find(o => o.id === selectedTitleType)?.labelKo
+                          : TITLE_TYPE_OPTIONS.find(o => o.id === selectedTitleType)?.labelEn}
+                      </p>
                     </div>
                   )}
 
@@ -270,6 +302,7 @@ export default function AIRecommendPage() {
                         key={titleIndex}
                         title={title}
                         index={titleIndex}
+                        isKo={isKo}
                         onClick={() => handleTitleSelect(title)}
                       />
                     ))}
@@ -294,7 +327,7 @@ export default function AIRecommendPage() {
               <span>
                 {t(
                   "ai.fallbackNotice",
-                  "Using keyword extraction (AI unavailable)"
+                  "키워드 추출 모드 (AI 사용 불가)"
                 )}
               </span>
             </div>
@@ -339,41 +372,120 @@ function StepIndicator({ number, label, active, completed }: StepIndicatorProps)
   );
 }
 
-// Summary Option Card Component
-interface SummaryOptionCardProps {
-  item: SummaryItem;
-  index: number;
+// Analysis Summary Card Component
+interface AnalysisSummaryCardProps {
+  analysis: AnalysisResult;
+  isKo: boolean;
+}
+
+function AnalysisSummaryCard({ analysis, isKo }: AnalysisSummaryCardProps) {
+  return (
+    <div className="rounded-xl border border-[#464856] bg-[#212129]/50 p-5">
+      <h3 className="mb-4 flex items-center gap-2 text-sm font-medium text-[#e4e4e7]">
+        <BookOpen size={16} className="text-[#6366f1]" />
+        {isKo ? "분석 결과" : "Analysis Result"}
+      </h3>
+
+      <div className="flex flex-col gap-4">
+        {/* Hook */}
+        {analysis.intro.hook && (
+          <div className="flex items-start gap-3">
+            <Lightbulb size={14} className="mt-1 shrink-0 text-yellow-400" />
+            <div>
+              <p className="text-xs text-[#9292A1]">
+                {isKo ? "도입부 후킹" : "Introduction Hook"}
+              </p>
+              <p className="mt-0.5 text-sm text-[#e4e4e7]">{analysis.intro.hook}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Core Topic */}
+        {analysis.body.core_topic && (
+          <div className="flex items-start gap-3">
+            <Target size={14} className="mt-1 shrink-0 text-[#6366f1]" />
+            <div>
+              <p className="text-xs text-[#9292A1]">
+                {isKo ? "핵심 주제" : "Core Topic"}
+              </p>
+              <p className="mt-0.5 text-sm text-[#e4e4e7]">
+                {analysis.body.core_topic}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Key Terms */}
+        {analysis.body.key_terms.length > 0 && (
+          <div className="flex items-start gap-3">
+            <Hash size={14} className="mt-1 shrink-0 text-emerald-400" />
+            <div>
+              <p className="text-xs text-[#9292A1]">
+                {isKo ? "키워드" : "Key Terms"}
+              </p>
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                {analysis.body.key_terms.map((term, idx) => (
+                  <span
+                    key={idx}
+                    className="rounded-md bg-[#464856]/50 px-2 py-0.5 text-xs text-[#c4c4ff]"
+                  >
+                    {term}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Takeaway */}
+        {analysis.conclusion.takeaway && (
+          <div className="flex items-start gap-3">
+            <Sparkles size={14} className="mt-1 shrink-0 text-orange-400" />
+            <div>
+              <p className="text-xs text-[#9292A1]">
+                {isKo ? "핵심 교훈" : "Key Takeaway"}
+              </p>
+              <p className="mt-0.5 text-sm text-[#e4e4e7]">
+                {analysis.conclusion.takeaway}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Title Type Card Component
+interface TitleTypeCardProps {
+  option: { id: TitleType; labelKo: string; labelEn: string; descriptionKo: string; descriptionEn: string };
+  isKo: boolean;
   onClick: () => void;
 }
 
-function SummaryOptionCard({ item, index, onClick }: SummaryOptionCardProps) {
+function TitleTypeCard({ option, isKo, onClick }: TitleTypeCardProps) {
   return (
     <button
       type="button"
       onClick={onClick}
       className="group w-full rounded-xl border border-[#464856] bg-[#212129]/50 p-4 text-left transition-all hover:border-[#6366f1] hover:bg-[#6366f1]/10"
     >
-      <div className="flex items-start gap-3">
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#464856] text-sm font-medium text-white group-hover:bg-[#6366f1]">
-          {index + 1}
+      <div className="flex items-center gap-3">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#464856] text-sm group-hover:bg-[#6366f1]">
+          <Sparkles size={14} className="text-white" />
         </span>
-        <div className="flex flex-col gap-2">
-          <span className="text-[#e4e4e7] group-hover:text-white leading-relaxed">
-            {item.summary}
-          </span>
-          {item.keywords.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {item.keywords.map((keyword, idx) => (
-                <span
-                  key={idx}
-                  className="rounded-md bg-[#464856]/50 px-2 py-0.5 text-xs text-[#9292A1] group-hover:bg-[#6366f1]/30 group-hover:text-[#c4c4ff]"
-                >
-                  {keyword}
-                </span>
-              ))}
-            </div>
-          )}
+        <div>
+          <p className="font-medium text-[#e4e4e7] group-hover:text-white">
+            {isKo ? option.labelKo : option.labelEn}
+          </p>
+          <p className="mt-0.5 text-xs text-[#9292A1]">
+            {isKo ? option.descriptionKo : option.descriptionEn}
+          </p>
         </div>
+        <ChevronRight
+          size={16}
+          className="ml-auto text-[#464856] group-hover:text-[#6366f1]"
+        />
       </div>
     </button>
   );
@@ -383,10 +495,15 @@ function SummaryOptionCard({ item, index, onClick }: SummaryOptionCardProps) {
 interface TitleOptionCardProps {
   title: TitleRecommendation;
   index: number;
+  isKo: boolean;
   onClick: () => void;
 }
 
-function TitleOptionCard({ title, index, onClick }: TitleOptionCardProps) {
+function TitleOptionCard({ title, index, isKo, onClick }: TitleOptionCardProps) {
+  const titleTypeLabel = title.title_type
+    ? TITLE_TYPE_OPTIONS.find((o) => o.id === title.title_type)
+    : null;
+
   return (
     <button
       type="button"
@@ -397,8 +514,13 @@ function TitleOptionCard({ title, index, onClick }: TitleOptionCardProps) {
         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#464856] text-sm font-medium text-white group-hover:bg-[#6366f1]">
           {index + 1}
         </span>
-        <span className="text-sm text-[#9292A1] group-hover:text-[#c4c4ff]">
-          Click to apply all tags
+        {titleTypeLabel && (
+          <span className="rounded-md bg-[#6366f1]/20 px-2 py-0.5 text-xs text-[#c4c4ff]">
+            {isKo ? titleTypeLabel.labelKo : titleTypeLabel.labelEn}
+          </span>
+        )}
+        <span className="ml-auto text-sm text-[#9292A1] group-hover:text-[#c4c4ff]">
+          {isKo ? "클릭하여 적용" : "Click to apply"}
         </span>
       </div>
 

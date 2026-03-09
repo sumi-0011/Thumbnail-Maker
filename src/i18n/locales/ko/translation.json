@@ -23,6 +23,27 @@
     "suggestedEmoji": "추천 이모지:",
     "addEmojiAsText": "이모지를 텍스트 태그로 추가",
     "close": "닫기",
-    "fallbackNotice": "제목 분리 모드 (AI 사용 불가)"
+    "fallbackNotice": "키워드 추출 모드 (AI 사용 불가)",
+    "back": "에디터로 돌아가기",
+    "step1": "내용",
+    "step2": "분석",
+    "step3": "제목",
+    "selectTitleType": "분석 결과를 확인하고 제목 타입을 선택하세요",
+    "selectTitles": "제목을 선택하여 썸네일에 적용하세요",
+    "backToAnalysis": "분석 결과로 돌아가기",
+    "analyzingContent": "블로그 분석 중...",
+    "analyzeButton": "블로그 분석하기",
+    "analysisResult": "분석 결과",
+    "recommendedTypes": "추천 제목 타입",
+    "generatingTitles": "제목 생성 중...",
+    "hook": "도입부 후킹",
+    "coreTopic": "핵심 주제",
+    "keyTerms": "키워드",
+    "takeaway": "핵심 교훈",
+    "clickToGenerate": "클릭하여 제목 생성",
+    "recommendedTitles": "추천 제목",
+    "clickToApply": "클릭하여 적용",
+    "tryAgain": "다른 내용으로 다시 시도",
+    "selectedType": "선택한 제목 타입"
   }
 }

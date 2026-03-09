@@ -9,6 +9,10 @@ import technicalPrompt from "./prompts/technical.md?raw";
 import questionPrompt from "./prompts/question.md?raw";
 import examplesPrompt from "./prompts/examples.md?raw";
 
+// 새 프롬프트 (분석 기반 2단계 플로우)
+import analysisPrompt from "./prompts/분석.md?raw";
+import titleRecommendPrompt from "./prompts/제목추천.md?raw";
+
 export interface TagRecommendation {
   text: string;
   type: "text" | "emoji";
@@ -17,6 +21,7 @@ export interface TagRecommendation {
 /** 하나의 제목 추천 (태그 배열) */
 export interface TitleRecommendation {
   tags: TagRecommendation[];
+  title_type?: TitleType;
 }
 
 /** AI 응답: 3개의 제목 추천 */
@@ -36,6 +41,108 @@ export interface SummaryResponse {
   items: SummaryItem[];
   language: "ko" | "en" | "mixed";
 }
+
+// === 새 분석 기반 플로우 타입 ===
+
+/** 제목 타입 (8가지) */
+export type TitleType =
+  | "narrative"
+  | "question"
+  | "keyword_stack"
+  | "subtitle"
+  | "retrospective"
+  | "provocative"
+  | "highlight"
+  | "casual";
+
+/** 분석 결과 */
+export interface AnalysisResult {
+  intro: {
+    hook: string;
+    hook_type: "problem" | "curiosity" | "empathy" | "challenge" | "none";
+    writing_motivation: string;
+  };
+  body: {
+    core_topic: string;
+    key_terms: string[];
+    unique_angle: string;
+    content_type: string;
+  };
+  conclusion: {
+    takeaway: string;
+    emotion: string;
+  };
+  recommended_types: TitleType[];
+  language: "ko" | "en" | "mixed";
+}
+
+/** 제목 타입 옵션 (UI 표시용) */
+export interface TitleTypeOption {
+  id: TitleType;
+  labelKo: string;
+  labelEn: string;
+  descriptionKo: string;
+  descriptionEn: string;
+}
+
+export const TITLE_TYPE_OPTIONS: TitleTypeOption[] = [
+  {
+    id: "narrative",
+    labelKo: "서술형",
+    labelEn: "Narrative",
+    descriptionKo: "자연스럽게 이어지는 문장형 제목",
+    descriptionEn: "Naturally flowing sentence-style title",
+  },
+  {
+    id: "question",
+    labelKo: "질문형",
+    labelEn: "Question",
+    descriptionKo: "질문으로 호기심을 유발하는 제목",
+    descriptionEn: "Question that sparks curiosity",
+  },
+  {
+    id: "keyword_stack",
+    labelKo: "키워드 스택",
+    labelEn: "Keyword Stack",
+    descriptionKo: "핵심 키워드를 나열하는 제목",
+    descriptionEn: "Stacked key terms and keywords",
+  },
+  {
+    id: "subtitle",
+    labelKo: "부제 포함형",
+    labelEn: "With Subtitle",
+    descriptionKo: "메인 제목 + 부제로 구성된 제목",
+    descriptionEn: "Main title with a descriptive subtitle",
+  },
+  {
+    id: "retrospective",
+    labelKo: "회고/감성형",
+    labelEn: "Retrospective",
+    descriptionKo: "시간과 감성을 담은 회고 제목",
+    descriptionEn: "Emotional retrospective with timeline",
+  },
+  {
+    id: "provocative",
+    labelKo: "도발/놀라움형",
+    labelEn: "Provocative",
+    descriptionKo: "의외성으로 시선을 끄는 제목",
+    descriptionEn: "Surprising angle that grabs attention",
+  },
+  {
+    id: "highlight",
+    labelKo: "핵심 강조형",
+    labelEn: "Highlight",
+    descriptionKo: "핵심 키워드를 강조하는 제목",
+    descriptionEn: "Emphasis on key concepts",
+  },
+  {
+    id: "casual",
+    labelKo: "캐주얼/재미형",
+    labelEn: "Casual",
+    descriptionKo: "친근하고 재미있는 표현의 제목",
+    descriptionEn: "Friendly and fun expressions",
+  },
+];
 
 export type TagStyle =
   | "narrative"
@@ -126,7 +233,7 @@ export const TAG_STYLE_OPTIONS: TagStyleOption[] = [
 
 // API 설정
 const API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const API_MODEL = "llama-3.1-70b-versatile";
+const API_MODEL = "llama-3.3-70b-versatile";
 
 // 스타일별 프롬프트 매핑
 const STYLE_PROMPTS: Record<TagStyle, string> = {
@@ -666,6 +773,204 @@ export async function generateTagsFromSummary(
     };
   } catch (error) {
     console.error("[generateTagsFromSummary] Error:", error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("JSON_PARSE_ERROR");
+  }
+}
+
+// === 새 분석 기반 2단계 플로우 ===
+
+const VALID_TITLE_TYPES: TitleType[] = [
+  "narrative", "question", "keyword_stack", "subtitle",
+  "retrospective", "provocative", "highlight", "casual",
+];
+
+/**
+ * 분석 JSON 파싱 헬퍼 - 다양한 형식과 잘린 응답 처리
+ */
+function parseAnalysisJSON(text: string): AnalysisResult | null {
+  console.log("[parseAnalysisJSON] Raw input:", text.slice(0, 200) + "...");
+
+  const cleaned = cleanJsonResponse(text);
+
+  // 방법 1: 정규 JSON 파싱 시도
+  try {
+    const jsonMatch = cleaned.match(/\{[\s\S]*"intro"[\s\S]*\}/);
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0]);
+      console.log("[parseAnalysisJSON] Standard parse success");
+      return parsed;
+    }
+  } catch {
+    console.warn("[parseAnalysisJSON] Standard parse failed, trying repair...");
+  }
+
+  // 방법 2: 잘린 JSON 복구 후 파싱 시도
+  try {
+    const repaired = tryRepairTruncatedJson(cleaned);
+    const parsed = JSON.parse(repaired);
+    console.log("[parseAnalysisJSON] Repaired parse success");
+    return parsed;
+  } catch {
+    console.warn("[parseAnalysisJSON] Repair parse failed");
+  }
+
+  // 방법 3: 개별 필드 regex 추출
+  try {
+    const hookMatch = cleaned.match(/"hook"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+    const coreTopicMatch = cleaned.match(/"core_topic"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+    const takeawayMatch = cleaned.match(/"takeaway"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+    const keyTermsMatch = cleaned.match(/"key_terms"\s*:\s*\[((?:[^\]])*)\]/);
+    const recommendedTypesMatch = cleaned.match(/"recommended_types"\s*:\s*\[((?:[^\]])*)\]/);
+
+    if (coreTopicMatch) {
+      const keyTerms = keyTermsMatch
+        ? keyTermsMatch[1].split(",").map(k => k.trim().replace(/"/g, "")).filter(k => k.length > 0)
+        : [];
+      const recommendedTypes = recommendedTypesMatch
+        ? recommendedTypesMatch[1].split(",").map(k => k.trim().replace(/"/g, "")).filter(k => VALID_TITLE_TYPES.includes(k as TitleType)) as TitleType[]
+        : ["narrative", "highlight"] as TitleType[];
+
+      return {
+        intro: {
+          hook: hookMatch ? hookMatch[1].replace(/\\"/g, '"') : "",
+          hook_type: "none",
+          writing_motivation: "",
+        },
+        body: {
+          core_topic: coreTopicMatch[1].replace(/\\"/g, '"'),
+          key_terms: keyTerms,
+          unique_angle: "",
+          content_type: "tutorial",
+        },
+        conclusion: {
+          takeaway: takeawayMatch ? takeawayMatch[1].replace(/\\"/g, '"') : "",
+          emotion: "neutral",
+        },
+        recommended_types: recommendedTypes.length > 0 ? recommendedTypes : ["narrative", "highlight"],
+        language: "ko",
+      };
+    }
+  } catch {
+    console.warn("[parseAnalysisJSON] Regex extraction failed");
+  }
+
+  console.error("[parseAnalysisJSON] All parse methods failed");
+  return null;
+}
+
+/**
+ * 분석 결과 검증 - 필수 필드 확인 및 정규화
+ */
+function validateAnalysisResult(result: AnalysisResult): AnalysisResult {
+  const validatedTypes = (result.recommended_types || [])
+    .filter(t => VALID_TITLE_TYPES.includes(t))
+    .slice(0, 3);
+
+  return {
+    intro: {
+      hook: result.intro?.hook || "",
+      hook_type: result.intro?.hook_type || "none",
+      writing_motivation: result.intro?.writing_motivation || "",
+    },
+    body: {
+      core_topic: result.body?.core_topic || "",
+      key_terms: Array.isArray(result.body?.key_terms)
+        ? result.body.key_terms.filter(k => typeof k === "string" && k.length > 0).slice(0, 5)
+        : [],
+      unique_angle: result.body?.unique_angle || "",
+      content_type: result.body?.content_type || "tutorial",
+    },
+    conclusion: {
+      takeaway: result.conclusion?.takeaway || "",
+      emotion: result.conclusion?.emotion || "neutral",
+    },
+    recommended_types: validatedTypes.length >= 2 ? validatedTypes : ["narrative", "highlight"],
+    language: result.language || "ko",
+  };
+}
+
+/**
+ * Step 1 (New): 블로그 내용 구조 분석
+ */
+export async function analyzeContent(content: string): Promise<AnalysisResult> {
+  const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+
+  if (!apiKey) {
+    throw new Error("API_KEY_NOT_SET");
+  }
+
+  try {
+    const trimmedContent = content.slice(0, 2000);
+    const prompt = `${analysisPrompt}\n${trimmedContent}`;
+
+    const response = await callGroqAPI(prompt, apiKey, 0.6, 1500);
+    console.log("[analyzeContent] Raw response:", response);
+
+    const parsed = parseAnalysisJSON(response);
+    if (!parsed) {
+      throw new Error("INVALID_ANALYSIS_RESPONSE");
+    }
+
+    const validated = validateAnalysisResult(parsed);
+    console.log("[analyzeContent] Validated result:", validated);
+    return validated;
+  } catch (error) {
+    console.error("[analyzeContent] Error:", error);
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("ANALYSIS_PARSE_ERROR");
+  }
+}
+
+/**
+ * Step 2 (New): 분석 결과 + 선택된 제목 타입으로 제목 생성
+ */
+export async function generateTitlesFromAnalysis(
+  analysis: AnalysisResult,
+  titleType: TitleType
+): Promise<GeminiResponse> {
+  const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+
+  if (!apiKey) {
+    throw new Error("API_KEY_NOT_SET");
+  }
+
+  try {
+    const prompt = `${titleRecommendPrompt}\n${JSON.stringify(analysis)}\n\n선택된 제목 타입: ${titleType}`;
+    console.log("[generateTitlesFromAnalysis] Prompt length:", prompt.length);
+
+    const response = await callGroqAPI(prompt, apiKey, 0.8, 1024);
+    const parsed = parseJSON(response);
+
+    if (!Array.isArray(parsed.titles) || parsed.titles.length === 0) {
+      throw new Error("INVALID_RESPONSE_STRUCTURE");
+    }
+
+    const normalizedTitles: TitleRecommendation[] = parsed.titles
+      .slice(0, 3)
+      .map((title) => {
+        const titleObj = title as { tags?: unknown[]; title_type?: string };
+        const tags = Array.isArray(titleObj.tags) ? titleObj.tags : [];
+        return {
+          tags: normalizeTags(tags),
+          title_type: VALID_TITLE_TYPES.includes(titleObj.title_type as TitleType)
+            ? (titleObj.title_type as TitleType)
+            : titleType,
+        };
+      })
+      .filter((title) => title.tags.length > 0);
+
+    console.log("[generateTitlesFromAnalysis] Result:", normalizedTitles);
+    return {
+      titles: normalizedTitles,
+      language: (parsed.language as "ko" | "en" | "mixed") || "mixed",
+    };
+  } catch (error) {
+    console.error("[generateTitlesFromAnalysis] Error:", error);
     if (error instanceof Error) {
       throw error;
     }

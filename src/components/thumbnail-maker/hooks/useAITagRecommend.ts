@@ -1,14 +1,14 @@
 import { useState, useCallback } from "react";
 import {
-  generateSummaries,
-  generateTagsFromSummary,
+  analyzeContent as analyzeContentAPI,
+  generateTitlesFromAnalysis,
   TitleRecommendation,
-  TagStyle,
-  SummaryItem,
+  TitleType,
+  AnalysisResult,
 } from "src/services/ai/geminiService";
 import { extractKeywords } from "src/services/ai/keywordExtractor";
 
-export type AITagRecommendStep = "idle" | "summaries" | "tags";
+export type AITagRecommendStep = "idle" | "analysis" | "titles";
 export type AITagRecommendStatus =
   | "idle"
   | "loading"
@@ -19,10 +19,10 @@ export type AITagRecommendStatus =
 export interface AITagRecommendState {
   step: AITagRecommendStep;
   status: AITagRecommendStatus;
-  // Step 1: 요약 + 키워드
-  summaryItems: SummaryItem[];
-  selectedSummary: string | null;
-  // Step 2: 태그
+  // Step 1: 분석 결과
+  analysisResult: AnalysisResult | null;
+  selectedTitleType: TitleType | null;
+  // Step 2: 제목
   titles: TitleRecommendation[];
   error: string | null;
   language: "ko" | "en" | "mixed";
@@ -59,13 +59,23 @@ const ERROR_MESSAGES: Record<string, { ko: string; en: string }> = {
 const initialState: AITagRecommendState = {
   step: "idle",
   status: "idle",
-  summaryItems: [],
-  selectedSummary: null,
+  analysisResult: null,
+  selectedTitleType: null,
   titles: [],
   error: null,
   language: "mixed",
   usedFallback: false,
 };
+
+function detectLanguage(text: string): "ko" | "en" | "mixed" {
+  const koreanChars = (text.match(/[가-힣]/g) || []).length;
+  const englishChars = (text.match(/[a-zA-Z]/g) || []).length;
+  const total = koreanChars + englishChars;
+  if (total === 0) return "mixed";
+  if (koreanChars / total > 0.6) return "ko";
+  if (englishChars / total > 0.6) return "en";
+  return "mixed";
+}
 
 export function useAITagRecommend() {
   const [state, setState] = useState<AITagRecommendState>(initialState);
@@ -79,9 +89,9 @@ export function useAITagRecommend() {
   );
 
   /**
-   * Step 1: 블로그 내용에서 요약 생성
+   * Step 1: 블로그 내용 구조 분석
    */
-  const generateSummariesFromContent = useCallback(
+  const analyzeContent = useCallback(
     async (content: string) => {
       if (content.trim().length < 10) {
         setState((prev) => ({
@@ -94,39 +104,54 @@ export function useAITagRecommend() {
 
       setState((prev) => ({
         ...prev,
-        step: "summaries",
+        step: "analysis",
         status: "loading",
         error: null,
       }));
 
       try {
-        const response = await generateSummaries(content);
+        const result = await analyzeContentAPI(content);
         setState((prev) => ({
           ...prev,
           status: "success",
-          summaryItems: response.items,
-          language: response.language,
+          analysisResult: result,
+          language: result.language,
         }));
       } catch (error) {
         const errorCode = error instanceof Error ? error.message : "DEFAULT";
 
-        // Fallback: 키워드 추출 사용
+        // Fallback: 키워드 추출로 최소한의 분석 결과 생성
         if (
           errorCode === "API_KEY_NOT_SET" ||
           errorCode === "RATE_LIMIT_EXCEEDED"
         ) {
           const fallbackResponse = extractKeywords(content);
-          // 키워드를 요약처럼 변환
-          const fallbackItems: SummaryItem[] = fallbackResponse.titles.map(
-            (title) => ({
-              summary: title.tags.map((t) => t.text).join(" "),
-              keywords: title.tags.map((t) => t.text),
-            })
-          );
+          const fallbackTitle = fallbackResponse.titles[0]?.tags
+            .filter(t => t.type === "text")
+            .map(t => t.text)
+            .join(" ") || "";
+          const fallbackKeywords = fallbackResponse.titles[0]?.tags
+            .filter(t => t.type === "text")
+            .map(t => t.text) || [];
+          const detectedLang = detectLanguage(content);
+
+          const fallbackAnalysis: AnalysisResult = {
+            intro: { hook: "", hook_type: "none", writing_motivation: "" },
+            body: {
+              core_topic: fallbackTitle,
+              key_terms: fallbackKeywords.slice(0, 5),
+              unique_angle: "",
+              content_type: "tutorial",
+            },
+            conclusion: { takeaway: "", emotion: "neutral" },
+            recommended_types: ["keyword_stack", "highlight"],
+            language: detectedLang,
+          };
+
           setState((prev) => ({
             ...prev,
             status: "fallback",
-            summaryItems: fallbackItems,
+            analysisResult: fallbackAnalysis,
             error: getErrorMessage(errorCode),
             usedFallback: true,
           }));
@@ -143,20 +168,25 @@ export function useAITagRecommend() {
   );
 
   /**
-   * Step 2: 선택된 요약으로 태그 생성
+   * Step 2: 선택된 제목 타입으로 제목 생성
    */
-  const generateTagsFromSelectedSummary = useCallback(
-    async (summary: string, style: TagStyle = "question") => {
+  const generateTitles = useCallback(
+    async (titleType: TitleType) => {
+      if (!state.analysisResult) return;
+
       setState((prev) => ({
         ...prev,
-        step: "tags",
+        step: "titles",
         status: "loading",
-        selectedSummary: summary,
+        selectedTitleType: titleType,
         error: null,
       }));
 
       try {
-        const response = await generateTagsFromSummary(summary, style);
+        const response = await generateTitlesFromAnalysis(
+          state.analysisResult,
+          titleType
+        );
         setState((prev) => ({
           ...prev,
           status: "success",
@@ -172,18 +202,18 @@ export function useAITagRecommend() {
         }));
       }
     },
-    [getErrorMessage]
+    [state.analysisResult, getErrorMessage]
   );
 
   /**
-   * 요약 선택 단계로 돌아가기
+   * 분석 결과 단계로 돌아가기
    */
-  const backToSummaries = useCallback(() => {
+  const backToAnalysis = useCallback(() => {
     setState((prev) => ({
       ...prev,
-      step: "summaries",
+      step: "analysis",
       status: "success",
-      selectedSummary: null,
+      selectedTitleType: null,
       titles: [],
       error: null,
     }));
@@ -198,9 +228,9 @@ export function useAITagRecommend() {
 
   return {
     ...state,
-    generateSummaries: generateSummariesFromContent,
-    generateTagsFromSummary: generateTagsFromSelectedSummary,
-    backToSummaries,
+    analyzeContent,
+    generateTitles,
+    backToAnalysis,
     reset,
     isLoading: state.status === "loading",
   };
