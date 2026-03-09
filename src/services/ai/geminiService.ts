@@ -11,7 +11,6 @@ import examplesPrompt from "./prompts/examples.md?raw";
 
 // 새 프롬프트 (분석 기반 2단계 플로우)
 import analysisPrompt from "./prompts/분석.md?raw";
-import titleRecommendPrompt from "./prompts/제목추천.md?raw";
 
 export interface TagRecommendation {
   text: string;
@@ -927,6 +926,207 @@ export async function analyzeContent(content: string): Promise<AnalysisResult> {
 }
 
 /**
+ * 타입별 규칙 + 예시 (동적 프롬프트 구성용)
+ * 선택된 타입의 규칙만 포함하여 noise를 제거
+ */
+const TITLE_TYPE_RULES: Record<TitleType, string> = {
+  narrative: `## narrative (서술형)
+태그를 순서대로 읽으면 하나의 자연스러운 문장이 되는 구조.
+
+규칙:
+- 태그 읽는 순서 = 문장 읽는 순서
+- 한국어 조사(은/는/이/가/을/를/에서/으로)는 반드시 앞 단어에 붙임
+- 4~6개 태그, 각 2~12자
+- 분석의 writing_motivation을 문장 흐름으로 변환
+
+좋은 예시:
+1) "프론트엔드" → "개발자 관점으로" → "바라보는" → "관심사의 분리" → "✨"
+2) "Java" → "동시성 프로그래밍" → "🧑‍💻" → "Thread" → "Future" → "Callable"
+3) "브라우저가" → "닫혀도" → "API 요청을" → "안전하게 보내는 법" → "☁️"`,
+
+  question: `## question (질문 후킹형)
+독자가 공감할 질문으로 시작해서 답(주제)으로 이어지는 구조.
+
+규칙:
+- 첫 1~2개 태그가 질문 (반드시 ? 포함)
+- 질문 직후에 이모지(🤔, 💭, ❓) 배치
+- 나머지 태그가 답/해결책
+- 질문은 독자의 실제 고민 반영 (추상적 질문 금지)
+- 4~5개 태그
+
+좋은 예시:
+1) "이럴 때 뭐 쓰지?" → "🤔" → "golang" → "패키지 추천" → "📦"
+2) "API 요청이 사라진다?" → "🤔" → "keepalive로 해결" → "브라우저 종료 대응"
+3) "왜 이렇게 느릴까?" → "💭" → "Context Switching" → "비용 분석"`,
+
+  keyword_stack: `## keyword_stack (키워드 스택형)
+핵심 기술 키워드를 시각적으로 나열하여 한눈에 주제 파악.
+
+규칙:
+- 기술 용어는 영어 원문 그대로 유지
+- 관계어 1~2개로 맥락 부여: "장점", "차이점", "비교", "정리", "활용"
+- 가장 중요한 키워드를 첫 번째에 배치
+- 5~7개 태그, 각 1~8자
+
+좋은 예시:
+1) "Java" → "Kotlin" → "장점" → "차이점" → "Co-Routine" → "확장 함수"
+2) "DynamoDB" → "AWS" → "localStack" → "로컬 테스트" → "⚙️"
+3) "React" → "Vue" → "Angular" → "비교" → "2024" → "프레임워크 선택"`,
+
+  subtitle: `## subtitle (부제 포함형)
+메인 제목 태그들 + 콜론(:)으로 시작하는 부제 태그 1개.
+
+규칙:
+- 부제 태그는 반드시 ": "(콜론+공백)으로 시작하는 마지막 태그
+- 부제 역할 3가지 중 택 1:
+  (a) 구체적 방법: ": keepalive 옵션 활용"
+  (b) 핵심 교훈: ": 복잡도를 줄이기 위한 전략"
+  (c) 감성 코멘트: ": 그래도 재밌었잖아"
+- 메인 태그 3~5개 + 부제 1개, 부제 8~20자
+
+좋은 예시:
+1) "브라우저 종료 시" → "☁️" → "안정적으로" → "API 요청하기" → ": keepalive 옵션 활용"
+2) "디자인 패턴" → "전략 패턴" → "장단점 분석" → ": 복잡도를 줄이기 위한 선택"
+3) "Spring으로도" → "Slack Bot을?!" → "Spring🌱" → ": Slack API 연동기"`,
+
+  retrospective: `## retrospective (회고/감성형)
+개인적 경험, 감정, 시간 흐름을 담은 따뜻하거나 솔직한 톤.
+
+규칙:
+- 시간 표현으로 시작: 연도, 분기, "N년차", "하반기" 등
+- 구체적 경험/활동 키워드 포함 (컨퍼런스명, 프로젝트명)
+- 감성적 마무리 또는 솔직한 감상 포함
+- 구어체/반말 허용
+- 4~6개 태그
+
+좋은 예시:
+1) "2024년" → "하반기를 돌아보며" → "디프만" → "SIPE" → "여행" → ": 그래도 재밌었잖아"
+2) "2025 회고" → "넥스터즈" → "구름톤" → "바쁘다 바빠" → "😵‍💫"
+3) "1년차 개발자의" → "우당탕탕" → "성장기" → "✨" → ": 아직도 모르는 게 많지만"`,
+
+  provocative: `## provocative (도발/놀라움형)
+의외성, 놀라움, 반전을 전면에 내세워 클릭 유도.
+
+규칙:
+- ?!, ~도?, ~이라고?, 실화? 등 놀라움 표현 사용
+- 예상을 깨는 조합 강조
+- 첫 태그에서 반전 요소 제시
+- 과장 금지 — 실제 내용 기반
+- 3~5개 태그
+
+좋은 예시:
+1) "Spring으로도" → "Slack Bot을?!" → "Spring🌱" → "Slack API 연동💬"
+2) "CSS만으로" → "3D 애니메이션을?!" → "transform 완전정복" → "🤯"
+3) "SQL 한 줄로" → "성능 10배?!" → "인덱스의 마법" → "⚡"`,
+
+  highlight: `## highlight (핵심 강조형)
+가장 중요한 키워드를 첫 번째에 크게 배치, 나머지가 보충.
+
+규칙:
+- 1번째 태그 = 핵심 주제 (가장 큰 글씨)
+- 2~3번째 = 세부 주제/범위
+- 마지막 = 행동/결론 (가이드, 정리, 비교, 실전)
+- 이모지를 키워드 사이에 배치하여 시각적 리듬
+- 3~5개 태그
+
+좋은 예시:
+1) "CS" → "⚙️" → "Context Switching" → "🔄" → "하드웨어 관점"
+2) "React Hooks" → "완벽 가이드" → "실전 예제 포함" → "🚀"
+3) "TypeScript" → "🔷" → "제네릭 마스터" → "실전 패턴"`,
+
+  casual: `## casual (캐주얼/재미형)
+친근하고 가벼운 톤으로 접근성을 높이는 구조.
+
+규칙:
+- 의성어/의태어 활용: 뚝딱뚝딱, 슥슥, 차근차근
+- 구어체/반말 OK: ~해보자, ~만들어보는, ~인데요
+- 이모지 적극 활용 (2~3개)
+- 기술 용어도 친근하게 풀어쓰기
+- 3~5개 태그
+
+좋은 예시:
+1) "뚝딱뚝딱" → "만들어보는" → "나만의 앱" → "😎" → "처음이라 떨리는 중"
+2) "차근차근" → "배워보는" → "Docker" → "🐳" → "생각보다 쉽잖아?"
+3) "사이드 프로젝트" → "🐱" → "열심히" → "만들어요!" → "✨"`,
+};
+
+/**
+ * 분석 결과를 자연어로 포맷 (raw JSON 대신)
+ */
+function formatAnalysisForPrompt(analysis: AnalysisResult): string {
+  const lines: string[] = [];
+
+  if (analysis.intro.hook) {
+    lines.push(`도입부 후킹: ${analysis.intro.hook}`);
+  }
+  if (analysis.intro.hook_type !== "none") {
+    lines.push(`후킹 유형: ${analysis.intro.hook_type}`);
+  }
+  if (analysis.intro.writing_motivation) {
+    lines.push(`글쓴 동기: ${analysis.intro.writing_motivation}`);
+  }
+  lines.push(`핵심 주제: ${analysis.body.core_topic}`);
+  if (analysis.body.key_terms.length > 0) {
+    lines.push(`키워드: ${analysis.body.key_terms.join(", ")}`);
+  }
+  if (analysis.body.unique_angle) {
+    lines.push(`차별점: ${analysis.body.unique_angle}`);
+  }
+  lines.push(`글 유형: ${analysis.body.content_type}`);
+  if (analysis.conclusion.takeaway) {
+    lines.push(`핵심 교훈: ${analysis.conclusion.takeaway}`);
+  }
+  if (analysis.conclusion.emotion) {
+    lines.push(`마무리 톤: ${analysis.conclusion.emotion}`);
+  }
+
+  return lines.join("\n");
+}
+
+/**
+ * 선택된 타입에 맞는 집중 프롬프트 생성
+ */
+function buildTitlePrompt(analysis: AnalysisResult, titleType: TitleType): string {
+  const typeRule = TITLE_TYPE_RULES[titleType];
+  const analysisText = formatAnalysisForPrompt(analysis);
+
+  return `You are a blog thumbnail title generator. Generate exactly 3 title variations.
+
+<critical_rules>
+- OUTPUT PURE JSON ONLY
+- NO markdown code blocks (no \`\`\`json or \`\`\`)
+- NO explanations before or after JSON
+- Start response with { and end with }
+</critical_rules>
+
+<blog_analysis>
+${analysisText}
+</blog_analysis>
+
+<selected_style>
+${typeRule}
+</selected_style>
+
+<variation_guide>
+3개 제목은 서로 다른 관점/톤이어야 한다:
+- 제목 1: 분석의 core_topic을 중심으로
+- 제목 2: 분석의 hook 또는 unique_angle을 활용
+- 제목 3: 분석의 takeaway 또는 key_terms를 활용
+</variation_guide>
+
+<common_rules>
+- 기술 용어(React, Docker, API 등)는 영어 유지
+- 이모지: 독립 태그 또는 텍스트 뒤 붙이기. 최대 2~3개
+- 태그 길이: 한국어 2~12자, 영어/혼용 2~16자
+- 블로그 언어: ${analysis.language}
+</common_rules>
+
+<format>
+{"titles":[{"tags":[{"text":"내용","type":"text"},{"text":"🤔","type":"emoji"}],"title_type":"${titleType}"},{"tags":[...],"title_type":"${titleType}"},{"tags":[...],"title_type":"${titleType}"}],"language":"${analysis.language}"}
+</format>`;
+}
+
+/**
  * Step 2 (New): 분석 결과 + 선택된 제목 타입으로 제목 생성
  */
 export async function generateTitlesFromAnalysis(
@@ -940,10 +1140,10 @@ export async function generateTitlesFromAnalysis(
   }
 
   try {
-    const prompt = `${titleRecommendPrompt}\n${JSON.stringify(analysis)}\n\n선택된 제목 타입: ${titleType}`;
+    const prompt = buildTitlePrompt(analysis, titleType);
     console.log("[generateTitlesFromAnalysis] Prompt length:", prompt.length);
 
-    const response = await callGroqAPI(prompt, apiKey, 0.8, 1024);
+    const response = await callGroqAPI(prompt, apiKey, 0.75, 1500);
     const parsed = parseJSON(response);
 
     if (!Array.isArray(parsed.titles) || parsed.titles.length === 0) {
