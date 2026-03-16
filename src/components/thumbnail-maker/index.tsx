@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AddTagSection } from "./AddTagSection";
 import { CanvasContainer } from "./CanvasContainer";
 import { useCheckTagOverflow } from "./hooks/useCheckTagOverflow";
@@ -16,7 +16,17 @@ import { CanvasSizeProvider } from "./CanvasSize.context";
 import { PaletteProvider } from "./Palette.context";
 
 function ThumbnailMaker() {
+  const editorRef = useRef<HTMLDivElement>(null);
   const [isDragMode, setIsDragMode] = useState(false);
+
+  // Swiper의 mousewheel 핸들러로 wheel 이벤트가 전파되는 것을 차단
+  useEffect(() => {
+    const el = editorRef.current;
+    if (!el) return;
+    const stopWheel = (e: WheelEvent) => e.stopPropagation();
+    el.addEventListener("wheel", stopWheel, { passive: true });
+    return () => el.removeEventListener("wheel", stopWheel);
+  }, []);
   const { previewRef, onDownload: downloadImage, getImageFile } = usePreview();
   const { tagsContainerRef, checkOverflow, showOverflowToast } =
     useCheckTagOverflow();
@@ -72,7 +82,10 @@ function ThumbnailMaker() {
   return (
     <PaletteProvider>
       <CanvasSizeProvider>
-        <div className="mx-auto flex w-full flex-col gap-4 py-8">
+        <div
+          ref={editorRef}
+          className="thumbnail-maker-interactive mx-auto flex w-full flex-col gap-4 py-8"
+        >
           <h1 className="mb-7 text-center text-[60px] text-[#C1CCFF]">
             Thumbnail Maker
           </h1>

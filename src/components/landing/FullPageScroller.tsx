@@ -130,6 +130,8 @@ function FullPageContent({ children, className = "" }: FullPageContentProps) {
       <Swiper
         direction="vertical"
         slidesPerView={1}
+        noSwiping={true}
+        noSwipingSelector=".thumbnail-maker-interactive"
         mousewheel={{
           forceToAxis: true,
           sensitivity: 1,

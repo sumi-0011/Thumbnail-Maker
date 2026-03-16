@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { cn } from "src/lib/utils";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { Input } from "../ui/input";
@@ -26,6 +26,16 @@ export const ThreeDEmojiPicker = ({ onEmojiSelect }: Props) => {
     searchTerm,
     category: selectedCategory,
   });
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const stopWheel = (e: WheelEvent) => e.stopPropagation();
+    el.addEventListener("wheel", stopWheel, { passive: true });
+    return () => el.removeEventListener("wheel", stopWheel);
+  }, []);
 
   const handleEmojiClick = (emoji: EmojiType) => {
     onEmojiSelect(emoji);
@@ -57,7 +67,10 @@ export const ThreeDEmojiPicker = ({ onEmojiSelect }: Props) => {
             </TabsTrigger>
           ))}
         </TabsList>
-        <div className="scrollbar flex max-h-[300px] flex-wrap gap-1 overflow-y-auto p-1">
+        <div
+          ref={scrollRef}
+          className="scrollbar flex max-h-[300px] flex-wrap gap-1 overflow-y-auto overscroll-contain p-1"
+        >
           {searchResults.map((emoji) => (
             <div
               key={emoji.cldr}
