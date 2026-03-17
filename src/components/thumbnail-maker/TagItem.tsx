@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { CornerDownLeft, X } from "lucide-react";
 import { CSSProperties } from "react";
 import { cva } from "class-variance-authority";
 import { cn } from "src/lib/utils";
@@ -24,6 +24,7 @@ export function TagItem({ tag, onRemove, onClick, className }: Props) {
       />
       {onRemove && (
         <div
+          data-html2canvas-ignore
           className="absolute -right-1 -top-1  hidden h-6 w-6 cursor-default justify-center rounded-full bg-white/80 p-0.5 align-middle group-hover:flex"
           onClick={(e) => {
             e.stopPropagation();
@@ -31,6 +32,14 @@ export function TagItem({ tag, onRemove, onClick, className }: Props) {
           }}
         >
           <X size={20} color="#454545" />
+        </div>
+      )}
+      {onRemove && tag.lineBreakAfter && (
+        <div
+          data-html2canvas-ignore
+          className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-white/80"
+        >
+          <CornerDownLeft size={12} color="#454545" />
         </div>
       )}
     </div>

@@ -8,6 +8,7 @@ import {
   SheetFooter,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
+import { Switch } from "../ui/switch";
 import { TagItemView } from "./TagItem";
 import { Input } from "../ui/input";
 import { getTagStyleKey } from "./assets/utils";
@@ -75,6 +76,15 @@ export function TagChangeSheet({ onStyleChange, onRemove }: Props) {
           <div>
             <p className="mb-5 text-[13px] text-[#9292A1]">Tag style</p>
             <TagStylePicker onClick={onChangeTagStyle} />
+          </div>
+          <div className="mt-8 flex items-center justify-between">
+            <p className="text-[13px] text-[#9292A1]">Line break after tag</p>
+            <Switch
+              checked={tag.lineBreakAfter ?? false}
+              onCheckedChange={(checked) =>
+                setTag({ ...tag, lineBreakAfter: checked })
+              }
+            />
           </div>
         </div>
         <SheetFooter className="mt-[96px] flex justify-center gap-2 sm:justify-center">

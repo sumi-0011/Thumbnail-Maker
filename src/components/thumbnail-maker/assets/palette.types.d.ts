@@ -16,6 +16,7 @@ export type Tag = {
   content: TagContentType;
   tagVariant: TagVariant;
   tagShape: TagShape;
+  lineBreakAfter?: boolean;
 };
 
 export type PaletteTag = `${TagVariant}-${TagShape}`;

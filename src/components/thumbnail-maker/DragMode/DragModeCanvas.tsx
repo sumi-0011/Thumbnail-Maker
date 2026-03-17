@@ -13,6 +13,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { Fragment } from "react";
 import { cn } from "src/lib/utils";
 import { useCurrentPaletteStyle } from "../Palette.context";
 import {
@@ -90,9 +91,12 @@ export function DragModeCanvas({ previewRef, tagsContainerRef }: Props) {
               strategy={verticalListSortingStrategy}
             >
               {tags.map((tag) => (
-                <SortableTagItem key={tag.id} tag={tag}>
-                  <TagItem tag={tag} />
-                </SortableTagItem>
+                <Fragment key={tag.id}>
+                  <SortableTagItem tag={tag}>
+                    <TagItem tag={tag} />
+                  </SortableTagItem>
+                  {tag.lineBreakAfter && <div className="h-0 basis-full" />}
+                </Fragment>
               ))}
             </SortableContext>
           </div>

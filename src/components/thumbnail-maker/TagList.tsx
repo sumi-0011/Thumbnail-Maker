@@ -1,4 +1,4 @@
-import { cn } from "src/lib/utils";
+import { Fragment } from "react";
 import { TagItem } from "./TagItem";
 import { Tag } from "./assets/palette.types";
 import { useTagAction, useTagList } from "./Tag.context";
@@ -14,13 +14,15 @@ export function TagList({ setOpenTagSheet }: Props) {
   return (
     <>
       {tags.map((tag) => (
-        <TagItem
-          key={tag.id}
-          tag={tag}
-          onRemove={() => onRemoveTag(tag.id)}
-          onClick={() => setOpenTagSheet(tag)}
-          className={cn(tag.content.type !== "3d-emoji" && "cursor-pointer")}
-        />
+        <Fragment key={tag.id}>
+          <TagItem
+            tag={tag}
+            onRemove={() => onRemoveTag(tag.id)}
+            onClick={() => setOpenTagSheet(tag)}
+            className="cursor-pointer"
+          />
+          {tag.lineBreakAfter && <div className="h-0 basis-full" />}
+        </Fragment>
       ))}
     </>
   );

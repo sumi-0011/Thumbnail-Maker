@@ -8,6 +8,7 @@ import {
   SheetFooter,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
+import { Switch } from "../ui/switch";
 import { EmojiType, ThreeDEmojiPicker } from "../3d-emoji-picker";
 import { TagItemView } from "./TagItem";
 import { getTagStyleKey } from "./assets/utils";
@@ -50,6 +51,15 @@ export function TagEmojiSheet({ onStyleChange, onRemove }: Props) {
           </div>
           <div>
             <ThreeDEmojiPicker onEmojiSelect={onChangeEmoji} />
+          </div>
+          <div className="mt-8 flex items-center justify-between">
+            <p className="text-[13px] text-[#9292A1]">Line break after tag</p>
+            <Switch
+              checked={tag.lineBreakAfter ?? false}
+              onCheckedChange={(checked) =>
+                setTag({ ...tag, lineBreakAfter: checked })
+              }
+            />
           </div>
         </div>
         <SheetFooter className="mt-[96px] flex justify-center gap-2 sm:justify-center">
